@@ -38,7 +38,7 @@ P/s: This prioritization focuses on the core functionality of your app, starting
 4. `npm install --save-dev @types/express typescript`.
 5. `npx tsc --init` to create a `tsconfig.json` file.
     - configure `tsconfig.json` file.
-    
+    - [refer to this for configuration](https://www.youtube.com/watch?v=qy8PxD3alWw&list=LL&index=3&t=1s).
 6. Create Routes folder including `routes` such as POST, GET, DELETE, PUT, PATCH ... And a `.env` file including environment variable such as PORT, MONGO_URL or URLs.
 7. Create Models folder including `schemas`.
 8. Create Controller folder including `function` for modify and update in the Routes
