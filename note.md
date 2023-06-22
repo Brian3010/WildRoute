@@ -34,10 +34,14 @@ P/s: This prioritization focuses on the core functionality of your app, starting
 
 1. Create a folder called 'backend'.
 2. `npm init` to install package.json.
-3. `npm install express mongoose`
-4. Create Routes folder including `routes` such as POST, GET, DELETE, PUT, PATCH ... And a `.env` file including environment variable such as PORT, MONGO_URL or URLs.
-5. Create Models folder including `schemas`.
-6. Create Controller folder including `function` for modify and update in the Routes
+3. `npm install express mongoose`.
+4. `npm install --save-dev @types/express typescript`.
+5. `npx tsc --init` to create a `tsconfig.json` file.
+    - configure `tsconfig.json` file.
+    
+6. Create Routes folder including `routes` such as POST, GET, DELETE, PUT, PATCH ... And a `.env` file including environment variable such as PORT, MONGO_URL or URLs.
+7. Create Models folder including `schemas`.
+8. Create Controller folder including `function` for modify and update in the Routes
 
 **Frontend** [Refer to this link for frontend](https://www.youtube.com/watch?v=G_XyAfcLeqI&t=5s)
 
