@@ -8,8 +8,9 @@ const express_1 = __importDefault(require("express"));
 const PORT = 3000;
 const app = (0, express_1.default)();
 app.get('/', (req, res) => {
-    res.send('Helloooooasdaasdasdasdsd');
+    res.send('Helloooooasdaasdasdasdsasdasdd');
 });
 app.listen(PORT, () => {
     console.log(`Now listening on PORT ${PORT}`);
 });
+//# sourceMappingURL=index.js.map
