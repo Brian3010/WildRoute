@@ -23,8 +23,12 @@
   "dependencies": {
     "concurrently": "^8.2.0",
     "express": "^4.18.2",
+    "glob-parent": "^6.0.1",
     "mongodb": "^5.6.0",
     "mongoose": "^7.3.1",
     "rimraf": "^5.0.1"
+  },
+  "overrides": {
+    "glob-parent": "$glob-parent"
   }
 }
