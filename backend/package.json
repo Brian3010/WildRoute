@@ -2,13 +2,15 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
-    "start": "node dist/index.js",
+    "start": "node dist/app.js",
     "preserve": "npm run build",
-    "serve": "concurrently \"tsc --watch\" \"nodemon dist/index.js\"",
+    "serve": "concurrently \"tsc --watch\" \"nodemon dist/app.js\"",
+    "preseed": "npm run build",
+    "seed": "node dist/seeds/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

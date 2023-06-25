@@ -6,14 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const { Schema } = mongoose_1.default;
 const ActivityListSchema = new Schema({
-    // id: String,
     activity_title: String,
     location: String,
     description: String,
-    price: Number,
+    avg_price: Number,
     image: String,
 });
-//{id, activity_name, location, desciption(fact), price, image, author}.
 const ActivityList = mongoose_1.default.model('ActivityList', ActivityListSchema);
-module.exports = ActivityList;
+exports.default = ActivityList;
 //# sourceMappingURL=activities.js.map
