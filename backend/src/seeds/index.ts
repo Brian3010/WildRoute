@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import ActivityList from '../models/activities.js';
+import { descriptors, places } from './seedHelpers.js';
 
 main()
   .then(() => {

@@ -20,35 +20,56 @@ export const descriptors: Array<string> = [
   'Wildlife Tours',
 ];
 
-export const places:Array<string>[] = [
-    ["Fraser Island", "Cape York Peninsula", "Gibb River Road"],
-    ["Blue Mountains", "Kangaroo Point (Brisbane)", "Mount Arapiles (Victoria)"],
-    ["Wilsons Promontory National Park", "Kakadu National Park", "Great Ocean Road"],
-    ["Blue Mountains", "Lamington National Park", "Cradle Mountain-Lake St Clair National Park"],
-    ["Sydney Harbour Bridge", "Mount Kosciuszko", "Mount Barney (Queensland)"],
-    ["Great Ocean Road", "Rottnest Island", "Munda Biddi Trail (Western Australia)"],
-    ["Great Barrier Reef", "Ningaloo Reef", "Lord Howe Island"],
-    ["Overland Track (Tasmania)", "Larapinta Trail (Northern Territory)", "Grampians National Park"],
-    ["Sydney Harbour", "Gold Coast", "Queenstown (New Zealand)"],
-    ["Freycinet National Park (Tasmania)", "Ningaloo Reef", "Noosa Everglades"],
-    ["Blue Mountains", "Mount Arapiles (Victoria)", "Barrington Tops National Park"],
-    ["Whitsunday Islands", "Sydney Harbour", "Great Barrier Reef"],
-    ["Moreton Island", "Stockton Sand Dunes (Port Stephens)", "Lancelin Sand Dunes (Western Australia)"],
-    ["Great Barrier Reef", "Ningaloo Reef", "Lord Howe Island"],
-    ["Gold Coast", "Bells Beach (Victoria)", "Margaret River (Western Australia)"],
-    ["Bondi Beach (Sydney)", "Whitehaven Beach (Whitsunday Islands)", "Litchfield National Park"],
-    ["Hervey Bay", "Sydney", "Augusta (Western Australia)"],
-    ["Tully River (Queensland)", "Franklin River (Tasmania)", "Barron River (Cairns)"],
-    ["Kangaroo Island", "Tasmania", "Great Ocean Road"]
+const placesWithLoc: Array<string>[] = [
+  ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road'],
+  ['Blue Mountains', 'Kangaroo Point (Brisbane)', 'Mount Arapiles (Victoria)'],
+  ['Wilsons Promontory National Park', 'Kakadu National Park', 'Great Ocean Road'],
+  [
+    'Blue Mountains',
+    'Lamington National Park',
+    'Cradle Mountain-Lake St Clair National Park',
+  ],
+  ['Sydney Harbour Bridge', 'Mount Kosciuszko', 'Mount Barney (Queensland)'],
+  ['Great Ocean Road', 'Rottnest Island', 'Munda Biddi Trail (Western Australia)'],
+  ['Great Barrier Reef', 'Ningaloo Reef', 'Lord Howe Island'],
+  [
+    'Overland Track (Tasmania)',
+    'Larapinta Trail (Northern Territory)',
+    'Grampians National Park',
+  ],
+  ['Sydney Harbour', 'Gold Coast', 'Queenstown (New Zealand)'],
+  ['Freycinet National Park (Tasmania)', 'Ningaloo Reef', 'Noosa Everglades'],
+  ['Blue Mountains', 'Mount Arapiles (Victoria)', 'Barrington Tops National Park'],
+  ['Whitsunday Islands', 'Sydney Harbour', 'Great Barrier Reef'],
+  [
+    'Moreton Island',
+    'Stockton Sand Dunes (Port Stephens)',
+    'Lancelin Sand Dunes (Western Australia)',
+  ],
+  ['Great Barrier Reef', 'Ningaloo Reef', 'Lord Howe Island'],
+  ['Gold Coast', 'Bells Beach (Victoria)', 'Margaret River (Western Australia)'],
+  [
+    'Bondi Beach (Sydney)',
+    'Whitehaven Beach (Whitsunday Islands)',
+    'Litchfield National Park',
+  ],
+  ['Hervey Bay', 'Sydney', 'Augusta (Western Australia)'],
+  ['Tully River (Queensland)', 'Franklin River (Tasmania)', 'Barron River (Cairns)'],
+  ['Kangaroo Island', 'Tasmania', 'Great Ocean Road'],
 ];
 
+// strip () out of the array
+
+export const places = placesWithLoc.map(place => {
+  return place.map(pW => {
+    return pW.replace(/\s*\([^)]*\)/, '');
+  });
+});
+// places + descriptors
 
 // look for random locations in Austrlia
 
-
-
-
-
+//https://www.matthewproctor.com/Content/postcodes/australian_postcodes.json
 
 // 4WD Tours: Fraser Island, Cape York Peninsula, Gibb River Road
 // Abseiling: Blue Mountains, Kangaroo Point (Brisbane), Mount Arapiles (Victoria)
@@ -69,7 +90,6 @@ export const places:Array<string>[] = [
 // Whale Watching: Hervey Bay, Sydney, Augusta (Western Australia)
 // White Water Rafting: Tully River (Queensland), Franklin River (Tasmania), Barron River (Cairns)
 // Wildlife Tours: Kangaroo Island, Tasmania, Great Ocean Road
-
 
 // export const location= [
 //     { name: "Fraser Island", address: "123 Beach Street, Fraser Island, Queensland" },
@@ -93,5 +113,3 @@ export const places:Array<string>[] = [
 //     { name: "Larapinta Trail (Northern Territory)", address: "567 Larapinta Lane, Larapinta Trail, Northern Territory" },
 //     { name: "Grampians National Park", address: "890 Grampians Road, Grampians National Park, Victoria" }
 //   ];
-
-
