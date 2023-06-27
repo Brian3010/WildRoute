@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import ActivityList from '../models/activities.js';
+import { cities } from './cities.js';
 import { descriptors, places } from './seedHelpers.js';
 
 main()
@@ -13,7 +14,7 @@ async function main() {
 }
 
 const seedDb = async (): Promise<void> => {
-  console.log(ActivityList);
+  // console.log(ActivityList);
 
   console.log('seedDb() TRIGGED');
   await ActivityList.deleteMany({});

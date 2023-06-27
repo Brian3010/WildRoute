@@ -24,19 +24,11 @@ const placesWithLoc: Array<string>[] = [
   ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road'],
   ['Blue Mountains', 'Kangaroo Point (Brisbane)', 'Mount Arapiles (Victoria)'],
   ['Wilsons Promontory National Park', 'Kakadu National Park', 'Great Ocean Road'],
-  [
-    'Blue Mountains',
-    'Lamington National Park',
-    'Cradle Mountain-Lake St Clair National Park',
-  ],
+  ['Blue Mountains', 'Lamington National Park', 'Cradle Mountain-Lake St Clair National Park'],
   ['Sydney Harbour Bridge', 'Mount Kosciuszko', 'Mount Barney (Queensland)'],
   ['Great Ocean Road', 'Rottnest Island', 'Munda Biddi Trail (Western Australia)'],
   ['Great Barrier Reef', 'Ningaloo Reef', 'Lord Howe Island'],
-  [
-    'Overland Track (Tasmania)',
-    'Larapinta Trail (Northern Territory)',
-    'Grampians National Park',
-  ],
+  ['Overland Track (Tasmania)', 'Larapinta Trail (Northern Territory)', 'Grampians National Park'],
   ['Sydney Harbour', 'Gold Coast', 'Queenstown (New Zealand)'],
   ['Freycinet National Park (Tasmania)', 'Ningaloo Reef', 'Noosa Everglades'],
   ['Blue Mountains', 'Mount Arapiles (Victoria)', 'Barrington Tops National Park'],
@@ -48,11 +40,7 @@ const placesWithLoc: Array<string>[] = [
   ],
   ['Great Barrier Reef', 'Ningaloo Reef', 'Lord Howe Island'],
   ['Gold Coast', 'Bells Beach (Victoria)', 'Margaret River (Western Australia)'],
-  [
-    'Bondi Beach (Sydney)',
-    'Whitehaven Beach (Whitsunday Islands)',
-    'Litchfield National Park',
-  ],
+  ['Bondi Beach (Sydney)', 'Whitehaven Beach (Whitsunday Islands)', 'Litchfield National Park'],
   ['Hervey Bay', 'Sydney', 'Augusta (Western Australia)'],
   ['Tully River (Queensland)', 'Franklin River (Tasmania)', 'Barron River (Cairns)'],
   ['Kangaroo Island', 'Tasmania', 'Great Ocean Road'],
@@ -65,11 +53,8 @@ export const places = placesWithLoc.map(place => {
     return pW.replace(/\s*\([^)]*\)/, '');
   });
 });
+
 // places + descriptors
-
-// look for random locations in Austrlia
-
-//https://www.matthewproctor.com/Content/postcodes/australian_postcodes.json
 
 // 4WD Tours: Fraser Island, Cape York Peninsula, Gibb River Road
 // Abseiling: Blue Mountains, Kangaroo Point (Brisbane), Mount Arapiles (Victoria)
