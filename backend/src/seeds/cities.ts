@@ -1,6 +1,19 @@
 // random locations in Austrlia
 // https://simplemaps.com/data/au-cities
-export const cities: Array<object> = [
+
+type City = {
+  city: string;
+  lat: string;
+  lng: string;
+  country: string;
+  iso2: string;
+  admin_name: string;
+  capital: string;
+  population: string;
+  population_proper: string;
+};
+
+export const cities: City[] = [
   {
     city: 'Sydney',
     lat: '-33.8678',

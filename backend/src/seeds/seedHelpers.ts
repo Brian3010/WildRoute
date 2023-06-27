@@ -48,7 +48,7 @@ const placesWithLoc: Array<string>[] = [
 
 // strip () out of the array
 
-export const places = placesWithLoc.map(place => {
+export const places : string[][] = placesWithLoc.map(place => {
   return place.map(pW => {
     return pW.replace(/\s*\([^)]*\)/, '');
   });
