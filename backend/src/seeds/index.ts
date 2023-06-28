@@ -45,14 +45,14 @@ const getPhotoUrl = async (): Promise<string | undefined> => {
 const seedDb = async (): Promise<void> => {
   console.log('seedDb() TRIGGED');
   await ActivityList.deleteMany({});
-  const imgUrl = await getPhotoUrl();
+  // const imgUrl = await getPhotoUrl();
 
   for (let i = 0; i < 50; i++) {
     console.log(i);
 
     const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
     const cityIdx = randomIndex(cities)[0];
-    // const imgUrl = await getPhotoUrl();
+    const imgUrl = await getPhotoUrl();
 
     const ActList = new ActivityList({
       activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,

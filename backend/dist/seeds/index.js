@@ -43,11 +43,11 @@ const getPhotoUrl = async () => {
 const seedDb = async () => {
     console.log('seedDb() TRIGGED');
     await activities_js_1.default.deleteMany({});
-    const imgUrl = await getPhotoUrl();
     for (let i = 0; i < 50; i++) {
         console.log(i);
         const placeIdx = randomIndex(seedHelpers_js_1.places);
         const cityIdx = randomIndex(cities_js_1.cities)[0];
+        const imgUrl = await getPhotoUrl();
         const ActList = new activities_js_1.default({
             activity_title: `${seedHelpers_js_1.places[placeIdx[0]][1]} ${seedHelpers_js_1.descriptors[placeIdx[0]]}`,
             location: `${cities_js_1.cities[cityIdx].city} ${cities_js_1.cities[cityIdx].admin_name}`,
