@@ -1,5 +1,6 @@
+require('dotenv').config();
+import axios, { AxiosResponse } from 'axios';
 import mongoose from 'mongoose';
-import { type } from 'os';
 import ActivityList from '../models/activities.js';
 import { cities } from './cities.js';
 import { descriptors, places } from './seedHelpers.js';
@@ -26,31 +27,50 @@ const randomIndex = <T extends Array<string>[] | object[]>(data: T): [number, nu
   return [randIndex, subIndex];
 };
 
+const getPhotoUrl = async (): Promise<string | undefined> => {
+  try {
+    const response: AxiosResponse = await axios.get('https://api.unsplash.com/photos/random', {
+      params: {
+        collections: '3293100',
+        client_id: process.env.UNSPLASH_KEY,
+      },
+    });
+    return response.data.urls.regular;
+  } catch (error) {
+    console.log('ERROR: ', error);
+  }
+  return undefined;
+};
+
 const seedDb = async (): Promise<void> => {
   console.log('seedDb() TRIGGED');
-
-  const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
-  // console.log(`title: ${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`);
-
-  const cityIdx = randomIndex(cities)[0];
-  // console.log(`location: ${cities[cityIdx].city} ${cities[cityIdx].admin_name}`);
-
   await ActivityList.deleteMany({});
-  const ActList = new ActivityList({
-    activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,
-    location: `${cities[cityIdx].city} ${cities[cityIdx].admin_name}`,
-    description: 'desc',
-    price: 2,
-    image: 'url',
-  });
+  const imgUrl = await getPhotoUrl();
 
-  await ActList.save()
-    .then(res => {
-      console.log('RESULT: ', res);
-    })
-    .catch(err => {
-      console.log('Error:', err);
+  for (let i = 0; i < 50; i++) {
+    console.log(i);
+
+    const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
+    const cityIdx = randomIndex(cities)[0];
+    // const imgUrl = await getPhotoUrl();
+
+    const ActList = new ActivityList({
+      activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,
+      location: `${cities[cityIdx].city} ${cities[cityIdx].admin_name}`,
+      description: 'desc',
+      avg_price: 2,
+      image: [
+        {
+          url: imgUrl,
+        },
+        {
+          url: imgUrl,
+        },
+      ],
     });
+
+    await ActList.save();
+  }
 };
 
 seedDb().then(() => {
