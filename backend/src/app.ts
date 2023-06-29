@@ -1,6 +1,8 @@
-import express, { Express, NextFunction, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response, response } from 'express';
 import mongoose from 'mongoose';
+import { nextTick } from 'process';
 import activitiesRoute from './routes/activities';
+import AppError from './utils/AppError';
 
 const PORT = 3000;
 
@@ -25,6 +27,16 @@ app.use('/activities', activitiesRoute);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   res.send('INVALID URL');
+});
+
+app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
+  console.log('error name: ', err.name);
+
+  // console.log('error:', err);
+  // res.status(err.statusCode || 500).send(err.message || 'Internal Server Error');
+  res
+    .status(err.statusCode || 500)
+    .json({ errorMessage: err.message } || { errorMessage: 'Internal Server Error' });
 });
 
 app.listen(PORT, () => {
