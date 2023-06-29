@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.displayActivity = exports.index = void 0;
+exports.createActivity = exports.displayActivity = exports.index = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const activities_1 = __importDefault(require("../models/activities"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
@@ -28,4 +28,11 @@ const displayActivity = async (req, res, next) => {
     return res.status(200).json(activity);
 };
 exports.displayActivity = displayActivity;
+const createActivity = (req, res, next) => {
+    console.log('/activities POST REQUEST');
+    const activity = req.body.activity;
+    console.log(activity);
+    res.send(activity);
+};
+exports.createActivity = createActivity;
 //# sourceMappingURL=activities.js.map

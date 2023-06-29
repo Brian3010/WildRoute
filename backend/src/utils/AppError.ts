@@ -1,3 +1,4 @@
+// create custom AppError inherit from built-in Error
 class AppError extends Error {
   message: string;
   statusCode: number;

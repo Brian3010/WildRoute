@@ -19,6 +19,8 @@ async function main() {
 
 const app: Express = express();
 
+app.use(express.json());
+
 // app.get('/', (req: Request, res: Response) => {
 //   res.send('Helloooooasdaasdasdasdsasdasdd');
 // });
@@ -29,6 +31,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
   res.send('INVALID URL');
 });
 
+// Errors are catched here from throwing new Error/AppError using next(error);
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
   console.log('error name: ', err.name);
 

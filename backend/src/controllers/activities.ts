@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import ActivityList from '../models/activities';
 import AppError from '../utils/AppError';
 
+// show a list of activities
 export const index: RequestHandler = async (req, res, next) => {
   console.log('/activitites GET REQUEST');
   const actList = await ActivityList.find({});
@@ -11,6 +12,7 @@ export const index: RequestHandler = async (req, res, next) => {
   res.status(200).json(actList);
 };
 
+// show activity's details
 export const displayActivity: RequestHandler = async (req, res, next) => {
   console.log('/activities/:id GET REQUEST');
 
@@ -26,4 +28,38 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
   }
 
   return res.status(200).json(activity);
+};
+
+// render a form
+// export const renderActivityForm: RequestHandler = (req, res) => {
+//   console.log('/activities/new GET REQUEST');
+//   res.redirect('')
+// }
+
+// create new actvity
+interface NewActivityBody {
+  activity: {
+    activity_title: string;
+    location: string;
+    description: string;
+    avg_price: number;
+    image: [
+      {
+        url: string;
+      }
+    ];
+  };
+}
+
+//
+export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = (req, res, next) => {
+  console.log('/activities POST REQUEST');
+  const activity = req.body.activity;
+
+  console.log(activity);
+  // TODO: add the parsed body to the dbs
+  // !: run npm install -> seed the database -> check everything before adding.
+
+  // res.status(200).json(activity);
+  res.send(activity);
 };
