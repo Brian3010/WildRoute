@@ -56,10 +56,12 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
   console.log('/activities POST REQUEST');
   const activity = req.body.activity;
 
-  console.log(activity);
-  // TODO: add the parsed body to the dbs
-  // !: run npm install -> seed the database -> check everything before adding.
+  const newActivitySaved = new ActivityList(activity);
 
+  if (!newActivitySaved) throw new AppError('Cannot save to the database', 400);
+  console.log(activity);
+  // ! Error throw error, still can submit data when throwing error, rewrite the code
+  // TODO: validate the data sent from front end using Joi ?
   // res.status(200).json(activity);
   res.send(activity);
 };

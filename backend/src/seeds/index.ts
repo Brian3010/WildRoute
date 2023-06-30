@@ -46,6 +46,7 @@ const seedDb = async (): Promise<void> => {
   console.log('seedDb() TRIGGED');
   await ActivityList.deleteMany({});
   // const imgUrl = await getPhotoUrl();
+  // console.log(imgUrl);
 
   for (let i = 0; i < 50; i++) {
     console.log(i);

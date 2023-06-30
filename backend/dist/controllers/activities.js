@@ -31,6 +31,9 @@ exports.displayActivity = displayActivity;
 const createActivity = (req, res, next) => {
     console.log('/activities POST REQUEST');
     const activity = req.body.activity;
+    const newActivitySaved = new activities_1.default(activity);
+    if (!newActivitySaved)
+        throw new AppError_1.default('Cannot save to the database', 400);
     console.log(activity);
     res.send(activity);
 };
