@@ -30,7 +30,7 @@ const express_1 = __importDefault(require("express"));
 const activities = __importStar(require("../controllers/activities"));
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const router = express_1.default.Router();
-router.route('/').get((0, catchAsync_1.default)(activities.index)).post(activities.createActivity);
+router.route('/').get((0, catchAsync_1.default)(activities.index)).post((0, catchAsync_1.default)(activities.createActivity));
 router.route('/:id').get((0, catchAsync_1.default)(activities.displayActivity));
 exports.default = router;
 //# sourceMappingURL=activities.js.map

@@ -37,9 +37,7 @@ app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
 
   // console.log('error:', err);
   // res.status(err.statusCode || 500).send(err.message || 'Internal Server Error');
-  res
-    .status(err.statusCode || 500)
-    .json({ errorMessage: err.message } || { errorMessage: 'Internal Server Error' });
+  res.status(err.statusCode || 500).json({ errorMessage: err.message } || { errorMessage: 'Internal Server Error' });
 });
 
 app.listen(PORT, () => {

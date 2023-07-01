@@ -28,13 +28,13 @@ const displayActivity = async (req, res, next) => {
     return res.status(200).json(activity);
 };
 exports.displayActivity = displayActivity;
-const createActivity = (req, res, next) => {
+const createActivity = async (req, res, next) => {
     console.log('/activities POST REQUEST');
     const activity = req.body.activity;
-    const newActivitySaved = new activities_1.default(activity);
-    if (!newActivitySaved)
-        throw new AppError_1.default('Cannot save to the database', 400);
-    console.log(activity);
+    if (!activity)
+        throw new AppError_1.default('data not exist', 400);
+    const newActivity = new activities_1.default(activity);
+    await newActivity.save();
     res.send(activity);
 };
 exports.createActivity = createActivity;

@@ -21,15 +21,18 @@ const ActivityListSchema = new Schema({
     type: Number,
     required: true,
   },
-  image: [
-    {
-      url: {
-        type: String,
-        required: true,
+  image: {
+    type: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+        // fileName: String,
       },
-      // fileName: String,
-    },
-  ],
+    ],
+    required: true,
+  },
 });
 
 //{id, activity_name, location, desciption(fact), price, image, author}.

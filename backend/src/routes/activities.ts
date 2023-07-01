@@ -4,7 +4,7 @@ import catchAsync from '../utils/catchAsync';
 
 const router: Router = express.Router();
 
-router.route('/').get(catchAsync(activities.index)).post(activities.createActivity);
+router.route('/').get(catchAsync(activities.index)).post(catchAsync(activities.createActivity));
 
 // router.route('/new').get(activities.renderActivityForm);
 

@@ -22,14 +22,17 @@ const ActivityListSchema = new Schema({
         type: Number,
         required: true,
     },
-    image: [
-        {
-            url: {
-                type: String,
-                required: true,
+    image: {
+        type: [
+            {
+                url: {
+                    type: String,
+                    required: true,
+                },
             },
-        },
-    ],
+        ],
+        required: true,
+    },
 });
 const ActivityList = mongoose_1.default.model('ActivityList', ActivityListSchema);
 exports.default = ActivityList;

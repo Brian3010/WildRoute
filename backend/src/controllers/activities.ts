@@ -43,24 +43,23 @@ interface NewActivityBody {
     location: string;
     description: string;
     avg_price: number;
-    image: [
-      {
-        url: string;
-      }
-    ];
+    image: Array<{
+      url: string;
+      // filename: string;
+    }>;
   };
 }
 
 //
-export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = (req, res, next) => {
+export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = async (req, res, next) => {
   console.log('/activities POST REQUEST');
   const activity = req.body.activity;
+  if (!activity) throw new AppError('data not exist', 400);
 
-  const newActivitySaved = new ActivityList(activity);
+  const newActivity = new ActivityList(activity);
+  await newActivity.save();
 
-  if (!newActivitySaved) throw new AppError('Cannot save to the database', 400);
-  console.log(activity);
-  // ! Error throw error, still can submit data when throwing error, rewrite the code
+  // ! submit field like imag , still can submit
   // TODO: validate the data sent from front end using Joi ?
   // res.status(200).json(activity);
   res.send(activity);

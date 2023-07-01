@@ -23,9 +23,7 @@ app.all('*', (req, res, next) => {
 });
 app.use((err, req, res, next) => {
     console.log('error name: ', err.name);
-    res
-        .status(err.statusCode || 500)
-        .json({ errorMessage: err.message } || { errorMessage: 'Internal Server Error' });
+    res.status(err.statusCode || 500).json({ errorMessage: err.message } || { errorMessage: 'Internal Server Error' });
 });
 app.listen(PORT, () => {
     console.log(`Now listening on PORT ${PORT}`);
