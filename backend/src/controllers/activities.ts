@@ -60,7 +60,8 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
   await newActivity.save();
 
   // ! submit field like imag , still can submit
-  // TODO: validate the data sent from front end using Joi ?
+  // ! solution: consider setting strictmode to the model
+  // TODO: validate the data sent from front end using Joi ? use this as middleware to validate data before saving to the dbs
   // res.status(200).json(activity);
   res.send(activity);
 };
