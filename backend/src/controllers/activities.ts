@@ -54,14 +54,11 @@ interface NewActivityBody {
 export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = async (req, res, next) => {
   console.log('/activities POST REQUEST');
   const activity = req.body.activity;
-  if (!activity) throw new AppError('data not exist', 400);
+  if (!activity) throw new AppError('Cannot fetch data submitted', 400);
 
   const newActivity = new ActivityList(activity);
   await newActivity.save();
 
-  // ! submit field like imag , still can submit
-  // ! solution: consider setting strictmode to the model
-  // TODO: validate the data sent from front end using Joi ? use this as middleware to validate data before saving to the dbs
-  // res.status(200).json(activity);
-  res.send(activity);
+  res.status(200).json(activity);
+  // res.send(activity);
 };

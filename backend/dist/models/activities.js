@@ -5,6 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const { Schema } = mongoose_1.default;
+const schemaConfig = {
+    strict: 'throw',
+};
 const ActivityListSchema = new Schema({
     activity_title: {
         type: String,
@@ -33,7 +36,7 @@ const ActivityListSchema = new Schema({
         ],
         required: true,
     },
-});
+}, schemaConfig);
 const ActivityList = mongoose_1.default.model('ActivityList', ActivityListSchema);
 exports.default = ActivityList;
 //# sourceMappingURL=activities.js.map
