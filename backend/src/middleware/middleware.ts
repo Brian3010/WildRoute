@@ -1,5 +1,4 @@
 import { RequestHandler } from 'express';
-import Joi from 'joi';
 import { NewActivityBody } from '../types/type-controller';
 import AppError from '../utils/AppError';
 import { activitySchema } from './joiSchema';
