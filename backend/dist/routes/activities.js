@@ -28,9 +28,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const activities = __importStar(require("../controllers/activities"));
+const middleware_1 = require("../middleware/middleware");
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const router = express_1.default.Router();
-router.route('/').get((0, catchAsync_1.default)(activities.index)).post((0, catchAsync_1.default)(activities.createActivity));
+router.route('/').get((0, catchAsync_1.default)(activities.index)).post(middleware_1.validateActivity, (0, catchAsync_1.default)(activities.createActivity));
 router.route('/:id').get((0, catchAsync_1.default)(activities.displayActivity));
 exports.default = router;
 //# sourceMappingURL=activities.js.map

@@ -33,11 +33,11 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 
 // Errors are catched here from throwing new Error/AppError using next(error);
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
-  console.log('error name: ', err.name);
+  console.log('Errors name: ', err.name);
 
   // console.log('error:', err);
   // res.status(err.statusCode || 500).send(err.message || 'Internal Server Error');
-  res.status(err.statusCode || 500).json({ errorMessage: err.message } || { errorMessage: 'Internal Server Error' });
+  res.status(err.statusCode || 500).json({ message: err.message } || { message: 'Internal Server Error' });
 });
 
 app.listen(PORT, () => {

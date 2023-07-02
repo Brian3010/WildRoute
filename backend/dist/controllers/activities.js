@@ -21,21 +21,21 @@ const displayActivity = async (req, res, next) => {
     if (!mongoose_1.default.isValidObjectId(id)) {
         throw new AppError_1.default('Invalid Activity Id', 400);
     }
-    const activity = await activities_1.default.findById(id);
-    if (!activity) {
+    const acty = await activities_1.default.findById(id);
+    if (!acty) {
         throw new AppError_1.default('Activity does not exist', 404);
     }
-    return res.status(200).json(activity);
+    return res.status(200).json(acty);
 };
 exports.displayActivity = displayActivity;
 const createActivity = async (req, res, next) => {
     console.log('/activities POST REQUEST');
-    const activity = req.body.activity;
-    if (!activity)
-        throw new AppError_1.default('Cannot fetch data submitted', 400);
-    const newActivity = new activities_1.default(activity);
-    await newActivity.save();
-    res.status(200).json(activity);
+    const acty = req.body.activity;
+    if (!acty)
+        throw new AppError_1.default('Cannot fetch data from body', 400);
+    const newActy = new activities_1.default(acty);
+    const savedActy = await newActy.save();
+    res.status(200).json(savedActy);
 };
 exports.createActivity = createActivity;
 //# sourceMappingURL=activities.js.map

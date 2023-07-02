@@ -22,8 +22,8 @@ app.all('*', (req, res, next) => {
     res.send('INVALID URL');
 });
 app.use((err, req, res, next) => {
-    console.log('error name: ', err.name);
-    res.status(err.statusCode || 500).json({ errorMessage: err.message } || { errorMessage: 'Internal Server Error' });
+    console.log('Errors name: ', err.name);
+    res.status(err.statusCode || 500).json({ message: err.message } || { message: 'Internal Server Error' });
 });
 app.listen(PORT, () => {
     console.log(`Now listening on PORT ${PORT}`);
