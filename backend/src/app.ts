@@ -27,6 +27,8 @@ app.use(express.json());
 
 app.use('/activities', activitiesRoute);
 
+// app.use('/user', userRoute);
+
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   res.send('INVALID URL');
 });

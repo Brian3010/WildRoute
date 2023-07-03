@@ -1,8 +1,13 @@
 import { RequestHandler } from 'express';
+import { extend } from 'joi';
 import mongoose from 'mongoose';
+import { normalize } from 'path';
 import ActivityList from '../models/activities';
 import { NewActivityBody } from '../types/type-controller';
 import AppError from '../utils/AppError';
+
+// utils function
+const isValidId = (id: string) => mongoose.isValidObjectId(id);
 
 // show a list of activities
 export const index: RequestHandler = async (req, res, next) => {
@@ -19,7 +24,7 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
 
   const { id } = req.params;
   // could place this in a middleware
-  if (!mongoose.isValidObjectId(id)) {
+  if (!isValidId(id)) {
     throw new AppError('Invalid Activity Id', 400);
   }
 
@@ -34,8 +39,8 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
 // render a form
 // export const renderActivityForm: RequestHandler = (req, res) => {
 //   console.log('/activities/new GET REQUEST');
-//   res.redirect('')
-// }
+//   res.redirect('');
+// };
 
 // create new actvity
 export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = async (req, res, next) => {
@@ -47,4 +52,31 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
 
   res.status(200).json(savedActy);
   // res.send(activity);
+};
+
+// update activity
+interface actyparams {
+  id: string;
+}
+
+export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, unknown> = async (req, res, next) => {
+  console.log('/activities/:id/edit PUT REQUEST');
+  const actyId = req.params.id;
+  if (!isValidId(actyId)) throw new AppError('Invalid Activity Id', 400);
+  const acty = req.body.activity;
+  if (!acty) throw new AppError('Cannot fetch data from body', 400);
+
+  const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...acty });
+
+  res.status(201).json(resActy);
+};
+
+// delete an activity
+export const deleteActy: RequestHandler<actyparams, unknown, NewActivityBody, unknown> = async (req, res, next) => {
+  const actyId = req.params.id;
+  if (!isValidId(actyId)) throw new AppError('Invalid Activity Id', 400);
+
+  const resActy = await ActivityList.findByIdAndDelete(actyId);
+
+  res.status(200).json(resActy);
 };
