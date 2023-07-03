@@ -123,3 +123,43 @@ The `AppError` class allows you to create custom error instances with specific p
 
 Note: It's important to handle errors appropriately in your application and define error middleware or handlers to catch and respond to errors in a consistent and meaningful way.
 
+## Error Handling of throw new Error and next(error)
+
+1. Errors in synchronous code: When an error occurs in synchronous code within a route handler or middleware function, you can simply throw an error using `throw new Error()`. Express will automatically catch and handle the error for you. You don't need to do anything extra to ensure that the error is processed correctly.
+
+    Example:
+
+    ```javascript
+    app.get('/', (req, res) => {
+      throw new Error('This is a synchronous error');
+    });
+    ```
+
+2. Errors in asynchronous code: When an error occurs in asynchronous code, such as within a Promise or a callback function, you need to pass the error to the `next()` function. This allows Express to catch and handle the error. You should pass the error object as an argument to `next()`.
+
+    Example:
+
+    ```javascript
+    app.get('/', (req, res, next) => {
+      someAsyncFunction()
+        .then(result => {
+          // Handle the result
+        })
+        .catch(error => {
+          next(error); // Pass the error to Express
+        });
+    });
+    ```
+
+By passing the error to the `next()` function, Express will automatically route the error to the error-handling middleware you've defined. This middleware should be defined with four parameters `(err, req, res, next)` to handle errors.
+
+Example error handling middleware:
+
+```javascript
+app.use((err, req, res, next) => {
+  // Handle the error
+  res.status(500).json({ error: err.message });
+});
+```
+
+In summary, when dealing with synchronous errors, you can simply throw the error, and Express will handle it. For asynchronous errors, you need to pass the error to the `next()` function, and Express will route it to the error-handling middleware.
