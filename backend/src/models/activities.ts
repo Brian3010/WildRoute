@@ -1,7 +1,4 @@
-// import mongoose from 'mongoose';
-import { SchemaMember } from 'mongodb';
 import mongoose, { InferSchemaType, SchemaOptions } from 'mongoose';
-import { type } from 'os';
 const { Schema } = mongoose;
 
 const schemaConfig: SchemaOptions = {

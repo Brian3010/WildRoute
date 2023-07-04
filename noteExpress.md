@@ -163,3 +163,77 @@ app.use((err, req, res, next) => {
 ```
 
 In summary, when dealing with synchronous errors, you can simply throw the error, and Express will handle it. For asynchronous errors, you need to pass the error to the `next()` function, and Express will route it to the error-handling middleware.
+
+## Create User with Passport
+
+1. Install Dependencies: Start by installing the required dependencies. You'll need `passport`, `passport-local`, and `passport-local-mongoose`. You can install them using npm or yarn:
+
+   ```bash
+   npm install passport passport-local passport-local-mongoose
+   ```
+
+2. Setup User Model: Create a User model in your Mongoose schema. You can use `passport-local-mongoose` to add the necessary fields and methods for authentication. Here's an example:
+
+   ```javascript
+   const mongoose = require('mongoose');
+   const passportLocalMongoose = require('passport-local-mongoose');
+
+   const userSchema = new mongoose.Schema({
+     // Other user fields
+   });
+
+   userSchema.plugin(passportLocalMongoose);
+
+   const User = mongoose.model('User', userSchema);
+
+   module.exports = User;
+   ```
+
+   The `passportLocalMongoose` plugin will add a username, hashed password, and additional methods to the User schema.
+
+3. Configure Passport: Initialize and configure Passport.js in your application. You'll need to set up the local strategy and serialize/deserialize user functions. Here's an example:
+
+   ```javascript
+   const passport = require('passport');
+   const LocalStrategy = require('passport-local').Strategy;
+   const User = require('./models/user'); // Replace with the path to your User model
+
+   passport.use(new LocalStrategy(User.authenticate()));
+   passport.serializeUser(User.serializeUser());
+   passport.deserializeUser(User.deserializeUser());
+   ```
+
+4. User Registration: To register a new user, you can use the `register` method provided by `passport-local-mongoose`. Here's an example:
+
+   ```javascript
+   const User = require('./models/user'); // Replace with the path to your User model
+
+   const newUser = new User({ username: 'john', email: 'john@example.com' });
+
+   User.register(newUser, 'password123', (err, user) => {
+     if (err) {
+       // Handle registration error
+     } else {
+       // User registered successfully
+     }
+   });
+   ```
+
+   The `register` method will automatically hash the password and store the user in the database.
+
+5. User Authentication: To authenticate a user, you can use the `authenticate` method provided by `passport-local-mongoose`. Here's an example:
+
+   ```javascript
+   const passport = require('passport');
+   const User = require('./models/user'); // Replace with the path to your User model
+
+   app.post('/login', passport.authenticate('local'), (req, res) => {
+     // User authenticated successfully
+   });
+   ```
+
+   The `passport.authenticate` middleware will handle the authentication process.
+
+These are the basic steps to get started with `passport-local-mongoose`. Remember to configure your database connection, set up routes, and handle any errors or additional functionalities as needed.
+
+For more advanced features and customization options, refer to the `passport-local-mongoose` documentation: [https://github.com/saintedlama/passport-local-mongoose](https://github.com/saintedlama/passport-local-mongoose).
