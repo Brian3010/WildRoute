@@ -1,7 +1,5 @@
 import { RequestHandler } from 'express';
-import { extend } from 'joi';
 import mongoose from 'mongoose';
-import { normalize } from 'path';
 import ActivityList from '../models/activities';
 import { NewActivityBody } from '../types/type-controller';
 import AppError from '../utils/AppError';

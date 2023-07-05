@@ -194,13 +194,14 @@ In summary, when dealing with synchronous errors, you can simply throw the error
 3. Configure Passport: Initialize and configure Passport.js in your application. You'll need to set up the local strategy and serialize/deserialize user functions. Here's an example:
 
    ```javascript
-   const passport = require('passport');
-   const LocalStrategy = require('passport-local').Strategy;
-   const User = require('./models/user'); // Replace with the path to your User model
-
-   passport.use(new LocalStrategy(User.authenticate()));
-   passport.serializeUser(User.serializeUser());
-   passport.deserializeUser(User.deserializeUser());
+   // Passport configuration
+    passport.use(new LocalStrategy(User.authenticate()));
+    passport.serializeUser((user: any, done) => {
+      done(null, user.id);
+    });
+    passport.deserializeUser(User.deserializeUser());
+    app.use(passport.initialize());
+    app.use(passport.session());
    ```
 
 4. User Registration: To register a new user, you can use the `register` method provided by `passport-local-mongoose`. Here's an example:

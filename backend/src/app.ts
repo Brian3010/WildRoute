@@ -1,7 +1,10 @@
 import express, { Express, NextFunction, Request, Response, response } from 'express';
 import mongoose from 'mongoose';
-import { nextTick } from 'process';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import User from './models/user';
 import activitiesRoute from './routes/activities';
+import userRoute from './routes/user';
 import AppError from './utils/AppError';
 
 const PORT = 3000;
@@ -21,13 +24,22 @@ const app: Express = express();
 
 app.use(express.json());
 
+// Passport configuration
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser((user: any, done) => {
+  done(null, user.id);
+});
+passport.deserializeUser(User.deserializeUser());
+app.use(passport.initialize());
+// todo: configure the session and passport session create register route and login route
+
 // app.get('/', (req: Request, res: Response) => {
 //   res.send('Helloooooasdaasdasdasdsasdasdd');
 // });
 
 app.use('/activities', activitiesRoute);
 
-// app.use('/user', userRoute);
+app.use('/user', userRoute);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   res.send('INVALID URL');
