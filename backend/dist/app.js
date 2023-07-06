@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const express_session_1 = __importDefault(require("express-session"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const passport_local_1 = require("passport-local");
@@ -21,12 +22,23 @@ async function main() {
 }
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+const sessionConfig = {
+    secret: 'verycomplicatedsecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
+};
+app.use((0, express_session_1.default)(sessionConfig));
+app.use(passport_1.default.initialize());
+app.use(passport_1.default.session());
 passport_1.default.use(new passport_local_1.Strategy(user_1.default.authenticate()));
 passport_1.default.serializeUser((user, done) => {
     done(null, user.id);
 });
 passport_1.default.deserializeUser(user_1.default.deserializeUser());
-app.use(passport_1.default.initialize());
 app.use('/activities', activities_1.default);
 app.use('/user', user_2.default);
 app.all('*', (req, res, next) => {
@@ -34,6 +46,7 @@ app.all('*', (req, res, next) => {
 });
 app.use((err, req, res, next) => {
     console.log('Errors name: ', err.name);
+    console.log(err);
     res.status(err.statusCode || 500).json({ message: err.message } || { message: 'Internal Server Error' });
 });
 app.listen(PORT, () => {
