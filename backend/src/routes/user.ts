@@ -7,20 +7,17 @@ const router: Router = express.Router();
 
 router.route('/register').post(catchAsync(userController.registerUser));
 
-router.route('/login').post(
-  passport.authenticate(
-    'local',
-    {
-      failureMessage: 'Invalid Login Data',
-      // failureRedirect: '/user/login',
-      // failureFlash: true,
-      passReqToCallback: true,
-    },
-    (err: any, user: any, info: any) => {
-      // ! cannot get to the loginUser function, this authenicate wont generate any errors
+// ! error cannot pass the detect errors, trying to redirect to error handling route
+router.route('/login').post(function (req, res, next) {
+  passport.authenticate('local', function (err: any, user: any, info: any) {
+    console.log(err);
+    console.log(user);
+    console.log(info);
+    if (info) {
+      return next(err);
     }
-  ),
-  userController.loginUser
-);
+    next();
+  })(req, res, next);
+}, userController.loginUser);
 
 export default router;
