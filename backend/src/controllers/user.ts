@@ -1,4 +1,6 @@
+require('dotenv').config();
 import { RequestHandler } from 'express';
+import JWT from 'jsonwebtoken';
 import { PassportLocalErrorMessages } from 'mongoose';
 import passport from 'passport';
 import User from '../models/user';
@@ -23,14 +25,24 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
   // use passport to register new user
   await User.register(user, password);
 
-  // req.logIn(newUser, function (e) {
-  //   if (e) return next(e);
-  //   res.status(200).json({});
-  // });
-
-  // res.redirect('/user/register');
-
-  res.status(200).json({ username, id: user._id });
+  // * signJWTForUser
+  // ? refer to this link <https://github.com/Gurenax/express-mongoose-passport-jwt>
+  const token = JWT.sign(
+    // payload
+    {
+      username,
+    },
+    // secret
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: process.env.JWTEXPIRE,
+      subject: user._id.toString(),
+    }
+  );
+  // Send the token
+  res.json({ token });
+  // res.status(200).json({ username, email, id: user._id });
+  // res.status(200).json(user);
 
   // todo: refer to <https://github.com/Brian3010/YelpCamp_pracs/blob/master/controllers/users.js>
 };

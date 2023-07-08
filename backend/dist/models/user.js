@@ -12,7 +12,10 @@ const UserSchema = new Schema({
         required: true,
     },
 });
-UserSchema.plugin(passport_local_mongoose_1.default);
+UserSchema.plugin(passport_local_mongoose_1.default, {
+    usernameLowerCase: true,
+    session: false,
+});
 const User = mongoose_1.default.model('User', UserSchema);
 exports.default = User;
 //# sourceMappingURL=user.js.map

@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from 'mongoose';
+import mongoose, { InferSchemaType, PassportLocalDocument } from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
 const { Schema } = mongoose;
 
@@ -9,7 +9,10 @@ const UserSchema = new Schema({
   },
 });
 
-UserSchema.plugin(passportLocalMongoose);
+UserSchema.plugin(passportLocalMongoose, {
+  usernameLowerCase: true,
+  session: false, //Disable sessions as we'll use JWTs
+});
 
 type UserSchemaType = InferSchemaType<typeof UserSchema>;
 

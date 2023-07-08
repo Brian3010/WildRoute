@@ -1,7 +1,9 @@
+require('dotenv').config();
 import express, { Express, NextFunction, Request, Response, response } from 'express';
 import session, { SessionOptions } from 'express-session';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import PassportJwt from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import User from './models/user';
 import activitiesRoute from './routes/activities';
@@ -26,25 +28,59 @@ const app: Express = express();
 app.use(express.json());
 
 // *configure session
-const sessionConfig: SessionOptions = {
-  secret: 'verycomplicatedsecret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 7,
-  },
+// const sessionConfig: SessionOptions = {
+//   secret: 'verycomplicatedsecret',
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {
+//     httpOnly: true,
+//     maxAge: 1000 * 60 * 60 * 24 * 7,
+//   },
+// };
+// app.use(session(sessionConfig));
+
+// *configure passport-jwt
+// should go to .env file -> add this later
+
+const jwtOpts: PassportJwt.StrategyOptions = {
+  jwtFromRequest: PassportJwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET,
 };
-app.use(session(sessionConfig));
+
+passport.use(User.createStrategy());
+
+// create verify callback
+const jwtVerify: PassportJwt.VerifyCallback = async (payload, done) => {
+  User.findById(payload.sub)
+    .then(user => {
+      // If user was found with this id
+      if (user) {
+        done(null, user);
+      } else {
+        // If not user was found
+        done(null, false);
+      }
+    })
+    .catch(error => {
+      // If there was failure
+      done(error, false);
+    });
+};
+
+//create strategy
+const jwtStrategy: PassportJwt.Strategy = new PassportJwt.Strategy(jwtOpts, jwtVerify);
+
+// use strategy
+passport.use(jwtStrategy);
 
 // *Passport configuration
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser((user: any, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser(User.deserializeUser());
+// app.use(passport.initialize());
+// app.use(passport.session());
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser((user: any, done) => {
+//   done(null, user.id);
+// });
+// passport.deserializeUser(User.deserializeUser());
 
 // todo: configure the session and passport session create register route and login route
 

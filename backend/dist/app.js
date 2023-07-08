@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require('dotenv').config();
 const express_1 = __importDefault(require("express"));
-const express_session_1 = __importDefault(require("express-session"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
-const passport_local_1 = require("passport-local");
+const passport_jwt_1 = __importDefault(require("passport-jwt"));
 const user_1 = __importDefault(require("./models/user"));
 const activities_1 = __importDefault(require("./routes/activities"));
 const user_2 = __importDefault(require("./routes/user"));
@@ -22,23 +22,27 @@ async function main() {
 }
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-const sessionConfig = {
-    secret: 'verycomplicatedsecret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-    },
+const jwtOpts = {
+    jwtFromRequest: passport_jwt_1.default.ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.JWT_SECRET,
 };
-app.use((0, express_session_1.default)(sessionConfig));
-app.use(passport_1.default.initialize());
-app.use(passport_1.default.session());
-passport_1.default.use(new passport_local_1.Strategy(user_1.default.authenticate()));
-passport_1.default.serializeUser((user, done) => {
-    done(null, user.id);
-});
-passport_1.default.deserializeUser(user_1.default.deserializeUser());
+passport_1.default.use(user_1.default.createStrategy());
+const jwtVerify = async (payload, done) => {
+    user_1.default.findById(payload.sub)
+        .then(user => {
+        if (user) {
+            done(null, user);
+        }
+        else {
+            done(null, false);
+        }
+    })
+        .catch(error => {
+        done(error, false);
+    });
+};
+const jwtStrategy = new passport_jwt_1.default.Strategy(jwtOpts, jwtVerify);
+passport_1.default.use(jwtStrategy);
 app.use('/activities', activities_1.default);
 app.use('/user', user_2.default);
 app.all('*', (req, res, next) => {
