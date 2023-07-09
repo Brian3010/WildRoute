@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
-import { NewActivityBody } from '../types/type-controller';
+import JWT from 'jsonwebtoken';
+import { NewActivityBody } from '../@types/type-controller';
 import AppError from '../utils/AppError';
 import { activitySchema } from './joiSchema';
 
@@ -15,4 +16,27 @@ export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody,
   } else {
     next();
   }
+};
+
+export const signUserJWT: RequestHandler = (req, res, next) => {
+  const user = req.user;
+
+  // create token
+  const token = JWT.sign(
+    // payload
+    {
+      username: user.username,
+    },
+    // secret
+    process.env.JWT_SECRET as JWT.Secret,
+    {
+      expiresIn: process.env.JWTEXPIRE,
+      subject: user._id.toString(),
+    }
+  );
+  // Send the token
+
+  res.json({ token });
+  // res.status(200).json({ username, email, id: user._id });
+  // res.status(200).json(user);
 };

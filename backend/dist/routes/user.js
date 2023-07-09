@@ -29,19 +29,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const passport_1 = __importDefault(require("passport"));
 const userController = __importStar(require("../controllers/user"));
+const middleware_1 = require("../middleware/middleware");
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const router = express_1.default.Router();
-router.route('/register').post((0, catchAsync_1.default)(userController.registerUser));
-router.route('/login').post(function (req, res, next) {
-    passport_1.default.authenticate('local', function (err, user, info) {
-        console.log(err);
-        console.log(user);
-        console.log(info);
-        if (info) {
-            return next(err);
-        }
-        next();
-    })(req, res, next);
-}, userController.loginUser);
+router.route('/register').post((0, catchAsync_1.default)(userController.registerUser), middleware_1.signUserJWT);
+router.route('/login').post(passport_1.default.authenticate('local', { session: false }), middleware_1.signUserJWT);
 exports.default = router;
 //# sourceMappingURL=user.js.map

@@ -9,6 +9,7 @@ import User from './models/user';
 import activitiesRoute from './routes/activities';
 import userRoute from './routes/user';
 import AppError from './utils/AppError';
+import catchAsync from './utils/catchAsync';
 
 const PORT = 3000;
 
@@ -40,8 +41,7 @@ app.use(express.json());
 // app.use(session(sessionConfig));
 
 // *configure passport-jwt
-// should go to .env file -> add this later
-
+// configure options for JWT
 const jwtOpts: PassportJwt.StrategyOptions = {
   jwtFromRequest: PassportJwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.JWT_SECRET,
@@ -67,10 +67,11 @@ const jwtVerify: PassportJwt.VerifyCallback = async (payload, done) => {
     });
 };
 
-//create strategy
+//create strategy instance
 const jwtStrategy: PassportJwt.Strategy = new PassportJwt.Strategy(jwtOpts, jwtVerify);
 
 // use strategy
+app.use(passport.initialize());
 passport.use(jwtStrategy);
 
 // *Passport configuration
@@ -82,10 +83,7 @@ passport.use(jwtStrategy);
 // });
 // passport.deserializeUser(User.deserializeUser());
 
-// todo: configure the session and passport session create register route and login route
-
 // *all the routes
-
 // app.get('/', (req: Request, res: Response) => {
 //   res.send('Helloooooasdaasdasdasdsasdasdd');
 // });

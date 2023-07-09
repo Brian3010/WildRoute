@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import mongoose from 'mongoose';
+import { NewActivityBody } from '../@types/type-controller';
 import ActivityList from '../models/activities';
-import { NewActivityBody } from '../types/type-controller';
 import AppError from '../utils/AppError';
 
 // utils function

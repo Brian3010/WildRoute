@@ -42,6 +42,7 @@ const jwtVerify = async (payload, done) => {
     });
 };
 const jwtStrategy = new passport_jwt_1.default.Strategy(jwtOpts, jwtVerify);
+app.use(passport_1.default.initialize());
 passport_1.default.use(jwtStrategy);
 app.use('/activities', activities_1.default);
 app.use('/user', user_2.default);

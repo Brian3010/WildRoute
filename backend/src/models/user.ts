@@ -14,7 +14,7 @@ UserSchema.plugin(passportLocalMongoose, {
   session: false, //Disable sessions as we'll use JWTs
 });
 
-type UserSchemaType = InferSchemaType<typeof UserSchema>;
+export type UserSchemaType = InferSchemaType<typeof UserSchema>;
 
 const User = mongoose.model<UserSchemaType>('User', UserSchema);
 
