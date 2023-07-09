@@ -28,6 +28,7 @@ const jwtOpts = {
 };
 passport_1.default.use(user_1.default.createStrategy());
 const jwtVerify = async (payload, done) => {
+    console.log('--------payload ', payload);
     user_1.default.findById(payload.sub)
         .then(user => {
         if (user) {

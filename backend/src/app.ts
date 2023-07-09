@@ -1,8 +1,9 @@
 require('dotenv').config();
 import express, { Express, NextFunction, Request, Response, response } from 'express';
 import session, { SessionOptions } from 'express-session';
+import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import passport from 'passport';
+import passport, { DoneCallback } from 'passport';
 import PassportJwt from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import User from './models/user';
@@ -50,7 +51,9 @@ const jwtOpts: PassportJwt.StrategyOptions = {
 passport.use(User.createStrategy());
 
 // create verify callback
-const jwtVerify: PassportJwt.VerifyCallback = async (payload, done) => {
+const jwtVerify: PassportJwt.VerifyCallback = async (payload: JwtPayload, done) => {
+  console.log('--------payload ', payload);
+
   User.findById(payload.sub)
     .then(user => {
       // If user was found with this id
@@ -73,7 +76,6 @@ const jwtStrategy: PassportJwt.Strategy = new PassportJwt.Strategy(jwtOpts, jwtV
 // use strategy
 app.use(passport.initialize());
 passport.use(jwtStrategy);
-passport.use(new LocalStrategy(User.authenticate()));
 
 // *Passport configuration
 // app.use(passport.initialize());
