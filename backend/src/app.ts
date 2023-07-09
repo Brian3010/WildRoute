@@ -73,6 +73,7 @@ const jwtStrategy: PassportJwt.Strategy = new PassportJwt.Strategy(jwtOpts, jwtV
 // use strategy
 app.use(passport.initialize());
 passport.use(jwtStrategy);
+passport.use(new LocalStrategy(User.authenticate()));
 
 // *Passport configuration
 // app.use(passport.initialize());
