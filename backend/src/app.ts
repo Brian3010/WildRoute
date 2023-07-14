@@ -101,7 +101,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 
 // *Errors are catched here from throwing new Error/AppError using next(error);
 app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
-  console.log('Errors name: ', err.name);
+  console.log('Errors name: ', err.name || 'err.name not exist');
   console.log(err);
 
   // console.log('error:', err);

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.registerUser = void 0;
+exports.registerUser = void 0;
 require('dotenv').config();
 const user_1 = __importDefault(require("../models/user"));
 const registerUser = async (req, res, next) => {
@@ -15,9 +15,4 @@ const registerUser = async (req, res, next) => {
     next();
 };
 exports.registerUser = registerUser;
-const loginUser = (req, res, next) => {
-    console.log(`${req.originalUrl} POST method`);
-    res.status(200).json(req.user);
-};
-exports.loginUser = loginUser;
 //# sourceMappingURL=user.js.map

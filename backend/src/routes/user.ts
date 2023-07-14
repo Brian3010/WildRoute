@@ -8,8 +8,6 @@ const router: Router = express.Router();
 
 router.route('/register').post(catchAsync(userController.registerUser), signUserJWT);
 
-// todo: redirect bad request and unauthorize to error handling route
-
 router.route('/login').post(authCheck, signUserJWT);
 
 export default router;

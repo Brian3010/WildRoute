@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signUserJWT = exports.authCheck = exports.validateActivity = void 0;
+exports.isLoggedIn = exports.signUserJWT = exports.authCheck = exports.validateActivity = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const passport_1 = __importDefault(require("passport"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
@@ -45,8 +45,12 @@ const signUserJWT = (req, res, next) => {
         username: user.username,
     }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWTEXPIRE,
+        subject: user._id.toString(),
     });
     res.json({ token });
 };
 exports.signUserJWT = signUserJWT;
+const isLoggedIn = (req, res, next) => {
+};
+exports.isLoggedIn = isLoggedIn;
 //# sourceMappingURL=middleware.js.map

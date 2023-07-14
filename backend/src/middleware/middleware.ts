@@ -5,6 +5,7 @@ import { NewActivityBody } from '../@types/type-controller';
 import AppError from '../utils/AppError';
 import { activitySchema } from './joiSchema';
 
+// validate request.body
 export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = (req, res, next) => {
   const acty = req.body;
   if (!acty) throw new AppError('Cannot fetch data from body', 404);
@@ -19,6 +20,7 @@ export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody,
   }
 };
 
+// authenticate using local strategy (IIFE)
 export const authCheck: RequestHandler = (req, res, next) => {
   passport.authenticate('local', { session: false, passReqToCallback: true }, (err: any, user: any, info: any) => {
     if (err) {
@@ -36,6 +38,7 @@ export const authCheck: RequestHandler = (req, res, next) => {
   })(req, res, next);
 };
 
+// Create and send token back to frontend
 export const signUserJWT: RequestHandler = (req, res, next) => {
   const user = req.user;
   console.log(user);
@@ -49,12 +52,16 @@ export const signUserJWT: RequestHandler = (req, res, next) => {
     process.env.JWT_SECRET as JWT.Secret,
     {
       expiresIn: process.env.JWTEXPIRE,
-      // subject: user._id.toString(),
+      subject: user._id.toString(),
     }
   );
-  // Send the token
 
   res.json({ token });
   // res.status(200).json({ username, email, id: user._id });
   // res.status(200).json(user);
+};
+
+// todo: add in isloggedIn to check if the user is login for protected routes.
+export const isLoggedIn: RequestHandler = (req, res, next) => {
+  // ? need function to invoke immediately. Use IIFE to check error, return if false to the error handling route.
 };

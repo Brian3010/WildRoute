@@ -18,6 +18,4 @@ export type UserSchemaType = InferSchemaType<typeof UserSchema>;
 
 const User = mongoose.model<UserSchemaType>('User', UserSchema);
 
-// TODO: configure passport in app.ts and use session for persistent login refer to noteExpress.md
-
 export default User;

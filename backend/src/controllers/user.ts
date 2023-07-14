@@ -25,8 +25,8 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
   next();
 };
 
-export const loginUser: RequestHandler = (req, res, next) => {
-  console.log(`${req.originalUrl} POST method`);
+// export const loginUser: RequestHandler = (req, res, next) => {
+//   console.log(`${req.originalUrl} POST method`);
 
-  res.status(200).json(req.user);
-};
+//   res.status(200).json(req.user);
+// };
