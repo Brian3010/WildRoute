@@ -64,7 +64,7 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   const acty = req.body.activity;
   if (!acty) throw new AppError('Cannot fetch data from body', 400);
 
-  const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...acty });
+  const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...acty }, { returnDocument: 'after' });
 
   res.status(201).json(resActy);
 };

@@ -3,7 +3,7 @@ import express, { Express, NextFunction, Request, Response, response } from 'exp
 import session, { SessionOptions } from 'express-session';
 import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
-import passport, { DoneCallback } from 'passport';
+import passport from 'passport';
 import PassportJwt from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import User from './models/user';

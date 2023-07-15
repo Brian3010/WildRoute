@@ -23,6 +23,7 @@ export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody,
 // authenticate using local strategy (IIFE)
 export const authCheck: RequestHandler = (req, res, next) => {
   passport.authenticate('local', { session: false, passReqToCallback: true }, (err: any, user: any, info: any) => {
+    console.log('user: ', user);
     if (err) {
       return next(err);
     }
@@ -46,6 +47,7 @@ export const signUserJWT: RequestHandler = (req, res, next) => {
   const token = JWT.sign(
     // payload
     {
+      id: user._id,
       username: user.username,
     },
     // secret
@@ -55,13 +57,25 @@ export const signUserJWT: RequestHandler = (req, res, next) => {
       subject: user._id.toString(),
     }
   );
-
+  // delete user.salt;
+  // delete user.hash;
   res.json({ token });
   // res.status(200).json({ username, email, id: user._id });
   // res.status(200).json(user);
 };
 
-// todo: add in isloggedIn to check if the user is login for protected routes.
 export const isLoggedIn: RequestHandler = (req, res, next) => {
-  // ? need function to invoke immediately. Use IIFE to check error, return if false to the error handling route.
+  passport.authenticate('jwt', { session: false }, (err: any, user: any, info: any) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      throw new AppError(info.message || 'user not found', 404);
+    }
+    if (info) {
+      throw new AppError(info.message, 401);
+    }
+    req.user = user;
+    next();
+  })(req, res, next);
 };

@@ -24,6 +24,7 @@ const validateActivity = (req, res, next) => {
 exports.validateActivity = validateActivity;
 const authCheck = (req, res, next) => {
     passport_1.default.authenticate('local', { session: false, passReqToCallback: true }, (err, user, info) => {
+        console.log('user: ', user);
         if (err) {
             return next(err);
         }
@@ -42,6 +43,7 @@ const signUserJWT = (req, res, next) => {
     const user = req.user;
     console.log(user);
     const token = jsonwebtoken_1.default.sign({
+        id: user._id,
         username: user.username,
     }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWTEXPIRE,
@@ -51,6 +53,19 @@ const signUserJWT = (req, res, next) => {
 };
 exports.signUserJWT = signUserJWT;
 const isLoggedIn = (req, res, next) => {
+    passport_1.default.authenticate('jwt', { session: false }, (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            throw new AppError_1.default(info.message || 'user not found', 404);
+        }
+        if (info) {
+            throw new AppError_1.default(info.message, 401);
+        }
+        req.user = user;
+        next();
+    })(req, res, next);
 };
 exports.isLoggedIn = isLoggedIn;
 //# sourceMappingURL=middleware.js.map

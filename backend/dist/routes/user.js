@@ -33,5 +33,6 @@ const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const router = express_1.default.Router();
 router.route('/register').post((0, catchAsync_1.default)(userController.registerUser), middleware_1.signUserJWT);
 router.route('/login').post(middleware_1.authCheck, middleware_1.signUserJWT);
+router.route('/logout').get(userController.logoutUser);
 exports.default = router;
 //# sourceMappingURL=user.js.map

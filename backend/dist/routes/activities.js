@@ -34,11 +34,11 @@ const router = express_1.default.Router();
 router
     .route('/')
     .get((0, catchAsync_1.default)(actyController.index))
-    .post(middleware_1.validateActivity, (0, catchAsync_1.default)(actyController.createActivity));
+    .post(middleware_1.isLoggedIn, middleware_1.validateActivity, (0, catchAsync_1.default)(actyController.createActivity));
 router
     .route('/:id')
     .get((0, catchAsync_1.default)(actyController.displayActivity))
-    .put(middleware_1.validateActivity, (0, catchAsync_1.default)(actyController.updateActy))
-    .delete((0, catchAsync_1.default)(actyController.deleteActy));
+    .put(middleware_1.isLoggedIn, middleware_1.validateActivity, (0, catchAsync_1.default)(actyController.updateActy))
+    .delete(middleware_1.isLoggedIn, (0, catchAsync_1.default)(actyController.deleteActy));
 exports.default = router;
 //# sourceMappingURL=activities.js.map

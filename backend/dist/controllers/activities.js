@@ -47,7 +47,7 @@ const updateActy = async (req, res, next) => {
     const acty = req.body.activity;
     if (!acty)
         throw new AppError_1.default('Cannot fetch data from body', 400);
-    const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...acty });
+    const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...acty }, { returnDocument: 'after' });
     res.status(201).json(resActy);
 };
 exports.updateActy = updateActy;
