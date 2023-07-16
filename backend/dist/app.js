@@ -11,6 +11,7 @@ const passport_jwt_1 = __importDefault(require("passport-jwt"));
 const user_1 = __importDefault(require("./models/user"));
 const activities_1 = __importDefault(require("./routes/activities"));
 const user_2 = __importDefault(require("./routes/user"));
+const redis_1 = require("./utils/redis");
 const PORT = 3000;
 main()
     .then(() => {
@@ -21,6 +22,7 @@ async function main() {
     await mongoose_1.default.connect('mongodb://127.0.0.1:27017/wildRoute');
 }
 const app = (0, express_1.default)();
+(0, redis_1.initializeRedis)();
 app.use(express_1.default.json());
 const jwtOpts = {
     jwtFromRequest: passport_jwt_1.default.ExtractJwt.fromAuthHeaderAsBearerToken(),

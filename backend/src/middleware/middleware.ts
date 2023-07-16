@@ -1,8 +1,10 @@
+import { ok } from 'assert';
 import { RequestHandler } from 'express';
 import JWT from 'jsonwebtoken';
 import passport from 'passport';
 import { NewActivityBody } from '../@types/type-controller';
 import AppError from '../utils/AppError';
+import { getRedisToken, initializeRedis, uninitializeRedis } from '../utils/redis';
 import { activitySchema } from './joiSchema';
 
 // validate request.body
@@ -23,7 +25,6 @@ export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody,
 // authenticate using local strategy (IIFE)
 export const authCheck: RequestHandler = (req, res, next) => {
   passport.authenticate('local', { session: false, passReqToCallback: true }, (err: any, user: any, info: any) => {
-    console.log('user: ', user);
     if (err) {
       return next(err);
     }
@@ -42,7 +43,7 @@ export const authCheck: RequestHandler = (req, res, next) => {
 // Create and send token back to frontend
 export const signUserJWT: RequestHandler = (req, res, next) => {
   const user = req.user;
-  console.log(user);
+  // console.log(user);
   // create token
   const token = JWT.sign(
     // payload
@@ -78,4 +79,28 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
     req.user = user;
     next();
   })(req, res, next);
+};
+
+export const isTokenInBlackList: RequestHandler = async (req, res, next) => {
+  // const user = req.user;
+  // console.log(user);
+  // get token from header
+  try {
+    if (req.get('Authorization')) {
+      const token = req.headers.authorization!.startsWith('bearer ') && req.headers.authorization!.split(' ')[1];
+      // if (!token) throw new AppError('Cannot valididate the token', 404);
+
+      const result = await getRedisToken('tokens');
+
+      if (result === JSON.stringify(token)) {
+        throw new AppError('token exist in blacklist', 500);
+      }
+
+      next();
+    } else {
+      throw new AppError('headers[Authorization] needed', 404);
+    }
+  } catch (err) {
+    next(err);
+  }
 };
