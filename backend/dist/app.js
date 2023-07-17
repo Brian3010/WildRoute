@@ -15,14 +15,15 @@ const redis_1 = require("./utils/redis");
 const PORT = 3000;
 main()
     .then(() => {
-    console.log('CONNECTION SUCCESS');
+    console.log('CONNECTION TO MONGODB SUCCESSFULLY');
+    console.log('CONNECTION TO REDIS SUCCESSFULLY');
 })
-    .catch(err => console.log(err));
+    .catch(err => console.log('ERROR CONNECTING TO DBS -- ', err));
 async function main() {
     await mongoose_1.default.connect('mongodb://127.0.0.1:27017/wildRoute');
+    await (0, redis_1.connectToRedis)();
 }
 const app = (0, express_1.default)();
-(0, redis_1.initializeRedis)();
 app.use(express_1.default.json());
 const jwtOpts = {
     jwtFromRequest: passport_jwt_1.default.ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -58,6 +59,6 @@ app.use((err, req, res, next) => {
     res.status(err.statusCode || 500).json({ message: err.message } || { message: 'Internal Server Error' });
 });
 app.listen(PORT, () => {
-    console.log(`Now listening on PORT ${PORT}`);
+    console.log(`NOW LISTENING ON PORT ${PORT}`);
 });
 //# sourceMappingURL=app.js.map

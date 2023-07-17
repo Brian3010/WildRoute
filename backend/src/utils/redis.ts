@@ -1,4 +1,4 @@
-import type { RedisClientType, commandOptions } from 'redis';
+import type { RedisClientType } from 'redis';
 import { createClient } from 'redis';
 
 let redisClient: RedisClientType;
@@ -8,6 +8,20 @@ export const initializeRedis = async () => {
   redisClient.on('error', error => console.error(`Error : ${error}`));
 
   await redisClient.connect();
+};
+
+export const connectToRedis = (): Promise<void> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      redisClient = createClient(); // will need to specify an url for production ({url:...})
+      redisClient.on('error', error => reject(error));
+
+      await redisClient.connect();
+      return resolve();
+    } catch (err) {
+      return reject(err);
+    }
+  });
 };
 
 export const uninitializeRedis = async () => {

@@ -24,7 +24,7 @@ const logoutUser = async (req, res, next) => {
     if (!token)
         throw new AppError_1.default('Cannot valididate the token', 404);
     const result = await (0, redis_1.setRedisToken)('tokens', JSON.stringify(token));
-    res.status(200).json({ redisRes: result, message: 'Successfully added to the blacklist', tokenAdded: token });
+    res.status(200).json({ redisResult: result, message: 'Successfully added to the blacklist', tokenAdded: token });
 };
 exports.logoutUser = logoutUser;
 //# sourceMappingURL=user.js.map

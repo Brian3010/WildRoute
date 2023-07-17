@@ -1,10 +1,9 @@
-import { ok } from 'assert';
 import { RequestHandler } from 'express';
 import JWT from 'jsonwebtoken';
 import passport from 'passport';
 import { NewActivityBody } from '../@types/type-controller';
 import AppError from '../utils/AppError';
-import { getRedisToken, initializeRedis, uninitializeRedis } from '../utils/redis';
+import { getRedisToken } from '../utils/redis';
 import { activitySchema } from './joiSchema';
 
 // validate request.body

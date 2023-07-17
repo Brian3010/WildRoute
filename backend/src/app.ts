@@ -12,25 +12,25 @@ import activitiesRoute from './routes/activities';
 import userRoute from './routes/user';
 import AppError from './utils/AppError';
 import catchAsync from './utils/catchAsync';
-import { initializeRedis } from './utils/redis';
+import { connectToRedis, initializeRedis } from './utils/redis';
 
 const PORT = 3000;
 
 // *Connect to dbs
 main()
   .then(() => {
-    console.log('CONNECTION SUCCESS');
+    console.log('CONNECTION TO MONGODB SUCCESSFULLY');
+    console.log('CONNECTION TO REDIS SUCCESSFULLY');
   })
-  .catch(err => console.log(err));
+  .catch(err => console.log('ERROR CONNECTING TO DBS -- ', err));
 
 async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/wildRoute');
+  await connectToRedis();
 }
 
 const app: Express = express();
 
-// connect to redis
-initializeRedis();
 app.use(express.json());
 
 // *configure session
@@ -114,5 +114,5 @@ app.use((err: AppError, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Now listening on PORT ${PORT}`);
+  console.log(`NOW LISTENING ON PORT ${PORT}`);
 });

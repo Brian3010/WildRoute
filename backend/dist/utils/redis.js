@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRedisToken = exports.setRedisToken = exports.uninitializeRedis = exports.initializeRedis = void 0;
+exports.getRedisToken = exports.setRedisToken = exports.uninitializeRedis = exports.connectToRedis = exports.initializeRedis = void 0;
 const redis_1 = require("redis");
 let redisClient;
 const initializeRedis = async () => {
@@ -9,6 +9,20 @@ const initializeRedis = async () => {
     await redisClient.connect();
 };
 exports.initializeRedis = initializeRedis;
+const connectToRedis = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            redisClient = (0, redis_1.createClient)();
+            redisClient.on('error', error => reject(error));
+            await redisClient.connect();
+            return resolve();
+        }
+        catch (err) {
+            return reject(err);
+        }
+    });
+};
+exports.connectToRedis = connectToRedis;
 const uninitializeRedis = async () => {
     await redisClient.disconnect();
 };
