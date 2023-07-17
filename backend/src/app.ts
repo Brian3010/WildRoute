@@ -6,13 +6,11 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import PassportJwt from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { createClient } from 'redis';
 import User from './models/user';
 import activitiesRoute from './routes/activities';
 import userRoute from './routes/user';
 import AppError from './utils/AppError';
-import catchAsync from './utils/catchAsync';
-import { connectToRedis, initializeRedis } from './utils/redis';
+import { connectToRedis } from './utils/redis';
 
 const PORT = 3000;
 

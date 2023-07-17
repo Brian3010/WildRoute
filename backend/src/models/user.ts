@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType, PassportLocalDocument } from 'mongoose';
+import mongoose, { InferSchemaType } from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
 const { Schema } = mongoose;
 
