@@ -8,13 +8,14 @@ require('dotenv').config();
 const user_1 = __importDefault(require("../models/user"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 const redis_1 = require("../utils/redis");
+const tokenHandling_1 = require("../utils/tokenHandling");
 const registerUser = async (req, res, next) => {
     console.log(`${req.originalUrl} POST method`);
     const { email, username, password } = req.body.user;
     const user = new user_1.default({ email, username });
-    await user_1.default.register(user, password);
-    req.user = user;
-    next();
+    const result = await user_1.default.register(user, password);
+    const token = (0, tokenHandling_1.generateAccessToken)(result);
+    res.status(200).json({ accessToken: token });
 };
 exports.registerUser = registerUser;
 const logoutUser = async (req, res, next) => {

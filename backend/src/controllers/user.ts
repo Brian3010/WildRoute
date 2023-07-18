@@ -5,6 +5,7 @@ import JWT from 'jsonwebtoken';
 import User from '../models/user';
 import AppError from '../utils/AppError';
 import { setRedisToken } from '../utils/redis';
+import { generateAccessToken } from '../utils/tokenHandling';
 
 // export const index: RequestHandler = (req, res, next) => {
 //   res.send('index from user');
@@ -24,10 +25,9 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
   const { email, username, password } = req.body.user;
 
   const user = new User({ email, username });
-  await User.register(user, password);
-  req.user = user;
-
-  next();
+  const result = await User.register(user, password);
+  const token = generateAccessToken<typeof result>(result);
+  res.status(200).json({ accessToken: token });
 };
 
 // export const loginUser: RequestHandler = (req, res, next) => {

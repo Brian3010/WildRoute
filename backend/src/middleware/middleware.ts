@@ -57,11 +57,8 @@ export const signUserJWT: RequestHandler = (req, res, next) => {
       subject: user._id.toString(),
     }
   );
-  // delete user.salt;
-  // delete user.hash;
-  res.json({ token });
-  // res.status(200).json({ username, email, id: user._id });
-  // res.status(200).json(user);
+
+  res.status(200).json({ accessToken: token });
 };
 
 export const isLoggedIn: RequestHandler = (req, res, next) => {

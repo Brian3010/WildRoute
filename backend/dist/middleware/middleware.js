@@ -48,7 +48,7 @@ const signUserJWT = (req, res, next) => {
         expiresIn: process.env.JWTEXPIRE,
         subject: user._id.toString(),
     });
-    res.json({ token });
+    res.status(200).json({ accessToken: token });
 };
 exports.signUserJWT = signUserJWT;
 const isLoggedIn = (req, res, next) => {

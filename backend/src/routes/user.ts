@@ -5,7 +5,7 @@ import AppError from '../utils/AppError';
 import catchAsync from '../utils/catchAsync';
 const router: Router = express.Router();
 
-router.route('/register').post(catchAsync(userController.registerUser), signUserJWT);
+router.route('/register').post(catchAsync(userController.registerUser));
 
 router.route('/login').post(authCheck, isTokenInBlackList, signUserJWT);
 
