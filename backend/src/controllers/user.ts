@@ -23,18 +23,22 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
   console.log(`${req.originalUrl} POST method`);
 
   const { email, username, password } = req.body.user;
-
   const user = new User({ email, username });
-  const result = await User.register(user, password);
-  const token = generateAccessToken<typeof result>(result);
+  await User.register(user, password);
+
+  const token = generateAccessToken<typeof user>(user);
+
   res.status(200).json({ accessToken: token });
 };
 
-// export const loginUser: RequestHandler = (req, res, next) => {
-//   console.log(`${req.originalUrl} POST method`);
+export const loginUser: RequestHandler = (req, res, next) => {
+  console.log(`${req.originalUrl} POST method`);
 
-//   res.status(200).json(req.user);
-// };
+  const user = req.user;
+  const token = generateAccessToken<typeof user>(user);
+
+  res.status(200).json({ accessToken: token });
+};
 
 export const logoutUser: RequestHandler = async (req, res, next) => {
   const user = req.user;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logoutUser = exports.registerUser = void 0;
+exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
 require('dotenv').config();
 const user_1 = __importDefault(require("../models/user"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
@@ -13,11 +13,18 @@ const registerUser = async (req, res, next) => {
     console.log(`${req.originalUrl} POST method`);
     const { email, username, password } = req.body.user;
     const user = new user_1.default({ email, username });
-    const result = await user_1.default.register(user, password);
-    const token = (0, tokenHandling_1.generateAccessToken)(result);
+    await user_1.default.register(user, password);
+    const token = (0, tokenHandling_1.generateAccessToken)(user);
     res.status(200).json({ accessToken: token });
 };
 exports.registerUser = registerUser;
+const loginUser = (req, res, next) => {
+    console.log(`${req.originalUrl} POST method`);
+    const user = req.user;
+    const token = (0, tokenHandling_1.generateAccessToken)(user);
+    res.status(200).json({ accessToken: token });
+};
+exports.loginUser = loginUser;
 const logoutUser = async (req, res, next) => {
     const user = req.user;
     console.log(user);

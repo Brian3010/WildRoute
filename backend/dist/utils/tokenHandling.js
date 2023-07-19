@@ -8,10 +8,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const generateAccessToken = user => {
     const token = jsonwebtoken_1.default.sign({
         userId: user._id,
-        userName: user.username,
+        username: user.username,
     }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWTEXPIRE,
-        subject: user._id.toString(),
+        subject: user._id && user._id.toString(),
     });
     return token;
 };

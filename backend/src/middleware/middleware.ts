@@ -39,28 +39,6 @@ export const authCheck: RequestHandler = (req, res, next) => {
   })(req, res, next);
 };
 
-// Create and send token back to frontend
-export const signUserJWT: RequestHandler = (req, res, next) => {
-  const user = req.user;
-  // console.log(user);
-  // create token
-  const token = JWT.sign(
-    // payload
-    {
-      id: user._id,
-      username: user.username,
-    },
-    // secret
-    process.env.JWT_SECRET as JWT.Secret,
-    {
-      expiresIn: process.env.JWTEXPIRE,
-      subject: user._id.toString(),
-    }
-  );
-
-  res.status(200).json({ accessToken: token });
-};
-
 export const isLoggedIn: RequestHandler = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err: any, user: any, info: any) => {
     if (err) {
@@ -78,25 +56,39 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
 };
 
 export const isTokenInBlackList: RequestHandler = async (req, res, next) => {
-  // const user = req.user;
-  // console.log(user);
-  // get token from header
-  try {
-    if (req.get('Authorization')) {
-      const token = req.headers.authorization!.startsWith('bearer ') && req.headers.authorization!.split(' ')[1];
-      // if (!token) throw new AppError('Cannot valididate the token', 404);
-
-      const result = await getRedisToken('tokens');
-
-      if (result === JSON.stringify(token)) {
-        throw new AppError('token exist in blacklist', 500);
-      }
-
-      next();
-    } else {
-      throw new AppError('headers[Authorization] needed', 404);
+  const authHeader = req.headers.authorization;
+  if (authHeader || authCheck.length === 0) {
+    const token = req.headers.authorization!.startsWith('bearer ') && req.headers.authorization!.split(' ')[1];
+    const result = await getRedisToken('tokens');
+    if (result === JSON.stringify(token)) {
+      throw new AppError('token exist in blacklist', 403);
     }
-  } catch (err) {
-    next(err);
+    next();
+  } else {
+    throw new AppError('Authorization not exist', 404);
   }
 };
+
+// export const isTokenInBlackList: RequestHandler = async (req, res, next) => {
+//   // const user = req.user;
+//   // console.log(user);
+//   // get token from header
+//   try {
+//     if (req.get('Authorization')) {
+//       const token = req.headers.authorization!.startsWith('bearer ') && req.headers.authorization!.split(' ')[1];
+//       // if (!token) throw new AppError('Cannot valididate the token', 404);
+
+//       const result = await getRedisToken('tokens');
+
+//       if (result === JSON.stringify(token)) {
+//         throw new AppError('token exist in blacklist', 500);
+//       }
+
+//       next();
+//     } else {
+//       throw new AppError('headers[Authorization] needed', 404);
+//     }
+//   } catch (err) {
+//     next(err);
+//   }
+// };

@@ -3,8 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isTokenInBlackList = exports.isLoggedIn = exports.signUserJWT = exports.authCheck = exports.validateActivity = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+exports.isTokenInBlackList = exports.isLoggedIn = exports.authCheck = exports.validateActivity = void 0;
 const passport_1 = __importDefault(require("passport"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 const redis_1 = require("../utils/redis");
@@ -39,18 +38,6 @@ const authCheck = (req, res, next) => {
     })(req, res, next);
 };
 exports.authCheck = authCheck;
-const signUserJWT = (req, res, next) => {
-    const user = req.user;
-    const token = jsonwebtoken_1.default.sign({
-        id: user._id,
-        username: user.username,
-    }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWTEXPIRE,
-        subject: user._id.toString(),
-    });
-    res.status(200).json({ accessToken: token });
-};
-exports.signUserJWT = signUserJWT;
 const isLoggedIn = (req, res, next) => {
     passport_1.default.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err) {
@@ -68,21 +55,17 @@ const isLoggedIn = (req, res, next) => {
 };
 exports.isLoggedIn = isLoggedIn;
 const isTokenInBlackList = async (req, res, next) => {
-    try {
-        if (req.get('Authorization')) {
-            const token = req.headers.authorization.startsWith('bearer ') && req.headers.authorization.split(' ')[1];
-            const result = await (0, redis_1.getRedisToken)('tokens');
-            if (result === JSON.stringify(token)) {
-                throw new AppError_1.default('token exist in blacklist', 500);
-            }
-            next();
+    const authHeader = req.headers.authorization;
+    if (authHeader || exports.authCheck.length === 0) {
+        const token = req.headers.authorization.startsWith('bearer ') && req.headers.authorization.split(' ')[1];
+        const result = await (0, redis_1.getRedisToken)('tokens');
+        if (result === JSON.stringify(token)) {
+            throw new AppError_1.default('token exist in blacklist', 403);
         }
-        else {
-            throw new AppError_1.default('headers[Authorization] needed', 404);
-        }
+        next();
     }
-    catch (err) {
-        next(err);
+    else {
+        throw new AppError_1.default('Authorization not exist', 404);
     }
 };
 exports.isTokenInBlackList = isTokenInBlackList;
