@@ -27,11 +27,10 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 const jwtOpts = {
     jwtFromRequest: passport_jwt_1.default.ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET,
+    secretOrKey: process.env.JWT_ACCESS_SECRET,
 };
 passport_1.default.use(user_1.default.createStrategy());
 const jwtVerify = async (payload, done) => {
-    console.log('--------payload ', payload);
     user_1.default.findById(payload.sub)
         .then(user => {
         if (user) {

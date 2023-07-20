@@ -43,10 +43,14 @@ export const uninitializeRedis = async () => {
 //   });
 // };
 
-export const setRedisToken = (key: string, currentToken: string) => {
+export const setRedisToken = (refreshToken: string, id: string) => {
+  // would need to store refreshToken as array in redis dbs
+  // const refreshTokenArr = [refreshToken];
+
   return new Promise(async (resolve, reject) => {
     try {
-      const newData = await redisClient.setEx(key, parseInt(process.env.REDIS_EXPIRE!), currentToken);
+      // const newData = await redisClient.hSet(`userToken:${id}`, 'refreshTokens', JSON.stringify(refreshTokenArr));
+      const newData = await redisClient.hSet(`userToken:${id}`, 'refreshTokens', refreshToken);
       return resolve(newData);
     } catch (error) {
       return reject(error);
@@ -54,13 +58,41 @@ export const setRedisToken = (key: string, currentToken: string) => {
   });
 };
 
-export const getRedisToken = (key: string) => {
+export const getRedisToken: (id: string) => Promise<string> = id => {
+  const key = `userToken:${id}`;
+  const field = 'refreshTokens';
   return new Promise(async (resolve, reject) => {
     try {
-      const newData = await redisClient.get(key);
-      return resolve(newData);
+      const newData = await redisClient.hGet(key, field);
+      console.log(`newData`, newData);
+      return resolve(newData as string);
     } catch (error) {
       return reject(error);
+    }
+  });
+};
+
+export const deleteRedisToken: (id: string, refreshToken: string) => Promise<string | number | void> = (
+  id,
+  refreshToken
+) => {
+  const key = `userToken:${id}`;
+  const field = 'refreshTokens';
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = await getRedisToken(id);
+      console.log('getRedisToken:', token.length);
+      if (token.length > 0 && token === refreshToken) {
+        const tokenInDb = await redisClient.hSet(key, field, '');
+        return resolve(tokenInDb);
+      } else if (token.length === 0) {
+        return resolve('RefreshToken in Redis is empty');
+      } else {
+        throw Error('Cannot delete refreshToken due to false comparison, Valid refreshToken must be provided');
+      }
+    } catch (err) {
+      return reject(err);
     }
   });
 };

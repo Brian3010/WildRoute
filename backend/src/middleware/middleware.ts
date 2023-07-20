@@ -22,7 +22,7 @@ export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody,
 };
 
 // authenticate using local strategy (IIFE)
-export const authCheck: RequestHandler = (req, res, next) => {
+export const authLoginInfo: RequestHandler = (req, res, next) => {
   passport.authenticate('local', { session: false, passReqToCallback: true }, (err: any, user: any, info: any) => {
     if (err) {
       return next(err);
@@ -39,6 +39,7 @@ export const authCheck: RequestHandler = (req, res, next) => {
   })(req, res, next);
 };
 
+// check valid accessToken
 export const isLoggedIn: RequestHandler = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err: any, user: any, info: any) => {
     if (err) {
@@ -51,23 +52,24 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
       throw new AppError(info.message, 401);
     }
     req.user = user;
+    console.log('req.user: ', user);
     next();
   })(req, res, next);
 };
 
-export const isTokenInBlackList: RequestHandler = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (authHeader || authCheck.length === 0) {
-    const token = req.headers.authorization!.startsWith('bearer ') && req.headers.authorization!.split(' ')[1];
-    const result = await getRedisToken('tokens');
-    if (result === JSON.stringify(token)) {
-      throw new AppError('token exist in blacklist', 403);
-    }
-    next();
-  } else {
-    throw new AppError('Authorization not exist', 404);
-  }
-};
+// export const isTokenInBlackList: RequestHandler = async (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+//   if (authHeader || authCheck.length === 0) {
+//     const token = req.headers.authorization!.startsWith('bearer ') && req.headers.authorization!.split(' ')[1];
+//     const result = await getRedisToken('tokens');
+//     if (result === JSON.stringify(token)) {
+//       throw new AppError('token exist in blacklist', 403);
+//     }
+//     next();
+//   } else {
+//     throw new AppError('Authorization not exist', 404);
+//   }
+// };
 
 // export const isTokenInBlackList: RequestHandler = async (req, res, next) => {
 //   // const user = req.user;

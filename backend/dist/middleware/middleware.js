@@ -3,10 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isTokenInBlackList = exports.isLoggedIn = exports.authCheck = exports.validateActivity = void 0;
+exports.isLoggedIn = exports.authLoginInfo = exports.validateActivity = void 0;
 const passport_1 = __importDefault(require("passport"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
-const redis_1 = require("../utils/redis");
 const joiSchema_1 = require("./joiSchema");
 const validateActivity = (req, res, next) => {
     const acty = req.body;
@@ -22,7 +21,7 @@ const validateActivity = (req, res, next) => {
     }
 };
 exports.validateActivity = validateActivity;
-const authCheck = (req, res, next) => {
+const authLoginInfo = (req, res, next) => {
     passport_1.default.authenticate('local', { session: false, passReqToCallback: true }, (err, user, info) => {
         if (err) {
             return next(err);
@@ -37,7 +36,7 @@ const authCheck = (req, res, next) => {
         next();
     })(req, res, next);
 };
-exports.authCheck = authCheck;
+exports.authLoginInfo = authLoginInfo;
 const isLoggedIn = (req, res, next) => {
     passport_1.default.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err) {
@@ -50,23 +49,9 @@ const isLoggedIn = (req, res, next) => {
             throw new AppError_1.default(info.message, 401);
         }
         req.user = user;
+        console.log('req.user: ', user);
         next();
     })(req, res, next);
 };
 exports.isLoggedIn = isLoggedIn;
-const isTokenInBlackList = async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (authHeader || exports.authCheck.length === 0) {
-        const token = req.headers.authorization.startsWith('bearer ') && req.headers.authorization.split(' ')[1];
-        const result = await (0, redis_1.getRedisToken)('tokens');
-        if (result === JSON.stringify(token)) {
-            throw new AppError_1.default('token exist in blacklist', 403);
-        }
-        next();
-    }
-    else {
-        throw new AppError_1.default('Authorization not exist', 404);
-    }
-};
-exports.isTokenInBlackList = isTokenInBlackList;
 //# sourceMappingURL=middleware.js.map

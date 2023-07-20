@@ -18,21 +18,27 @@ const registerUser = async (req, res, next) => {
     res.status(200).json({ accessToken: token });
 };
 exports.registerUser = registerUser;
-const loginUser = (req, res, next) => {
+const loginUser = async (req, res, next) => {
     console.log(`${req.originalUrl} POST method`);
     const user = req.user;
-    const token = (0, tokenHandling_1.generateAccessToken)(user);
-    res.status(200).json({ accessToken: token });
+    const accessToken = (0, tokenHandling_1.generateAccessToken)(user);
+    const refreshToken = (0, tokenHandling_1.generateRefreshToken)(user);
+    console.log(user._id);
+    await (0, redis_1.setRedisToken)(refreshToken, user._id);
+    res.status(200).json({ accessToken, refreshToken });
 };
 exports.loginUser = loginUser;
 const logoutUser = async (req, res, next) => {
-    const user = req.user;
-    console.log(user);
-    const token = req.headers.authorization.startsWith('bearer ') ? req.headers.authorization.split(' ')[1] : undefined;
-    if (!token)
-        throw new AppError_1.default('Cannot valididate the token', 404);
-    const result = await (0, redis_1.setRedisToken)('tokens', JSON.stringify(token));
-    res.status(200).json({ redisResult: result, message: 'Successfully added to the blacklist', tokenAdded: token });
+    const refreshToken = req.body.token;
+    if (!refreshToken)
+        throw new AppError_1.default('Cannot fetch data from body', 404);
+    const result = await (0, redis_1.deleteRedisToken)(req.user._id, refreshToken);
+    if (result === 0) {
+        res.status(200).json({ message: 'Successfully logout' });
+    }
+    else {
+        throw new AppError_1.default(result, 500);
+    }
 };
 exports.logoutUser = logoutUser;
 //# sourceMappingURL=user.js.map

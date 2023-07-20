@@ -47,14 +47,14 @@ app.use(express.json());
 // configure options for JWT
 const jwtOpts: PassportJwt.StrategyOptions = {
   jwtFromRequest: PassportJwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET,
+  secretOrKey: process.env.JWT_ACCESS_SECRET,
 };
 
 passport.use(User.createStrategy());
 
 // create verify callback
 const jwtVerify: PassportJwt.VerifyCallback = async (payload: JwtPayload, done) => {
-  console.log('--------payload ', payload);
+  // console.log('--------payload ', payload);
 
   User.findById(payload.sub)
     .then(user => {

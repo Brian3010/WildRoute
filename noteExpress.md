@@ -238,3 +238,60 @@ In summary, when dealing with synchronous errors, you can simply throw the error
 These are the basic steps to get started with `passport-local-mongoose`. Remember to configure your database connection, set up routes, and handle any errors or additional functionalities as needed.
 
 For more advanced features and customization options, refer to the `passport-local-mongoose` documentation: [https://github.com/saintedlama/passport-local-mongoose](https://github.com/saintedlama/passport-local-mongoose).
+
+## JWT Token management
+
+### `/Login` route
+
+- Sign `accessToken` and `refreshToken` and send them back to the client.
+- Store `refreshToken` in redis database. (along with userId?)
+
+### `isLoggedIn / verify` middleware (used to validate the accessToken on protected routes to ensure that the user is authenticated)
+
+- Use `accessToken` information like secret token to `jwt.verify`
+
+### `/logout` route
+
+- Include `isLoggedIn/verify` middleware in the route.
+- Attach `refreshToken` with the request using JSON.
+- Check if the `refreshToken` is in redis database.
+- Delete `refreshToken` from the database to invalidate it and prevent it from being used again.
+
+### `/refreshToken` route
+
+- Attach the `refreshToken` in the request as JSON.
+- Check if `refreshToken` has been passed.
+- Check if the `refreshToken` is in the database, if not, return error.
+- If yes, `JWT.verify` the `refreshToken` (using refresh token secret).
+- Delete `refreshToken` from the database to invalidate it and prevent it from being used again.
+- Generate new `accessToken` and `refreshToken`, add `refreshToken` (along with userId?) to the redis database.
+- Send `refreshToken` and `accessToken` to the client.
+
+## Implenment token in frontend
+
+1. Create API Endpoints:
+Set up the backend API endpoints for user registration, login, logout, and token refreshing
+
+2. User Registration:
+In the React app, create a user registration form where users can provide their credentials (e.g., email and password). When the form is submitted, make a POST request to the backend `/register` route to create a new user account. The backend will respond with access and refresh tokens, which you should store securely in the client.
+
+3. User Login:
+Similarly, create a login form where users can enter their credentials. Upon submission, make a POST request to the backend `/login` route to authenticate the user. If the login is successful, the backend will respond with access and refresh tokens, which you should store securely in the client.
+
+4. Secure Access:
+For protected routes in your React app (routes that require the user to be logged in), attach the access token to the Authorization header of your HTTP requests. You can use a library like Axios to manage your HTTP requests and add the access token to each request.
+
+5. Token Expiration Handling:
+When the access token expires (usually after a short period), the backend API will return a 401 Unauthorized response. Your frontend should catch this response and trigger the token refresh mechanism.
+
+6. Token Refresh:
+When you receive a 401 Unauthorized response from the backend, it's time to refresh the access token. Make a request to the `/refreshToken` route in your backend, passing the refresh token stored in your client's local storage or cookies.
+
+7. Logout:
+Create a logout functionality in your React app. When the user clicks the logout button, make a request to the `/logout` route on the backend. This route should invalidate the refresh token stored in the Redis database and perform any other necessary cleanup.
+
+8. Token Storage:
+Use secure methods to store the access and refresh tokens in the client. Common options include using HTTP-only cookies for the refresh token and storing the access token in the application state (e.g., Redux or React context). Avoid storing tokens in local storage or cookies accessible from JavaScript to prevent potential security risks.
+
+9. Error Handling:
+Implement error handling throughout your React app to handle scenarios like invalid tokens, network errors, or failed requests. Properly handle token expiration and use the token refresh mechanism when necessary.
