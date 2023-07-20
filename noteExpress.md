@@ -241,7 +241,7 @@ For more advanced features and customization options, refer to the `passport-loc
 
 ## JWT Token management
 
-### `/Login` route
+### `/Login` POST route
 
 - Sign `accessToken` and `refreshToken` and send them back to the client.
 - Store `refreshToken` in redis database. (along with userId?)
@@ -250,14 +250,14 @@ For more advanced features and customization options, refer to the `passport-loc
 
 - Use `accessToken` information like secret token to `jwt.verify`
 
-### `/logout` route
+### `/logout` POST route
 
 - Include `isLoggedIn/verify` middleware in the route.
 - Attach `refreshToken` with the request using JSON.
 - Check if the `refreshToken` is in redis database.
 - Delete `refreshToken` from the database to invalidate it and prevent it from being used again.
 
-### `/refreshToken` route
+### `/refreshToken` POST route
 
 - Attach the `refreshToken` in the request as JSON.
 - Check if `refreshToken` has been passed.
@@ -295,3 +295,4 @@ Use secure methods to store the access and refresh tokens in the client. Common 
 
 9. Error Handling:
 Implement error handling throughout your React app to handle scenarios like invalid tokens, network errors, or failed requests. Properly handle token expiration and use the token refresh mechanism when necessary.
+

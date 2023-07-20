@@ -1,4 +1,5 @@
 require('dotenv').config();
+import { ok } from 'assert';
 import { error } from 'console';
 import { RequestHandler } from 'express';
 import JWT from 'jsonwebtoken';
@@ -43,7 +44,8 @@ export const loginUser: RequestHandler = async (req, res, next) => {
   console.log(user._id);
   await setRedisToken(refreshToken, user._id);
 
-  res.status(200).json({ accessToken, refreshToken });
+  const { salt, hash, ...userTosend } = user._doc; // ._doc contain user data
+  res.status(200).json({ accessToken, refreshToken, user: userTosend });
 };
 
 // export const logoutUser: RequestHandler = async (req, res, next) => {
@@ -86,3 +88,12 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
 };
 
 // todo: refreshToken route implementation
+interface refreshTokenBody {
+  userId: string;
+  refreshToken: string;
+}
+export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, unknown> = (req, res) => {
+  const { refreshToken, userId } = req.body;
+
+  res.send('ok');
+};

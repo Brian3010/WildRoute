@@ -1,5 +1,7 @@
 import { RequestHandler } from 'express';
+import { appendFile } from 'fs';
 import JWT from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import passport from 'passport';
 import { NewActivityBody } from '../@types/type-controller';
 import AppError from '../utils/AppError';
@@ -94,3 +96,20 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
 //     next(err);
 //   }
 // };
+
+export const isValidBody: RequestHandler = (req, res, next) => {
+  //check empty
+  if (Object.keys(req.body).length === 0) throw new AppError('the body is empty', 404);
+  // check valid mongoose Id
+  if (
+    Object.keys(req.body).includes('_id') ||
+    Object.keys(req.body).includes('id') ||
+    Object.keys(req.body).includes('userId')
+  ) {
+    const id = req.body._id || req.body.id || req.body.userId || undefined;
+    if (!mongoose.isValidObjectId(id)) throw new AppError('id is not a valid mongoose id', 400);
+    if (id === undefined) throw new AppError('undefined id', 400);
+  }
+
+  next();
+};
