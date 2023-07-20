@@ -4,10 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteActy = exports.updateActy = exports.createActivity = exports.displayActivity = exports.index = void 0;
-const mongoose_1 = __importDefault(require("mongoose"));
 const activities_1 = __importDefault(require("../models/activities"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
-const isValidId = (id) => mongoose_1.default.isValidObjectId(id);
+const isValidId_1 = require("../utils/isValidId");
 const index = async (req, res, next) => {
     console.log('/activitites GET REQUEST');
     const actList = await activities_1.default.find({});
@@ -19,7 +18,7 @@ exports.index = index;
 const displayActivity = async (req, res, next) => {
     console.log('/activities/:id GET REQUEST');
     const { id } = req.params;
-    if (!isValidId(id)) {
+    if (!(0, isValidId_1.isValidMongooseId)(id)) {
         throw new AppError_1.default('Invalid Activity Id', 400);
     }
     const acty = await activities_1.default.findById(id);
@@ -42,7 +41,7 @@ exports.createActivity = createActivity;
 const updateActy = async (req, res, next) => {
     console.log('/activities/:id/edit PUT REQUEST');
     const actyId = req.params.id;
-    if (!isValidId(actyId))
+    if (!(0, isValidId_1.isValidMongooseId)(actyId))
         throw new AppError_1.default('Invalid Activity Id', 400);
     const acty = req.body.activity;
     if (!acty)
@@ -53,7 +52,7 @@ const updateActy = async (req, res, next) => {
 exports.updateActy = updateActy;
 const deleteActy = async (req, res, next) => {
     const actyId = req.params.id;
-    if (!isValidId(actyId))
+    if (!(0, isValidId_1.isValidMongooseId)(actyId))
         throw new AppError_1.default('Invalid Activity Id', 400);
     const resActy = await activities_1.default.findByIdAndDelete(actyId);
     res.status(200).json(resActy);

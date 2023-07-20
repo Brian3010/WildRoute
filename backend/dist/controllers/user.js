@@ -7,6 +7,7 @@ exports.refreshToken = exports.logoutUser = exports.loginUser = exports.register
 require('dotenv').config();
 const user_1 = __importDefault(require("../models/user"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
+const isValidId_1 = require("../utils/isValidId");
 const redis_1 = require("../utils/redis");
 const tokenHandling_1 = require("../utils/tokenHandling");
 const registerUser = async (req, res, next) => {
@@ -44,6 +45,10 @@ const logoutUser = async (req, res, next) => {
 exports.logoutUser = logoutUser;
 const refreshToken = (req, res) => {
     const { refreshToken, userId } = req.body;
+    if (!refreshToken || !userId)
+        throw new AppError_1.default('token or id must be provided', 400);
+    if (!(0, isValidId_1.isValidMongooseId)(userId))
+        throw new AppError_1.default('id is not a mongoose valid id', 400);
     res.send('ok');
 };
 exports.refreshToken = refreshToken;

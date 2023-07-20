@@ -1,11 +1,8 @@
 import { RequestHandler } from 'express';
-import mongoose from 'mongoose';
 import { NewActivityBody } from '../@types/type-controller';
 import ActivityList from '../models/activities';
 import AppError from '../utils/AppError';
-
-// utils function
-const isValidId = (id: string) => mongoose.isValidObjectId(id);
+import { isValidMongooseId } from '../utils/isValidId';
 
 // show a list of activities
 export const index: RequestHandler = async (req, res, next) => {
@@ -22,7 +19,7 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
 
   const { id } = req.params;
   // could place this in a middleware
-  if (!isValidId(id)) {
+  if (!isValidMongooseId(id)) {
     throw new AppError('Invalid Activity Id', 400);
   }
 
@@ -60,7 +57,7 @@ interface actyparams {
 export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, unknown> = async (req, res, next) => {
   console.log('/activities/:id/edit PUT REQUEST');
   const actyId = req.params.id;
-  if (!isValidId(actyId)) throw new AppError('Invalid Activity Id', 400);
+  if (!isValidMongooseId(actyId)) throw new AppError('Invalid Activity Id', 400);
   const acty = req.body.activity;
   if (!acty) throw new AppError('Cannot fetch data from body', 400);
 
@@ -72,7 +69,7 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
 // delete an activity
 export const deleteActy: RequestHandler<actyparams, unknown, NewActivityBody, unknown> = async (req, res, next) => {
   const actyId = req.params.id;
-  if (!isValidId(actyId)) throw new AppError('Invalid Activity Id', 400);
+  if (!isValidMongooseId(actyId)) throw new AppError('Invalid Activity Id', 400);
 
   const resActy = await ActivityList.findByIdAndDelete(actyId);
 

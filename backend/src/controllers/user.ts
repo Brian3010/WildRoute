@@ -1,10 +1,8 @@
 require('dotenv').config();
-import { ok } from 'assert';
-import { error } from 'console';
 import { RequestHandler } from 'express';
-import JWT from 'jsonwebtoken';
 import User from '../models/user';
 import AppError from '../utils/AppError';
+import { isValidMongooseId } from '../utils/isValidId';
 import { deleteRedisToken, getRedisToken, setRedisToken } from '../utils/redis';
 import { generateAccessToken, generateRefreshToken } from '../utils/tokenHandling';
 
@@ -48,19 +46,6 @@ export const loginUser: RequestHandler = async (req, res, next) => {
   res.status(200).json({ accessToken, refreshToken, user: userTosend });
 };
 
-// export const logoutUser: RequestHandler = async (req, res, next) => {
-//   const user = req.user;
-//   console.log(user);
-//   // get token from header
-//   const token = req.headers.authorization!.startsWith('bearer ') ? req.headers.authorization!.split(' ')[1] : undefined;
-//   if (!token) throw new AppError('Cannot valididate the token', 404);
-
-//   const result = await setRedisToken('tokens', JSON.stringify(token));
-
-//   // res.status(200).json({ token, message: 'the token added to the blacklist' });
-//   res.status(200).json({ redisResult: result, message: 'Successfully added to the blacklist', tokenAdded: token });
-// };
-
 type logoutBody = {
   token: string;
 };
@@ -94,6 +79,10 @@ interface refreshTokenBody {
 }
 export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, unknown> = (req, res) => {
   const { refreshToken, userId } = req.body;
+  if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
+  if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
 
   res.send('ok');
 };
+
+// ? refreshToken need to be send as header for checking valid token ?
