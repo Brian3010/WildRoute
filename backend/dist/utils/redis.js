@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRedisToken = exports.getRedisToken = exports.setRedisToken = exports.uninitializeRedis = exports.connectToRedis = exports.initializeRedis = void 0;
+exports.deleteRedisToken = exports.getRedisToken = exports.setRedisToken = exports.disconnectRedis = exports.connectToRedis = exports.initializeRedis = void 0;
 const redis_1 = require("redis");
 let redisClient;
 const initializeRedis = async () => {
@@ -23,15 +23,17 @@ const connectToRedis = () => {
     });
 };
 exports.connectToRedis = connectToRedis;
-const uninitializeRedis = async () => {
+const disconnectRedis = async () => {
     await redisClient.disconnect();
 };
-exports.uninitializeRedis = uninitializeRedis;
+exports.disconnectRedis = disconnectRedis;
 const setRedisToken = (refreshToken, id) => {
+    const key = `userToken:${id}`;
+    const field = 'refreshTokens';
     return new Promise(async (resolve, reject) => {
         try {
-            const newData = await redisClient.hSet(`userToken:${id}`, 'refreshTokens', refreshToken);
-            return resolve(newData);
+            const data = await redisClient.hSet(key, field, refreshToken);
+            return resolve(data);
         }
         catch (error) {
             return reject(error);
@@ -44,9 +46,8 @@ const getRedisToken = id => {
     const field = 'refreshTokens';
     return new Promise(async (resolve, reject) => {
         try {
-            const newData = await redisClient.hGet(key, field);
-            console.log(`newData`, newData);
-            return resolve(newData);
+            const data = await redisClient.hGet(key, field);
+            return resolve(data);
         }
         catch (error) {
             return reject(error);
@@ -60,16 +61,21 @@ const deleteRedisToken = (id, refreshToken) => {
     return new Promise(async (resolve, reject) => {
         try {
             const token = await (0, exports.getRedisToken)(id);
-            console.log('getRedisToken:', token.length);
-            if (token.length > 0 && token === refreshToken) {
-                const tokenInDb = await redisClient.hSet(key, field, '');
-                return resolve(tokenInDb);
-            }
-            else if (token.length === 0) {
-                return resolve('RefreshToken in Redis is empty');
+            if (token) {
+                console.log('getRedisToken:', token.length);
+                if (token.length > 0 && token === refreshToken) {
+                    const tokenInDb = await redisClient.hSet(key, field, '');
+                    return resolve(tokenInDb);
+                }
+                else if (token.length === 0) {
+                    return resolve('RefreshToken in Redis is empty');
+                }
+                else {
+                    throw Error('Cannot delete refreshToken due to false comparison, Valid refreshToken must be provided');
+                }
             }
             else {
-                throw Error('Cannot delete refreshToken due to false comparison, Valid refreshToken must be provided');
+                throw new Error('Token is undefined');
             }
         }
         catch (err) {

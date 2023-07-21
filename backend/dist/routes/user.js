@@ -34,6 +34,6 @@ const router = express_1.default.Router();
 router.route('/register').post((0, catchAsync_1.default)(userController.registerUser));
 router.route('/login').post(middleware_1.authLoginInfo, (0, catchAsync_1.default)(userController.loginUser));
 router.route('/logout').post(middleware_1.isLoggedIn, (0, catchAsync_1.default)(userController.logoutUser));
-router.route('/refresh-token').post(middleware_1.isValidBody, userController.refreshToken);
+router.route('/refresh-token').post(middleware_1.isValidBody, (0, catchAsync_1.default)(userController.refreshToken));
 exports.default = router;
 //# sourceMappingURL=user.js.map

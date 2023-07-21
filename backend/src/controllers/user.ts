@@ -6,6 +6,7 @@ import { isValidMongooseId } from '../utils/isValidId';
 import { deleteRedisToken, getRedisToken, setRedisToken } from '../utils/redis';
 import { generateAccessToken, generateRefreshToken } from '../utils/tokenHandling';
 
+import JWT from 'jsonwebtoken';
 // export const index: RequestHandler = (req, res, next) => {
 //   res.send('index from user');
 // };
@@ -77,12 +78,20 @@ interface refreshTokenBody {
   userId: string;
   refreshToken: string;
 }
-export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, unknown> = (req, res) => {
+export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, unknown> = async (req, res) => {
   const { refreshToken, userId } = req.body;
   if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
   if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
 
-  res.send('ok');
-};
+  // Check if the refreshToken is in the database, if not, return error.
+  // If yes, JWT.verify the refreshToken (using refresh token secret).
+  // Delete refreshToken from the database to invalidate it and prevent it from being used again.
+  // Generate new accessToken and refreshToken, add refreshToken (along with userId?) to the redis database.
+  // Send refreshToken and accessToken to the client.
+  const token = await getRedisToken(userId);
+  if (token?.length === 0) throw new AppError('There is no refreshToken in database (redirect to login)', 404);
 
-// ? refreshToken need to be send as header for checking valid token ?
+  // JWT.verify(token,process.env.JWT_REFRESH_SECRET)
+
+  res.send(token);
+};

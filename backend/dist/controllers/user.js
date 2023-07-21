@@ -43,13 +43,16 @@ const logoutUser = async (req, res, next) => {
     }
 };
 exports.logoutUser = logoutUser;
-const refreshToken = (req, res) => {
+const refreshToken = async (req, res) => {
     const { refreshToken, userId } = req.body;
     if (!refreshToken || !userId)
         throw new AppError_1.default('token or id must be provided', 400);
     if (!(0, isValidId_1.isValidMongooseId)(userId))
         throw new AppError_1.default('id is not a mongoose valid id', 400);
-    res.send('ok');
+    const token = await (0, redis_1.getRedisToken)(userId);
+    if (token?.length === 0)
+        throw new AppError_1.default('There is no refreshToken in database (redirect to login)', 404);
+    res.send(token);
 };
 exports.refreshToken = refreshToken;
 //# sourceMappingURL=user.js.map

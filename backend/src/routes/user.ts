@@ -14,6 +14,6 @@ router.route('/login').post(authLoginInfo, catchAsync(userController.loginUser))
 router.route('/logout').post(isLoggedIn, catchAsync(userController.logoutUser));
 
 // /refresh-token route to send new tokens
-router.route('/refresh-token').post(isValidBody, userController.refreshToken);
+router.route('/refresh-token').post(isValidBody, catchAsync(userController.refreshToken));
 
 export default router;
