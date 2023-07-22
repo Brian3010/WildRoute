@@ -263,8 +263,11 @@ For more advanced features and customization options, refer to the `passport-loc
 - Check if `refreshToken` has been passed.
 - Check if the `refreshToken` is in the database, if not, return error.
 - If yes, `JWT.verify` the `refreshToken` (using refresh token secret).
+- Get token in the redis database, the one we store earlier.
+- Compare the refreshToken with the one in the database to check valid.
 - Delete `refreshToken` from the database to invalidate it and prevent it from being used again.
 - Generate new `accessToken` and `refreshToken`, add `refreshToken` (along with userId?) to the redis database.
+- Set new refreshToken to the database
 - Send `refreshToken` and `accessToken` to the client.
 
 ## Implenment token in frontend

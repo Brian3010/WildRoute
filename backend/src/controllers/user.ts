@@ -108,6 +108,8 @@ export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, un
   // generate new tokens
   const newAccessToken = generateAccessToken(req.user);
   const newRefreshToken = generateRefreshToken(req.user);
+
+  // set new refreshToken to the database
   await setRedisToken(newRefreshToken, req.user._id);
 
   res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
