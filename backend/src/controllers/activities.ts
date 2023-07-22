@@ -43,9 +43,12 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
   const acty = req.body.activity;
   if (!acty) throw new AppError('Cannot fetch data from body', 400);
 
+  // ? acty.author = req.user._id; // updated type in type folder
+  const newActy = new ActivityList(acty);
   // add user as author
   // todo: add new user for newly create activity
-  const newActy = new ActivityList(acty);
+  // newActy.author = req.user._id; // would prefer this way
+  
 
   const savedActy = await newActy.save();
 
