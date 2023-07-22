@@ -52,8 +52,8 @@ export const setRedisToken = (refreshToken: string, id: string) => {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const data = await redisClient.hSet(key, field, refreshToken);
-      return resolve(data);
+      const newData = await redisClient.hSet(key, field, refreshToken);
+      return resolve(newData);
     } catch (error) {
       return reject(error);
     }

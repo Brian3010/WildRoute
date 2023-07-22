@@ -16,7 +16,9 @@ const registerUser = async (req, res, next) => {
     const user = new user_1.default({ email, username });
     await user_1.default.register(user, password);
     const token = (0, tokenHandling_1.generateAccessToken)(user);
-    res.status(200).json({ accessToken: token });
+    const refreshToken = (0, tokenHandling_1.generateRefreshToken)(user);
+    await (0, redis_1.setRedisToken)(refreshToken, user._id.toString());
+    res.status(200).json({ accessToken: token, refreshToken, message: 'redirect to other routes' });
 };
 exports.registerUser = registerUser;
 const loginUser = async (req, res, next) => {

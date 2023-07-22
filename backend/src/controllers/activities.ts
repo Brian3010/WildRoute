@@ -42,7 +42,11 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
   console.log('/activities POST REQUEST');
   const acty = req.body.activity;
   if (!acty) throw new AppError('Cannot fetch data from body', 400);
+
+  // add user as author
+  // todo: add new user for newly create activity
   const newActy = new ActivityList(acty);
+
   const savedActy = await newActy.save();
 
   res.status(200).json(savedActy);

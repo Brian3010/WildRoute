@@ -239,7 +239,44 @@ These are the basic steps to get started with `passport-local-mongoose`. Remembe
 
 For more advanced features and customization options, refer to the `passport-local-mongoose` documentation: [https://github.com/saintedlama/passport-local-mongoose](https://github.com/saintedlama/passport-local-mongoose).
 
+## Overview of token handling
+
+1. Registration:
+    - User sends a registration request to the server with their desired username and password.
+    - Server validates the input and creates a new user account in the database, including a hashed password for security.
+    - Upon successful registration, the server generates a refresh token for the user and stores it in Redis or another secure data store, associated with the user's account. The refresh token has a longer expiration time than the access token.
+    - The server then generates an access token (shorter-lived token) and signs it with a secret key, containing the user's identity and any relevant user claims.
+    - The server sends both the access token and refresh token back to the client as a response to the registration request.
+    - The client stores the refresh token securely (e.g., in an HttpOnly cookie or local storage) for future use.
+
+2. Login:
+    - User sends a login request to the server with their username and password.
+    - The server verifies the credentials and authenticates the user.
+    - If the credentials are valid, the server generates a new refresh token (since the previous one, if any, would have been used during registration) and associates it with the user's account in Redis.
+    - The server generates a new access token and signs it with the secret key, containing the user's identity and claims.
+    - The server sends both the access token and refresh token back to the client as a response to the login request.
+    - The client stores the refresh token securely for future use.
+
+3. Logout:
+    - When the user wants to log out, the client sends a logout request to the server.
+    - The server revokes the user's refresh token stored in Redis, effectively invalidating it. This prevents the refresh token from being used to obtain new access tokens.
+    - The client may also clear the stored refresh token from its side (e.g., delete the HttpOnly cookie or clear local storage) to further enhance security.
+
+4. Token Refresh (Obtaining New Access Tokens):
+    - Access tokens have a shorter lifespan for security purposes. When an access token expires, the client sends a request to the server to obtain a new one using the stored refresh token.
+    - The server verifies the refresh token's validity and checks if it's not in the list of revoked tokens (blacklist). If it's valid, the server generates a new access token and returns it to the client.
+    - The client can then use the new access token for future authenticated requests.
+
 ## JWT Token management
+
+### Registration
+
+- User sends a registration request to the server with their desired username and password.
+- Server validates the input and creates a new user account in the database, including a hashed password for security.
+- Upon successful registration, the server generates a refresh token for the user and stores it in Redis or another secure data store, associated with the user's account. The refresh token has a longer expiration time than the access token.
+- The server then generates an access token (shorter-lived token) and signs it with a secret key, containing the user's identity and any relevant user claims.
+- The server sends both the access token and refresh token back to the client as a response to the registration request.
+- The client stores the refresh token securely (e.g., in an HttpOnly cookie or local storage) for future use.
 
 ### `/Login` POST route
 
@@ -270,6 +307,24 @@ For more advanced features and customization options, refer to the `passport-loc
 - Set new refreshToken to the database
 - Send `refreshToken` and `accessToken` to the client.
 
+#### *Note*
+
+In the registration and login routes, you can handle refresh tokens separately to ensure that each user has a unique refresh token associated with their account. Here's how you can achieve this:
+
+1. Registration Route:
+    - After successfully registering a new user, generate a new refresh token specifically for that user. You can use a library or a utility function to create a unique refresh token.
+    - Store the refresh token in Redis or another secure data store, associated with the user's account. You can use the user's unique identifier (e.g., user ID or username) as the key to store the refresh token in Redis.
+    - Send both the access token and the newly generated refresh token back to the client as a response to the registration request. The client will store the refresh token securely for future use.
+
+2. Login Route:
+    - After successfully authenticating a user during the login process, generate a new refresh token for that user (similar to the registration route). This will ensure that the user gets a new refresh token each time they log in, preventing potential security issues if the previous refresh token was compromised.
+    - Store the new refresh token in Redis or update the existing refresh token associated with the user's account.
+    - Send both the access token and the newly generated refresh token back to the client as a response to the login request. The client will update the stored refresh token with the new one.
+
+By generating a new refresh token during registration and login, you ensure that each user has a unique refresh token associated with their account. This enhances security by reducing the risk of token reuse or replay attacks.
+
+In summary, the registration and login routes follow a similar process of generating and storing a new refresh token for each user, which is then used to obtain new access tokens when needed. The client stores the refresh token securely and sends it back to the server when requesting a new access token. This approach helps maintain the security and integrity of the authentication process in your application.
+
 ## Implenment token in frontend
 
 1. Create API Endpoints:
@@ -298,4 +353,3 @@ Use secure methods to store the access and refresh tokens in the client. Common 
 
 9. Error Handling:
 Implement error handling throughout your React app to handle scenarios like invalid tokens, network errors, or failed requests. Properly handle token expiration and use the token refresh mechanism when necessary.
-

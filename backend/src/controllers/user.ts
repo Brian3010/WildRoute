@@ -26,8 +26,12 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
   await User.register(user, password);
 
   const token = generateAccessToken<typeof user>(user);
+  const refreshToken = generateRefreshToken(user);
 
-  res.status(200).json({ accessToken: token });
+  // store refresh to redis database
+  await setRedisToken(refreshToken, user._id.toString());
+
+  res.status(200).json({ accessToken: token, refreshToken, message: 'redirect to other routes' });
 };
 
 export const loginUser: RequestHandler = async (req, res, next) => {

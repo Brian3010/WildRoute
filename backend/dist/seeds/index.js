@@ -61,7 +61,7 @@ const seedDb = async () => {
                     url: imgUrl,
                 },
             ],
-            author: '64b4cfcd706bc8a675b11af9',
+            author: '64bb7400d1712ffb93c88a71',
         });
         await ActList.save();
     }
