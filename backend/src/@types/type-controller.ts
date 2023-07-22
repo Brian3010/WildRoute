@@ -8,5 +8,6 @@ export interface NewActivityBody {
       url: string;
       // filename: string;
     }>;
+    author?:string; // mongoose.objectId type
   };
 }
