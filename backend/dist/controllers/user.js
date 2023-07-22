@@ -7,9 +7,9 @@ exports.refreshToken = exports.logoutUser = exports.loginUser = exports.register
 require('dotenv').config();
 const user_1 = __importDefault(require("../models/user"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
-const isValidId_1 = require("../utils/isValidId");
 const redis_1 = require("../utils/redis");
 const tokenHandling_1 = require("../utils/tokenHandling");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const registerUser = async (req, res, next) => {
     console.log(`${req.originalUrl} POST method`);
     const { email, username, password } = req.body.user;
@@ -31,6 +31,7 @@ const loginUser = async (req, res, next) => {
 };
 exports.loginUser = loginUser;
 const logoutUser = async (req, res, next) => {
+    console.log(`${req.originalUrl} POST method`);
     const refreshToken = req.body.token;
     if (!refreshToken)
         throw new AppError_1.default('Cannot fetch data from body', 404);
@@ -43,16 +44,24 @@ const logoutUser = async (req, res, next) => {
     }
 };
 exports.logoutUser = logoutUser;
-const refreshToken = async (req, res) => {
-    const { refreshToken, userId } = req.body;
-    if (!refreshToken || !userId)
+const refreshToken = async (req, res, next) => {
+    console.log(`${req.originalUrl} POST method`);
+    const { refreshToken } = req.body;
+    if (!refreshToken)
         throw new AppError_1.default('token or id must be provided', 400);
-    if (!(0, isValidId_1.isValidMongooseId)(userId))
-        throw new AppError_1.default('id is not a mongoose valid id', 400);
-    const token = await (0, redis_1.getRedisToken)(userId);
-    if (token?.length === 0)
+    jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const token = await (0, redis_1.getRedisToken)(req.user._id);
+    if (token === undefined)
+        throw new AppError_1.default('undefined token', 404);
+    if (token.length === 0)
         throw new AppError_1.default('There is no refreshToken in database (redirect to login)', 404);
-    res.send(token);
+    if (token !== refreshToken)
+        throw new AppError_1.default('invalid refreshToken', 401);
+    await (0, redis_1.deleteRedisToken)(req.user._id, refreshToken);
+    const newAccessToken = (0, tokenHandling_1.generateAccessToken)(req.user);
+    const newRefreshToken = (0, tokenHandling_1.generateRefreshToken)(req.user);
+    await (0, redis_1.setRedisToken)(newRefreshToken, req.user._id);
+    res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
 };
 exports.refreshToken = refreshToken;
 //# sourceMappingURL=user.js.map

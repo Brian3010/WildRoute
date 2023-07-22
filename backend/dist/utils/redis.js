@@ -47,6 +47,9 @@ const getRedisToken = id => {
     return new Promise(async (resolve, reject) => {
         try {
             const data = await redisClient.hGet(key, field);
+            console.log('file: redis.ts:69 ~ returnnewPromise ~ data:', data);
+            if (data === null)
+                throw new Error('user id not exist in database (redirect to login - to create create a new one with legitimate id)');
             return resolve(data);
         }
         catch (error) {
@@ -62,7 +65,6 @@ const deleteRedisToken = (id, refreshToken) => {
         try {
             const token = await (0, exports.getRedisToken)(id);
             if (token) {
-                console.log('getRedisToken:', token.length);
                 if (token.length > 0 && token === refreshToken) {
                     const tokenInDb = await redisClient.hSet(key, field, '');
                     return resolve(tokenInDb);

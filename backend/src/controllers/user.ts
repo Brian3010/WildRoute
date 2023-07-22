@@ -2,7 +2,6 @@ require('dotenv').config();
 import { RequestHandler } from 'express';
 import User from '../models/user';
 import AppError from '../utils/AppError';
-import { isValidMongooseId } from '../utils/isValidId';
 import { deleteRedisToken, getRedisToken, setRedisToken } from '../utils/redis';
 import { generateAccessToken, generateRefreshToken } from '../utils/tokenHandling';
 
@@ -52,6 +51,7 @@ type logoutBody = {
 };
 
 export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> = async (req, res, next) => {
+  console.log(`${req.originalUrl} POST method`);
   const refreshToken = req.body.token;
   if (!refreshToken) throw new AppError('Cannot fetch data from body', 404);
   const result = await deleteRedisToken(req.user._id, refreshToken);
@@ -75,23 +75,40 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
 
 // todo: refreshToken route implementation
 interface refreshTokenBody {
-  userId: string;
   refreshToken: string;
 }
-export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, unknown> = async (req, res) => {
-  const { refreshToken, userId } = req.body;
-  if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
-  if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
+export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, unknown> = async (req, res, next) => {
+  console.log(`${req.originalUrl} POST method`);
+  const { refreshToken } = req.body;
+  // if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
+  if (!refreshToken) throw new AppError('token or id must be provided', 400);
+  // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
 
   // Check if the refreshToken is in the database, if not, return error.
   // If yes, JWT.verify the refreshToken (using refresh token secret).
+  // compare the refreshToken with the one in the database.
   // Delete refreshToken from the database to invalidate it and prevent it from being used again.
   // Generate new accessToken and refreshToken, add refreshToken (along with userId?) to the redis database.
   // Send refreshToken and accessToken to the client.
-  const token = await getRedisToken(userId);
-  if (token?.length === 0) throw new AppError('There is no refreshToken in database (redirect to login)', 404);
 
-  // JWT.verify(token,process.env.JWT_REFRESH_SECRET)
+  // verify the refreshToken
+  JWT.verify(refreshToken, process.env.JWT_REFRESH_SECRET as JWT.Secret);
 
-  res.send(token);
+  // get token in the redis database
+  const token = await getRedisToken(req.user._id);
+  if (token === undefined) throw new AppError('undefined token', 404);
+  if (token.length === 0) throw new AppError('There is no refreshToken in database (redirect to login)', 404);
+
+  // compare 2 tokens to check valid refreshToken assigned to the user earlier.
+  if (token !== refreshToken) throw new AppError('invalid refreshToken', 401);
+
+  // delete token - setting to empty string
+  await deleteRedisToken(req.user._id, refreshToken);
+
+  // generate new tokens
+  const newAccessToken = generateAccessToken(req.user);
+  const newRefreshToken = generateRefreshToken(req.user);
+  await setRedisToken(newRefreshToken, req.user._id);
+
+  res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
 };
