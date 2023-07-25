@@ -66,15 +66,6 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
   } else {
     throw new AppError(<string>result, 500);
   }
-
-  //get token from redis dbs
-  // const fetchToken = await getRedisToken(req.user._id);
-  // if (!fetchToken) throw new AppError('refreshToken not found', 404);
-
-  // const deletedToken = await deleteRedisToken(req.user._id, refreshToken);
-  // console.log('deteteTOken ', typeof deletedToken);
-  // if (deletedToken != 0) throw new AppError('cannot delete the token', 400);
-  // res.status(200).json({ message: 'Successfully logout', deletedToken });
 };
 
 // todo: refreshToken route implementation
@@ -87,13 +78,6 @@ export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, un
   // if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
   if (!refreshToken) throw new AppError('token or id must be provided', 400);
   // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
-
-  // Check if the refreshToken is in the database, if not, return error.
-  // If yes, JWT.verify the refreshToken (using refresh token secret).
-  // compare the refreshToken with the one in the database.
-  // Delete refreshToken from the database to invalidate it and prevent it from being used again.
-  // Generate new accessToken and refreshToken, add refreshToken (along with userId?) to the redis database.
-  // Send refreshToken and accessToken to the client.
 
   // verify the refreshToken
   JWT.verify(refreshToken, process.env.JWT_REFRESH_SECRET as JWT.Secret);

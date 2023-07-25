@@ -8,6 +8,7 @@ export interface NewActivityBody {
       url: string;
       // filename: string;
     }>;
-    author?:string; // mongoose.objectId type
+    author?: string; // mongoose.objectId type
+    reviews?: Array<any>;
   };
 }

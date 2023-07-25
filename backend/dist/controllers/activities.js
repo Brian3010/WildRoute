@@ -34,6 +34,7 @@ const createActivity = async (req, res, next) => {
     if (!acty)
         throw new AppError_1.default('Cannot fetch data from body', 400);
     const newActy = new activities_1.default(acty);
+    newActy.author = req.user._id;
     const savedActy = await newActy.save();
     res.status(200).json(savedActy);
 };
