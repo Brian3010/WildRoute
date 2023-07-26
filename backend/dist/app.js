@@ -10,6 +10,7 @@ const passport_1 = __importDefault(require("passport"));
 const passport_jwt_1 = __importDefault(require("passport-jwt"));
 const user_1 = __importDefault(require("./models/user"));
 const activities_1 = __importDefault(require("./routes/activities"));
+const review_1 = __importDefault(require("./routes/review"));
 const user_2 = __importDefault(require("./routes/user"));
 const redis_1 = require("./utils/redis");
 const PORT = 3000;
@@ -49,6 +50,7 @@ app.use(passport_1.default.initialize());
 passport_1.default.use(jwtStrategy);
 app.use('/activities', activities_1.default);
 app.use('/user', user_2.default);
+app.use('/activities/:id/review', review_1.default);
 app.all('*', (req, res, next) => {
     res.send('INVALID URL');
 });

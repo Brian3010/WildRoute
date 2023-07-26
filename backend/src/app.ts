@@ -1,5 +1,5 @@
 require('dotenv').config();
-import express, { Express, NextFunction, Request, Response, response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import session, { SessionOptions } from 'express-session';
 import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
@@ -8,6 +8,7 @@ import PassportJwt from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
 import User from './models/user';
 import activitiesRoute from './routes/activities';
+import reviewRoute from './routes/review';
 import userRoute from './routes/user';
 import AppError from './utils/AppError';
 import { connectToRedis } from './utils/redis';
@@ -93,9 +94,14 @@ passport.use(jwtStrategy);
 //   res.send('Helloooooasdaasdasdasdsasdasdd');
 // });
 
+// *activities routes
 app.use('/activities', activitiesRoute);
 
+// *user routes
 app.use('/user', userRoute);
+
+// *review routes
+app.use('/activities/:id/review', reviewRoute);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   res.send('INVALID URL');
