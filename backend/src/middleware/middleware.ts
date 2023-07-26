@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
-import { appendFile } from 'fs';
 import JWT from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { NewActivityBody } from '../@types/type-controller';
+import ActivityList from '../models/activities';
 import AppError from '../utils/AppError';
 import { getRedisToken } from '../utils/redis';
 import { activitySchema } from './joiSchema';
@@ -57,6 +57,24 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
     console.log('req.user: ', user);
     next();
   })(req, res, next);
+};
+
+// check if author of an activity
+interface actyparams {
+  id: string;
+}
+export const isAuthor: RequestHandler<actyparams, unknown, unknown, unknown> = async (req, res, next) => {
+  const userId = req.user._id.toString() || undefined;
+  const actyId = req.params.id || undefined;
+
+  if (!userId || !actyId) throw new AppError('undefined ids', 404);
+
+  const acty = await ActivityList.findById(actyId);
+  if (!acty) throw new AppError('Activity not found', 404);
+
+  if (acty.author.toString() !== userId) throw new AppError('You donot own this activity', 401);
+
+  next();
 };
 
 // export const isTokenInBlackList: RequestHandler = async (req, res, next) => {

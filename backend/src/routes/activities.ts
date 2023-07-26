@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import * as actyController from '../controllers/activities';
-import { isLoggedIn, validateActivity } from '../middleware/middleware';
+import { isAuthor, isLoggedIn, validateActivity } from '../middleware/middleware';
 import catchAsync from '../utils/catchAsync';
 
 const router: Router = express.Router();
@@ -13,8 +13,8 @@ router
 router
   .route('/:id')
   .get(catchAsync(actyController.displayActivity))
-  .put(isLoggedIn, validateActivity, catchAsync(actyController.updateActy))
-  .delete(isLoggedIn, catchAsync(actyController.deleteActy));
+  .put(isLoggedIn, catchAsync(isAuthor), validateActivity, catchAsync(actyController.updateActy))
+  .delete(isLoggedIn, catchAsync(isAuthor), catchAsync(actyController.deleteActy));
 
 // router.route('/new').get(actyController.renderActivityForm);
 
