@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+const review_1 = __importDefault(require("./review"));
 const { Schema } = mongoose_1.default;
 const schemaConfig = {
     strict: 'throw',
@@ -47,6 +48,17 @@ const ActivityListSchema = new Schema({
         },
     ],
 }, schemaConfig);
+ActivityListSchema.post('findOneAndDelete', async function (actyToDel) {
+    console.log('POST "findbyIdandDelete"');
+    console.log('file: activities.ts:58 ~ actyToDel:', actyToDel);
+    if (actyToDel) {
+        await review_1.default.deleteMany({
+            _id: {
+                $in: actyToDel.reviews,
+            },
+        });
+    }
+});
 const ActivityList = mongoose_1.default.model('ActivityList', ActivityListSchema);
 exports.default = ActivityList;
 //# sourceMappingURL=activities.js.map

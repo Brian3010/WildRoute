@@ -28,7 +28,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const reviewController = __importStar(require("../controllers/review"));
+const middleware_1 = require("../middleware/middleware");
+const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const router = express_1.default.Router({ mergeParams: true });
-router.post('/', reviewController.createReview);
+router.post('/', middleware_1.isLoggedIn, middleware_1.validateReview, (0, catchAsync_1.default)(reviewController.createReview));
+router.delete('/:reviewId', middleware_1.isLoggedIn, (0, catchAsync_1.default)(middleware_1.isReviewAuthor), (0, catchAsync_1.default)(reviewController.deleteReview));
 exports.default = router;
 //# sourceMappingURL=review.js.map

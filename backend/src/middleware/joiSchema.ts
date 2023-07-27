@@ -14,3 +14,12 @@ export const activitySchema = Joi.object({
     ),
   }).required(),
 });
+
+export const reviewSchema = Joi.object({
+  review: Joi.object({
+    body: Joi.string().min(5).max(50),
+    rating: Joi.number().max(5).min(1).required(),
+  }).required(),
+});
+
+// })

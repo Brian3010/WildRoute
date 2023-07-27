@@ -14,6 +14,7 @@ export const index: RequestHandler = async (req, res, next) => {
 };
 
 // show activity's details
+// TODO: populate review fields, will display all the review at frontend.
 export const displayActivity: RequestHandler = async (req, res, next) => {
   console.log('/activities/:id GET REQUEST');
 

@@ -4,9 +4,10 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import { NewActivityBody } from '../@types/type-controller';
 import ActivityList from '../models/activities';
+import Review from '../models/review';
 import AppError from '../utils/AppError';
 import { getRedisToken } from '../utils/redis';
-import { activitySchema } from './joiSchema';
+import { activitySchema, reviewSchema } from './joiSchema';
 
 // validate request.body
 export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = (req, res, next) => {
@@ -21,6 +22,36 @@ export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody,
   } else {
     next();
   }
+};
+
+// validate review body
+interface reviewBody {
+  review: {
+    body: string;
+    rating: number;
+  };
+}
+export const validateReview: RequestHandler<unknown, unknown, reviewBody, unknown> = (req, res, next) => {
+  console.log(`${req.originalUrl} validateReview() middleware`);
+  const reviewbody = req.body;
+  if (!reviewbody) throw new AppError('missing reviews body', 400);
+
+  const { error } = reviewSchema.validate(reviewbody, { abortEarly: false });
+  if (error) {
+    const message = error.details.map(el => el.message).join(',');
+
+    throw new AppError(message, 400);
+  } else {
+    next();
+  }
+};
+
+// check if empty body
+export const isValidBody: RequestHandler = (req, res, next) => {
+  //check empty
+  if (Object.keys(req.body).length === 0) throw new AppError('the body is empty', 404);
+
+  next();
 };
 
 // authenticate using local strategy (IIFE)
@@ -54,7 +85,7 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
       throw new AppError(info.message, 401);
     }
     req.user = user;
-    console.log('req.user: ', user);
+    // console.log('req.user: ', user);
     next();
   })(req, res, next);
 };
@@ -73,6 +104,26 @@ export const isAuthor: RequestHandler<actyparams, unknown, unknown, unknown> = a
   if (!acty) throw new AppError('Activity not found', 404);
 
   if (acty.author.toString() !== userId) throw new AppError('You donot own this activity', 401);
+
+  next();
+};
+
+// check if owner of a review
+
+interface reviewParams {
+  reviewId: string;
+}
+export const isReviewAuthor: RequestHandler<reviewParams, unknown, unknown, unknown> = async (req, res, next) => {
+  console.log(`${req.originalUrl} isReviewAuthor Middleware`);
+  const { reviewId } = req.params;
+
+  // find review by id
+  const review = await Review.findById(reviewId);
+  if (!review) throw new AppError('Cannot find the review', 404);
+
+  if (JSON.stringify(review.owner) !== JSON.stringify(req.user._id)) {
+    throw new AppError('You do not have permission to delete this review', 401);
+  }
 
   next();
 };
@@ -114,10 +165,3 @@ export const isAuthor: RequestHandler<actyparams, unknown, unknown, unknown> = a
 //     next(err);
 //   }
 // };
-
-export const isValidBody: RequestHandler = (req, res, next) => {
-  //check empty
-  if (Object.keys(req.body).length === 0) throw new AppError('the body is empty', 404);
-
-  next();
-};
