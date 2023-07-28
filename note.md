@@ -95,11 +95,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 
 ```
 
-
-
 ### 1. Activity Listings
-
-
 
 *Brief*: Provide detailed listings for various outdoor activities, including descriptions, difficulty ratings, distance, elevation, and special requirements
 
@@ -108,4 +104,3 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 - List all activities:
   - started data: {id, activity_name, location, desciption(fact), price, image, author}.
   - modified ?:
-

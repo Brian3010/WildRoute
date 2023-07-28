@@ -1,5 +1,6 @@
 require('dotenv').config();
 import express, { Express, NextFunction, Request, Response } from 'express';
+import mongoSanitize from 'express-mongo-sanitize';
 import session, { SessionOptions } from 'express-session';
 import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
@@ -31,6 +32,15 @@ async function main() {
 const app: Express = express();
 
 app.use(express.json());
+
+// sanitize route to prevent mongo injection
+app.use(
+  mongoSanitize({
+    replaceWith: '_',
+  })
+);
+// TODO: sanitize user inputs with sanitizeHtml, implemnet with JOI
+// TODO: use cors or helmet to allow frontend to hit backend API
 
 // *configure session
 // const sessionConfig: SessionOptions = {
@@ -81,6 +91,7 @@ app.use(passport.initialize());
 passport.use(jwtStrategy);
 
 // *Passport configuration
+
 // app.use(passport.initialize());
 // app.use(passport.session());
 // passport.use(new LocalStrategy(User.authenticate()));
@@ -93,6 +104,10 @@ passport.use(jwtStrategy);
 // app.get('/', (req: Request, res: Response) => {
 //   res.send('Helloooooasdaasdasdasdsasdasdd');
 // });
+app.get('/', (req, res) => {
+  console.log(req.query);
+  res.json({ message: 'Home Page' });
+});
 
 // *activities routes
 app.use('/activities', activitiesRoute);
@@ -104,7 +119,7 @@ app.use('/user', userRoute);
 app.use('/activities/:id/review', reviewRoute);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  res.send('INVALID URL');
+  next(new AppError('Page Not Found', 404));
 });
 
 // *Errors are catched here from throwing new Error/AppError using next(error);

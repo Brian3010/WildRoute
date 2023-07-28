@@ -1,7 +1,17 @@
-import mongoose, { InferSchemaType, SchemaOptions } from 'mongoose';
+import mongoose, { SchemaOptions, Types } from 'mongoose';
 import { activitySchema } from '../middleware/joiSchema';
 import Review from './review';
 const { Schema } = mongoose;
+
+interface IActivityList {
+  activity_title: string;
+  location: string;
+  description: string;
+  avg_price: number;
+  image: Array<{ url: string }>;
+  author?: Types.ObjectId;
+  reviews?: Array<Types.ObjectId>;
+}
 
 const schemaConfig: SchemaOptions = {
   strict: 'throw',
@@ -55,7 +65,7 @@ const ActivityListSchema = new Schema(
 // applied when delete a activity
 // when deleting an activity, we delete the review in review colllection as well
 // "findbyidandDelete" trigger "findOneAndDelete".
-ActivityListSchema.post('findOneAndDelete', async function (actyToDel: SchemaType) {
+ActivityListSchema.post('findOneAndDelete', async function (actyToDel: IActivityList) {
   console.log('POST "findbyIdandDelete"');
   console.log('file: activities.ts:58 ~ actyToDel:', actyToDel);
 
@@ -70,8 +80,8 @@ ActivityListSchema.post('findOneAndDelete', async function (actyToDel: SchemaTyp
 });
 
 //{id, activity_name, location, desciption(fact), price, image, author}.
-type SchemaType = InferSchemaType<typeof ActivityListSchema>;
+// type SchemaType = InferSchemaType<typeof ActivityListSchema> ;
 
-const ActivityList = mongoose.model<SchemaType>('ActivityList', ActivityListSchema);
+const ActivityList = mongoose.model<IActivityList>('ActivityList', ActivityListSchema);
 
 export default ActivityList;

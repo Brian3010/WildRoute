@@ -1,6 +1,12 @@
 import mongoose, { InferSchemaType, SchemaOptions } from 'mongoose';
 const Schema = mongoose.Schema;
 
+interface IReview {
+  body?: string;
+  rating: string;
+  owner: string;
+}
+
 const schemaConfig: SchemaOptions = {
   strict: 'throw',
 };
@@ -21,8 +27,8 @@ const reviewSchema = new Schema(
   schemaConfig
 );
 
-type reviewSchemaType = InferSchemaType<typeof reviewSchema>;
+// type reviewSchemaType = InferSchemaType<typeof reviewSchema>;
 
-const Review = mongoose.model<reviewSchemaType>('Review', reviewSchema);
+const Review = mongoose.model<IReview>('Review', reviewSchema);
 
 export default Review;

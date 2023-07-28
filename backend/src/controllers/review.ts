@@ -28,7 +28,7 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
   reviewDoc.owner = req.user._id;
 
   //push review to activityList.reviews
-  acty.reviews.push(reviewDoc.id);
+  acty.reviews!.push(reviewDoc.id);
 
   await reviewDoc.save();
   await acty.save();

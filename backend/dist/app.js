@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 const express_1 = __importDefault(require("express"));
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
 const passport_jwt_1 = __importDefault(require("passport-jwt"));
@@ -12,6 +13,7 @@ const user_1 = __importDefault(require("./models/user"));
 const activities_1 = __importDefault(require("./routes/activities"));
 const review_1 = __importDefault(require("./routes/review"));
 const user_2 = __importDefault(require("./routes/user"));
+const AppError_1 = __importDefault(require("./utils/AppError"));
 const redis_1 = require("./utils/redis");
 const PORT = 3000;
 main()
@@ -26,6 +28,9 @@ async function main() {
 }
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+app.use((0, express_mongo_sanitize_1.default)({
+    replaceWith: '_',
+}));
 const jwtOpts = {
     jwtFromRequest: passport_jwt_1.default.ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_ACCESS_SECRET,
@@ -48,11 +53,15 @@ const jwtVerify = async (payload, done) => {
 const jwtStrategy = new passport_jwt_1.default.Strategy(jwtOpts, jwtVerify);
 app.use(passport_1.default.initialize());
 passport_1.default.use(jwtStrategy);
+app.get('/', (req, res) => {
+    console.log(req.query);
+    res.json({ message: 'Home Page' });
+});
 app.use('/activities', activities_1.default);
 app.use('/user', user_2.default);
 app.use('/activities/:id/review', review_1.default);
 app.all('*', (req, res, next) => {
-    res.send('INVALID URL');
+    next(new AppError_1.default('Page Not Found', 404));
 });
 app.use((err, req, res, next) => {
     console.log('Errors name: ', err.name || 'err.name not exist');

@@ -14,7 +14,6 @@ export const index: RequestHandler = async (req, res, next) => {
 };
 
 // show activity's details
-// TODO: populate review fields, will display all the review at frontend.
 export const displayActivity: RequestHandler = async (req, res, next) => {
   console.log('/activities/:id GET REQUEST');
 
@@ -24,10 +23,9 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
     throw new AppError('Invalid Activity Id', 400);
   }
 
-  const acty = await ActivityList.findById(id);
-  if (!acty) {
-    throw new AppError('Activity does not exist', 404);
-  }
+  const acty = await ActivityList.findById(id).populate('author').populate('reviews');
+  if (!acty) throw new AppError('Activity does not exist', 404);
+  if (!acty.populated) throw new AppError('Cannot populate the data', 400);
 
   return res.status(200).json(acty);
 };

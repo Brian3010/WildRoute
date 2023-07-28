@@ -103,7 +103,7 @@ export const isAuthor: RequestHandler<actyparams, unknown, unknown, unknown> = a
   const acty = await ActivityList.findById(actyId);
   if (!acty) throw new AppError('Activity not found', 404);
 
-  if (acty.author.toString() !== userId) throw new AppError('You donot own this activity', 401);
+  if (acty.author!.toString() !== userId) throw new AppError('You donot own this activity', 401);
 
   next();
 };
