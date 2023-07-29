@@ -22,7 +22,7 @@ function App() {
           </li>
         </ul>
       </nav>
-
+      // TODO: implement navigation refer to this https://youtu.be/Ul3y1LXxzdU?t=1010
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/activities" element={<ActivityList />} />
