@@ -15,7 +15,7 @@ const validateActivity = (req, res, next) => {
         throw new AppError_1.default('Cannot fetch data from body', 404);
     const { error } = joiSchema_1.activitySchema.validate(acty, { abortEarly: false });
     if (error) {
-        const message = error.details.map(el => el.message).join(',');
+        const message = error.details.map((el) => el.message).join(',');
         throw new AppError_1.default(message, 400);
     }
     else {

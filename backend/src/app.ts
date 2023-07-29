@@ -33,13 +33,12 @@ const app: Express = express();
 
 app.use(express.json());
 
-// sanitize route to prevent mongo injection
+// *sanitize route to prevent mongo injection
 app.use(
   mongoSanitize({
     replaceWith: '_',
   })
 );
-// TODO: sanitize user inputs with sanitizeHtml, implemnet with JOI
 // TODO: use cors or helmet to allow frontend to hit backend API
 
 // *configure session

@@ -16,7 +16,7 @@ export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody,
 
   const { error } = activitySchema.validate(acty, { abortEarly: false });
   if (error) {
-    const message = error.details.map(el => el.message).join(',');
+    const message = error.details.map((el: { message: string }) => el.message).join(',');
 
     throw new AppError(message, 400);
   } else {
