@@ -2,3 +2,30 @@
   padding-left: 2.5vw;
   padding-right: 2.5vw;
 }
+
+.custom-link {
+  text-decoration: none;
+  color: #ffffff;
+  position: relative;
+}
+.custom-link:hover {
+  filter: brightness(2);
+}
+
+.custom-link::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 0%;
+  content: '.';
+  color: transparent;
+  background: #ffffff;
+  height: 1px;
+}
+
+.custom-link:hover:after {
+  width: 100%;
+  transition: all 1s;
+}

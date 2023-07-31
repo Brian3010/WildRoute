@@ -1,43 +1,62 @@
-import MenuIcon from '@mui/icons-material/Menu';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
+import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 import '../assets/NavBar.css';
-// import AdbIcon from '@mui/icons-material/Adb';
-// import Avatar from '@mui/material/Avatar';
-// import Container from '@mui/material/Container';
-// import Tooltip from '@mui/material/Tooltip';
 
-const pages = ['Home', 'Activities'];
-// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#1976d2',
+    },
+  },
+});
 function NavBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  //   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-  //   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-  //     setAnchorElUser(event.currentTarget);
-  //   };
-  //   const handleCloseUserMenu = () => {
-  //     setAnchorElUser(null);
-  //   };
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   return (
-    <AppBar position="static">
+    <>
+      <ThemeProvider theme={darkTheme}>
+        <AppBar position="static" color="default">
+          <div className="custom-navbar">
+            <Toolbar>
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                  mr: 2,
+                  display: { xs: 'none', md: 'flex' },
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.1rem',
+                  color: 'inherit',
+                  textDecoration: 'none',
+                }}
+              >
+                WildRoute
+              </Typography>
+
+              <Box sx={{ flexGrow: 1, display: { md: 'flex', gap: '1.5em', justifyContent: 'flex-end', sm: 'none' } }}>
+                <Link to="/activities" className="custom-link">
+                  Activities
+                </Link>
+                <Link to="/activities/new" className="custom-link">
+                  New Activity
+                </Link>
+                <Link to="/activities/user/login" className="custom-link">
+                  Login
+                </Link>
+              </Box>
+            </Toolbar>
+          </div>
+        </AppBar>
+      </ThemeProvider>
+    </>
+  );
+}
+export default NavBar;
+{
+  /* <AppBar position="static">
       <div className="custom-navbar">
         <Toolbar disableGutters>
           <Typography
@@ -148,10 +167,8 @@ function NavBar() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box> */}
-        </Toolbar>
-      </div>
-    </AppBar>
-  );
+          </Box> */
 }
-export default NavBar;
+//     </Toolbar>
+//   </div>
+// </AppBar> */}
