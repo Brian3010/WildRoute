@@ -16,8 +16,8 @@ function App() {
       <CssBaseline />
       <>
         <NavBar />
-        <main>
-          <Container maxWidth="lg">
+        <main style={{ marginTop: '2em' }}>
+          <Container maxWidth="xl">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/activities">
