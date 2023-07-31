@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ActivityItem from '../components/ActivityItem';
 
@@ -81,10 +81,10 @@ function ActivityList() {
     <>
       <h1>Acitivity List Page</h1>
       {/* // ?use Grid */}
-      // todo: try to space equally
-      <Grid container spacing={2} justifyContent={'center'}>
+      // todo: have a look at sizing individual Grid item like <Grid item xs={8}></Grid>
+      <Grid container spacing={2}>
         {sampleData.map((el, i) => (
-          <Grid item flexGrow={1}>
+          <Grid item>
             <ActivityItem key={i} data={el} />
           </Grid>
         ))}
