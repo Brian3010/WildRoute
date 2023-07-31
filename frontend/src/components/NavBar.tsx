@@ -1,5 +1,7 @@
-import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, Toolbar, Typography } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../assets/NavBar.css';
 
@@ -11,11 +13,41 @@ const darkTheme = createTheme({
     },
   },
 });
+
+const drawerWidth = '240px';
 function NavBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(prevState => !prevState);
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Typography variant="h5" sx={{ my: 2, fontFamily: 'monospace', fontWeight: 700, letterSpacing: '.1rem' }}>
+        WildRoute
+      </Typography>
+      <Divider />
+      <List sx={{ px: '1.5em' }}>
+        <ListItem sx={{ flexDirection: 'column', gap: '1.5em', alignItems: 'baseline' }}>
+          <Link to="/activities" className="custom-link">
+            Activities
+          </Link>
+          <Link to="/activities/new" className="custom-link">
+            New Activity
+          </Link>
+          <Link to="/activities/user/login" className="custom-link">
+            Login
+          </Link>
+        </ListItem>
+      </List>
+    </Box>
+  );
+
   return (
     <>
       <ThemeProvider theme={darkTheme}>
-        <AppBar position="static" color="default">
+        <AppBar position="static" color="default" component={'nav'}>
           <div className="custom-navbar">
             <Toolbar>
               <Typography
@@ -36,7 +68,7 @@ function NavBar() {
                 WildRoute
               </Typography>
 
-              <Box sx={{ flexGrow: 1, display: { md: 'flex', gap: '1.5em', justifyContent: 'flex-end', sm: 'none' } }}>
+              <Box sx={{ flexGrow: 1, display: { md: 'flex', gap: '1.5em', justifyContent: 'flex-end', xs: 'none' } }}>
                 <Link to="/activities" className="custom-link">
                   Activities
                 </Link>
@@ -47,6 +79,61 @@ function NavBar() {
                   Login
                 </Link>
               </Box>
+
+              {/* display on small screen */}
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: { xs: 'flex', md: 'none' },
+                }}
+              >
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleDrawerToggle}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Box>
+
+              <Box component="nav">
+                <Drawer
+                  variant="temporary"
+                  open={mobileOpen}
+                  onClose={handleDrawerToggle}
+                  ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                  }}
+                  sx={{
+                    display: { xs: 'block', md: 'none' },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                  }}
+                >
+                  {drawer}
+                </Drawer>
+              </Box>
+
+              <Typography
+                variant="h5"
+                noWrap
+                component="a"
+                href=""
+                sx={{
+                  mr: 2,
+                  display: { xs: 'flex', md: 'none' },
+                  flexGrow: 1,
+                  fontFamily: 'monospace',
+                  fontWeight: 700,
+                  letterSpacing: '.1rem',
+                  color: 'inherit',
+                  textDecoration: 'none',
+                }}
+              >
+                WildRoute
+              </Typography>
             </Toolbar>
           </div>
         </AppBar>
