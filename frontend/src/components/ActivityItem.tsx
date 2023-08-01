@@ -2,7 +2,6 @@ import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@
 import { Link } from 'react-router-dom';
 
 type ActyItemProps = {
-  key: number;
   data: { id: number; title: string; description: string; location: string; image: string };
 };
 export default function ActivityItem(props: ActyItemProps) {
@@ -10,7 +9,7 @@ export default function ActivityItem(props: ActyItemProps) {
 
   return (
     <>
-      <Card sx={{ maxWidth: 335 }}>
+      <Card sx={{ width: '100%' }}>
         <CardMedia sx={{ height: 200 }} image={data.image} title="activity image" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

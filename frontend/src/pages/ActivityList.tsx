@@ -1,6 +1,7 @@
 import { Box, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
+
 import ActivityItem from '../components/ActivityItem';
+import AppPagination from '../components/Pagination';
 
 type ActyDataList = {
   id: number;
@@ -80,17 +81,18 @@ function ActivityList() {
   return (
     <>
       <h1>Acitivity List Page</h1>
-      {/* // ?use Grid */}
-      // todo: have a look at sizing individual Grid item like <Grid item xs={8}></Grid>
+
       <Grid container spacing={2}>
         {sampleData.map((el, i) => (
-          <Grid item>
-            <ActivityItem key={i} data={el} />
+          <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
+            <ActivityItem data={el} />
           </Grid>
         ))}
       </Grid>
-      <Link to="/activities/1">Activity 1 </Link>
-      <Link to="/activities/2">Activity 2 </Link>
+
+      <Box display={'flex'} justifyContent={'center'} marginTop={2} marginBottom={2}>
+        <AppPagination />
+      </Box>
     </>
   );
 }
