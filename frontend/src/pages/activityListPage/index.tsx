@@ -79,9 +79,14 @@ const sampleData: ActyDataList = [
 
 function ActivityList() {
   // activities per page
-  const [actiesPerPage] = useState(3);
+  const [actiesPerPage] = useState(4);
   // current page
   const [currentPage, setCurrentPage] = useState(1);
+
+  // todo: install axios, make sure the data presentation is correct before go to the next -> useEffect() to fetch data from backend (the api call method's already created)
+  // todo: refactor the code with the fetched data to display on the web
+
+  // https://github.com/bradtraversy/simple_react_pagination/blob/master/src/App.js
 
   // get current activities
   const indexOfLastActy = currentPage * actiesPerPage; // 1 * 3 = [3] // 2 * 3 = [6]

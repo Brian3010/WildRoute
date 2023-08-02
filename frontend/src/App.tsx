@@ -2,7 +2,7 @@ import { Container, CssBaseline } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
 import './assets/App.css';
 import NavBar from './components/NavBar';
-import NotFound from './pages/NotFound';
+import PageNotFound from './pages/PageNotFound';
 import Activity from './pages/activityDetailPage';
 import ActivityList from './pages/activityListPage';
 import EditActivity from './pages/editPage/EditActivity';
@@ -27,7 +27,7 @@ function App() {
                 <Route path=":id/edit" element={<EditActivity />} />
                 <Route path="user/login" element={<LoginPage />} />
               </Route>
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Container>
         </main>
@@ -35,6 +35,7 @@ function App() {
     </div>
   );
 }
+
 // function App() {
 //   return (
 //     <div className="App">
