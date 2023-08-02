@@ -1,7 +1,7 @@
 import { Box, Grid } from '@mui/material';
 import { useState } from 'react';
-import ActivityItem from '../components/ActivityItem';
-import AppPagination from '../components/Pagination';
+import ActivityItem from '../../components/ActivityItem';
+import AppPagination from '../../components/Pagination';
 
 type ActyDataList = {
   id: number;
@@ -79,7 +79,7 @@ const sampleData: ActyDataList = [
 
 function ActivityList() {
   // activities per page
-  const [actiesPerPage] = useState(4);
+  const [actiesPerPage] = useState(3);
   // current page
   const [currentPage, setCurrentPage] = useState(1);
 

@@ -2,13 +2,13 @@ import { Container, CssBaseline } from '@mui/material';
 import { Route, Routes } from 'react-router-dom';
 import './assets/App.css';
 import NavBar from './components/NavBar';
-import Activity from './pages/Activity';
-import ActivityList from './pages/ActivityList';
-import EditActivity from './pages/EditActivity';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import NewActivity from './pages/NewActivity';
 import NotFound from './pages/NotFound';
+import Activity from './pages/activityDetailPage';
+import ActivityList from './pages/activityListPage';
+import EditActivity from './pages/editPage/EditActivity';
+import HomePage from './pages/homepage';
+import LoginPage from './pages/loginPage';
+import NewActivity from './pages/newPage';
 
 function App() {
   return (
