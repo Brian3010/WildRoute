@@ -1,4 +1,5 @@
 require('dotenv').config();
+import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 import session, { SessionOptions } from 'express-session';
@@ -40,6 +41,11 @@ app.use(
   })
 );
 // TODO: use cors or helmet to allow frontend to hit backend API
+app.use(
+  cors({
+    origin: '*',
+  })
+);
 
 // *configure session
 // const sessionConfig: SessionOptions = {

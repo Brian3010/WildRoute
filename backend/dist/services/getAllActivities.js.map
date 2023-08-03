@@ -1,1 +1,0 @@
-{"version":3,"file":"getAllActivities.js","sourceRoot":"","sources":["../../src/services/getAllActivities.ts"],"names":[],"mappings":";;;;;;AAAA,kDAA6C;AAatC,KAAK,UAAU,gBAAgB;IACpC,MAAM,GAAG,GAAG,MAAM,eAAK,CAAC,GAAG,CAAY,aAAa,CAAC,CAAC;IACtD,OAAO,GAAG,CAAC,IAAI,CAAC;AAClB,CAAC;AAHD,4CAGC"}

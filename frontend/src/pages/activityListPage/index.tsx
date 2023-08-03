@@ -1,7 +1,8 @@
 import { Box, Grid } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ActivityItem from '../../components/ActivityItem';
 import AppPagination from '../../components/Pagination';
+import getActies from '../../services/getActies';
 
 type ActyDataList = {
   id: number;
@@ -83,10 +84,20 @@ function ActivityList() {
   // current page
   const [currentPage, setCurrentPage] = useState(1);
 
-  // todo: install axios, make sure the data presentation is correct before go to the next -> useEffect() to fetch data from backend (the api call method's already created)
   // todo: refactor the code with the fetched data to display on the web
+  // todo: add error handler like trycatch for fetching data
 
   // https://github.com/bradtraversy/simple_react_pagination/blob/master/src/App.js
+
+  // fetch data from backend
+  useEffect(() => {
+    console.log('useEffect run');
+    (async () => {
+      const res = await getActies();
+      console.log('file: index.tsx:96 ~ res:', res);
+    })();
+  }),
+    [];
 
   // get current activities
   const indexOfLastActy = currentPage * actiesPerPage; // 1 * 3 = [3] // 2 * 3 = [6]
