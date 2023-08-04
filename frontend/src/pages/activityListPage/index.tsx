@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import ActivityItem from '../../components/ActivityItem';
 import AppPagination from '../../components/Pagination';
 import getActies from '../../services/getActies';
+import catchError from '../../utils/catchError';
 
 type ActyDataList = {
   id: number;
@@ -92,12 +93,11 @@ function ActivityList() {
   // fetch data from backend
   useEffect(() => {
     console.log('useEffect run');
-    (async () => {
+    catchError(async () => {
       const res = await getActies();
       console.log('file: index.tsx:96 ~ res:', res);
     })();
-  }),
-    [];
+  }, []);
 
   // get current activities
   const indexOfLastActy = currentPage * actiesPerPage; // 1 * 3 = [3] // 2 * 3 = [6]
