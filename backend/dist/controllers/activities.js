@@ -9,7 +9,7 @@ const AppError_1 = __importDefault(require("../utils/AppError"));
 const isValidId_1 = require("../utils/isValidId");
 const index = async (req, res, next) => {
     console.log('/activitites GET REQUEST');
-    const actList = await activities_1.default.find({});
+    const actList = await activities_1.default.find();
     if (actList.length === 0)
         throw new AppError_1.default('Cannot fetch the activity list', 404);
     res.status(200).json(actList);

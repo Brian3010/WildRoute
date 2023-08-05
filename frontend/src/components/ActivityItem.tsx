@@ -8,11 +8,16 @@ type ActyItemProps = {
 
 export default function ActivityItem(props: ActyItemProps) {
   const data = props.data;
-
+  // todo: seed the database again :))
   return (
     <>
       <Card sx={{ width: '100%', height: '100%' }}>
-        <CardMedia sx={{ height: 200 }} image={data.image[0].url} title="activity image" />
+        <CardMedia
+          component="img"
+          sx={{ height: 200 }}
+          image={'/d/ies/mynn_230/278876908_934063843941879_4810330787763993630_n.jpg'}
+          title="activity image"
+        />
         <CardContent>
           <Typography
             gutterBottom
