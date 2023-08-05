@@ -7,7 +7,7 @@ import { isValidMongooseId } from '../utils/isValidId';
 // show a list of activities
 export const index: RequestHandler = async (req, res, next) => {
   console.log('/activitites GET REQUEST');
-  // todo-1: the following code will list a portion of documents
+
   // const actList = await ActivityList.find().skip(0).limit(2);
   const actList = await ActivityList.find();
   if (actList.length === 0) throw new AppError('Cannot fetch the activity list', 404);

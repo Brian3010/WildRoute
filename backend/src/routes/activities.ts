@@ -4,7 +4,6 @@ import { isAuthor, isLoggedIn, validateActivity } from '../middleware/middleware
 import catchAsync from '../utils/catchAsync';
 
 const router: Router = express.Router();
-// todo-1: create new route /activities/page-{number}/.
 router
   .route('/')
   .get(catchAsync(actyController.index))
