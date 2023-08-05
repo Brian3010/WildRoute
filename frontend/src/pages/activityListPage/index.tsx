@@ -80,10 +80,13 @@ const sampleData: ActyDataList = [
 ];
 
 function ActivityList() {
+  console.log('component render');
   // activities per page
   const [actiesPerPage] = useState(4);
   // current page
   const [currentPage, setCurrentPage] = useState(1);
+
+  const [error, setError] = useState<Error>();
 
   // todo: refactor the code with the fetched data to display on the web
   // todo: add error handler like trycatch for fetching data
@@ -96,7 +99,7 @@ function ActivityList() {
     catchError(async () => {
       const res = await getActies();
       console.log('file: index.tsx:96 ~ res:', res);
-    })();
+    })((error: Error) => setError(error));
   }, []);
 
   // get current activities
@@ -109,6 +112,7 @@ function ActivityList() {
 
   return (
     <>
+      {error && <div>{error.message}</div>}
       <h1>Acitivity List Page</h1>
 
       <Grid container spacing={2}>
