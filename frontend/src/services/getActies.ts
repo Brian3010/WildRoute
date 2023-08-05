@@ -13,6 +13,6 @@ export type TActies = {
 };
 
 export default async function getActies(): Promise<TActies[]> {
-  const res = await axios.get<TActies[]>(`${BACKEND_URL}/activitis`);
+  const res = await axios.get<TActies[]>(`${BACKEND_URL}/activities`);
   return res.data;
 }

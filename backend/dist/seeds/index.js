@@ -50,8 +50,8 @@ const seedDb = async () => {
         const imgUrl = await getPhotoUrl();
         const ActList = new activities_js_1.default({
             activity_title: `${seedHelpers_js_1.places[placeIdx[0]][1]} ${seedHelpers_js_1.descriptors[placeIdx[0]]}`,
-            location: `${cities_js_1.cities[cityIdx].city} ${cities_js_1.cities[cityIdx].admin_name}`,
-            description: 'desc',
+            location: `${cities_js_1.cities[cityIdx].city}, ${cities_js_1.cities[cityIdx].admin_name}`,
+            description: 'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
             avg_price: 2,
             image: [
                 {

@@ -57,8 +57,9 @@ const seedDb = async (): Promise<void> => {
 
     const ActList = new ActivityList({
       activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,
-      location: `${cities[cityIdx].city} ${cities[cityIdx].admin_name}`,
-      description: 'desc',
+      location: `${cities[cityIdx].city}, ${cities[cityIdx].admin_name}`,
+      description:
+        'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
       avg_price: 2,
       image: [
         {
