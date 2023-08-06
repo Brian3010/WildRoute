@@ -1,9 +1,9 @@
 import { Box, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useErrorBoundary } from 'react-error-boundary';
 import ActivityItem from '../../components/ActivityItem';
 import AppPagination from '../../components/Pagination';
 import getActies, { TActies } from '../../services/getActies';
-import catchError from '../../utils/catchError';
 
 // type ActyDataList = {
 //   id: TActies['_id'];
@@ -80,24 +80,26 @@ import catchError from '../../utils/catchError';
 // ];
 
 function ActivityList() {
+  const { showBoundary } = useErrorBoundary();
   const [actyData, setActyData] = useState<TActies[]>([]);
   // activities per page
   const [actiesPerPage] = useState(15);
   // current page
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [error, setError] = useState<Error>();
-
   // fetch data from backend
   useEffect(() => {
     console.log('useEffect run');
-    catchError(async () => {
-      const res = await getActies();
-      // console.log('file: index.tsx:96 ~ res:', res);
-      // store the result in the state
-      setActyData(res);
-    })((error: Error) => setError(error));
-  }, []);
+    (async () => {
+      try {
+        const res = await getActies();
+        // store the result in the state
+        setActyData(res);
+      } catch (error) {
+        showBoundary(error);
+      }
+    })();
+  }, [showBoundary]);
 
   // get current activities
   const indexOfLastActy = currentPage * actiesPerPage; // 1 * 3 = [3] // 2 * 3 = [6]
@@ -107,24 +109,30 @@ function ActivityList() {
   // change page
   const paginationOnChange: (pageNum: number) => void = pageNum => setCurrentPage(pageNum);
 
-  return (
-    <>
-      {error && <div>{error.message}</div>}
-      <h1>Acitivity List Page</h1>
+  if (actyData.length > 0) {
+    return (
+      <>
+        {/* {error && <div>{error.message}</div>} */}
+        <h1>Acitivity List Page</h1>
 
-      <Grid container spacing={2}>
-        {currentActies.map((el, i) => (
-          <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
-            <ActivityItem data={el} />
-          </Grid>
-        ))}
-      </Grid>
+        <Grid container spacing={2}>
+          {currentActies.map((el, i) => (
+            <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
+              <ActivityItem data={el} />
+            </Grid>
+          ))}
+        </Grid>
 
-      <Box display={'flex'} justifyContent={'center'} marginTop={2} marginBottom={2}>
-        <AppPagination actiesPerPage={actiesPerPage} totalActies={actyData.length} pageOnchange={paginationOnChange} />
-      </Box>
-    </>
-  );
+        <Box display={'flex'} justifyContent={'center'} marginTop={2} marginBottom={2}>
+          <AppPagination
+            actiesPerPage={actiesPerPage}
+            totalActies={actyData.length}
+            pageOnchange={paginationOnChange}
+          />
+        </Box>
+      </>
+    );
+  }
 }
 
 export default ActivityList;

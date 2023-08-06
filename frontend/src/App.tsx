@@ -1,6 +1,8 @@
 import { Container, CssBaseline } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes } from 'react-router-dom';
 import './assets/App.css';
+import ErrorFallBack from './components/ErrorFallBack';
 import NavBar from './components/NavBar';
 import PageNotFound from './pages/PageNotFound';
 import Activity from './pages/activityDetailPage';
@@ -9,6 +11,10 @@ import EditActivity from './pages/editPage/EditActivity';
 import HomePage from './pages/homepage';
 import LoginPage from './pages/loginPage';
 import NewActivity from './pages/newPage';
+
+function logError(error: Error, info: { componentStack: string }) {
+  console.error('Caught an error:', error, info);
+}
 
 function App() {
   return (
@@ -21,12 +27,21 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/activities">
-                <Route index element={<ActivityList />} />
+                <Route
+                  index
+                  element={
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError}>
+                      <ActivityList />
+                    </ErrorBoundary>
+                  }
+                />
+
                 <Route path=":id" element={<Activity />} />
                 <Route path="new" element={<NewActivity />} />
                 <Route path=":id/edit" element={<EditActivity />} />
                 <Route path="user/login" element={<LoginPage />} />
               </Route>
+
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Container>
