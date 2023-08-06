@@ -7,7 +7,7 @@ import NavBar from './components/NavBar';
 import PageNotFound from './pages/PageNotFound';
 import Activity from './pages/activityDetailPage';
 import ActivityList from './pages/activityListPage';
-import EditActivity from './pages/editPage/EditActivity';
+import EditActivity from './pages/editPage';
 import HomePage from './pages/homepage';
 import LoginPage from './pages/loginPage';
 import NewActivity from './pages/newPage';

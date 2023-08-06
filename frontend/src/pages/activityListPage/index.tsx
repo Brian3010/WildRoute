@@ -86,6 +86,7 @@ function ActivityList() {
   const [actiesPerPage] = useState(15);
   // current page
   const [currentPage, setCurrentPage] = useState(1);
+  // todo:Add loading status
 
   // fetch data from backend
   useEffect(() => {
@@ -112,7 +113,6 @@ function ActivityList() {
   if (actyData.length > 0) {
     return (
       <>
-        {/* {error && <div>{error.message}</div>} */}
         <h1>Acitivity List Page</h1>
 
         <Grid container spacing={2}>
