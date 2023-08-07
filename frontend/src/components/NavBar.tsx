@@ -30,7 +30,7 @@ function NavBar() {
       <Divider />
       <List sx={{ px: '1.5em' }}>
         <ListItem sx={{ flexDirection: 'column', gap: '1.5em', alignItems: 'baseline' }}>
-          <Link to="/activities" className="custom-link">
+          <Link to={'/activities'} className="custom-link">
             Activities
           </Link>
           <Link to="/activities/new" className="custom-link">

@@ -1,6 +1,6 @@
 import { Container, CssBaseline } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
 import ErrorFallBack from './components/ErrorFallBack';
 import NavBar from './components/NavBar';
@@ -17,6 +17,7 @@ function logError(error: Error, info: { componentStack: string }) {
 }
 
 function App() {
+  const location = useLocation();
   return (
     <div className="App">
       <CssBaseline />
@@ -30,13 +31,20 @@ function App() {
                 <Route
                   index
                   element={
-                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError}>
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} key={location.pathname}>
                       <ActivityList />
                     </ErrorBoundary>
                   }
                 />
 
-                <Route path=":id" element={<Activity />} />
+                <Route
+                  path=":id"
+                  element={
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError}>
+                      <Activity />
+                    </ErrorBoundary>
+                  }
+                />
                 <Route path="new" element={<NewActivity />} />
                 <Route path=":id/edit" element={<EditActivity />} />
                 <Route path="user/login" element={<LoginPage />} />
