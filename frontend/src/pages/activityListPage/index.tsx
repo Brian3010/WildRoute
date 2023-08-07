@@ -80,27 +80,32 @@ import getActies, { TActies } from '../../services/getActies';
 // ];
 
 function ActivityList() {
+  console.log('ActivityList component render');
   const { showBoundary } = useErrorBoundary();
   const [actyData, setActyData] = useState<TActies[]>([]);
   // activities per page
   const [actiesPerPage] = useState(15);
   // current page
   const [currentPage, setCurrentPage] = useState(1);
-  // todo:Add loading status
+  const [loading, setLoading] = useState(false);
 
   // fetch data from backend
   useEffect(() => {
+    setLoading(true);
     console.log('useEffect run');
     (async () => {
       try {
         const res = await getActies();
         // store the result in the state
         setActyData(res);
+        setLoading(false);
       } catch (error) {
         showBoundary(error);
       }
     })();
   }, [showBoundary]);
+
+  if (loading) return <div>loading...</div>;
 
   // get current activities
   const indexOfLastActy = currentPage * actiesPerPage; // 1 * 3 = [3] // 2 * 3 = [6]
