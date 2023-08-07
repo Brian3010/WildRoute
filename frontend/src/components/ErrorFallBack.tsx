@@ -7,7 +7,7 @@ export default function ErrorFallBack(props: FallbackProps) {
     <div style={{ width: '100%' }}>
       <p>Something went wrong:</p>
       <pre style={{ color: 'red' }}>{error.message}</pre>
-      <pre style={{ color: 'red' }}>{error.stack}</pre>
+      <pre style={{ color: 'red', whiteSpace: 'pre-wrap' }}>{error.stack}</pre>
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
   );
