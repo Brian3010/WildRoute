@@ -22,10 +22,11 @@ export interface TActyDetail {
     rating: number;
     owner: string;
   }>;
+  message?: string;
 }
 
 export default async function getActyById(id: string): Promise<TActyDetail> {
-  console.log(id);
+  // console.log(id);
   const res = await axios.get<TActyDetail>(`${BACKEND_URL}/activities/${id}`);
 
   console.log('file: getActyById.ts:30 ~ getActyById ~ res:', res);

@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { TActies } from '../services/getActies';
+import { TActies } from '../../services/getActies';
 
 type ActyItemProps = {
   data: TActies;

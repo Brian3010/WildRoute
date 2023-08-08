@@ -1,9 +1,10 @@
 import { Box } from '@mui/material';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import { Link, useParams } from 'react-router-dom';
-import ImageDisplay from '../../components/ImageDisplay';
 import getActyById, { TActyDetail } from '../../services/getActyById';
+import ImageDisplay from './ImageDisplay';
 
 function Activity() {
   const { showBoundary } = useErrorBoundary();
@@ -16,15 +17,22 @@ function Activity() {
   // * check if id exist then return details, otherwise, navigate to not found
   useEffect(() => {
     console.log('useEffect runs');
-
+    // ? TODO: implement catchError function
+    // TODO: errors occur -> return to the activities page and flash the message
     (async () => {
       if (id) {
         try {
-          const res = await getActyById(id);
-          // console.log('file: index.tsx:22 ~ res:', res);
-          setActyDetail(res);
+          const actyDetail = await getActyById(id);
+          console.log('file: index.tsx:22 ~ res:', actyDetail);
+          setActyDetail(actyDetail);
         } catch (error) {
-          showBoundary(error);
+          if (axios.isAxiosError(error)) {
+            console.log('file: index.tsx:29 ~ error:', error.response);
+            // console.log(object);
+            showBoundary(new Error(error.response?.data.error));
+          } else {
+            showBoundary(error);
+          }
         }
       } else {
         showBoundary(new Error('Id not found'));

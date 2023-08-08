@@ -70,7 +70,7 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     console.log('Errors name: ', err.name || 'err.name not exist');
     console.log(err);
-    res.status(err.statusCode || 500).json({ message: err.message } || { message: 'Internal Server Error' });
+    res.status(err.statusCode || 500).json({ error: err.message } || { message: 'Internal Server Error' });
 });
 app.listen(PORT, () => {
     console.log(`NOW LISTENING ON PORT ${PORT}`);

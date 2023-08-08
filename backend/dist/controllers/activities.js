@@ -19,7 +19,7 @@ const displayActivity = async (req, res, next) => {
     console.log('/activities/:id GET REQUEST');
     const { id } = req.params;
     if (!(0, isValidId_1.isValidMongooseId)(id)) {
-        throw new AppError_1.default('Invalid Activity Id', 400);
+        throw new AppError_1.default('Invalid Activity Id', 404);
     }
     const acty = await activities_1.default.findById(id).populate('author').populate('reviews');
     if (!acty)
