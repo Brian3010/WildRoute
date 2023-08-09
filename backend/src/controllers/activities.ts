@@ -22,7 +22,7 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
   const { id } = req.params;
   // could place this in a middleware
   if (!isValidMongooseId(id)) {
-    throw new AppError('Invalid Activity Id', 404);
+    throw new AppError('Invalid Activity ID', 404);
   }
 
   const acty = await ActivityList.findById(id).populate('author').populate('reviews');

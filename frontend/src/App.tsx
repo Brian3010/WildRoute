@@ -1,8 +1,11 @@
 import { Container, CssBaseline } from '@mui/material';
+import axios, { AxiosError } from 'axios';
+import { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
 import ErrorFallBack from './components/ErrorFallBack';
+import FlashMessage from './components/FlashMessage';
 import NavBar from './components/NavBar';
 import PageNotFound from './pages/PageNotFound';
 import Activity from './pages/activityDetailPage';
@@ -12,17 +15,23 @@ import HomePage from './pages/homepage';
 import LoginPage from './pages/loginPage';
 import NewActivity from './pages/newPage';
 
-function logError(error: Error, info: { componentStack: string }) {
-  console.error('Caught an error:', error, info);
-}
-
 function App() {
   const location = useLocation();
+  const [flashMsg, setFlashMsg] = useState<string>();
+
+  function logError(error: Error | AxiosError, info: { componentStack: string }) {
+    console.error('Caught an error:', error, info);
+    if (axios.isAxiosError(error)) {
+      setFlashMsg(error.response?.data.error);
+    }
+  }
+
   return (
     <div className="App">
       <CssBaseline />
       <>
         <NavBar />
+        {flashMsg && <FlashMessage flashMsg={flashMsg} />}
         <main style={{ marginTop: '2em' }}>
           <Container maxWidth="xl">
             <Routes>

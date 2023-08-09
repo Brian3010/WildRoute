@@ -1,9 +1,9 @@
 import { Box, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import AppPagination from './Pagination';
 import getActies, { TActies } from '../../services/getActies';
 import ActivityItem from './ActivityItem';
+import AppPagination from './Pagination';
 
 // type ActyDataList = {
 //   id: TActies['_id'];

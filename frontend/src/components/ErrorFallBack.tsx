@@ -1,8 +1,15 @@
+import axios from 'axios';
 import { FallbackProps } from 'react-error-boundary';
+import { Navigate } from 'react-router-dom';
 
 export default function ErrorFallBack(props: FallbackProps) {
   const { error, resetErrorBoundary } = props;
+
   // console.log('file: ErrorFallBack.tsx:5 ~ ErrorFallBack ~ error:', error);
+
+  if (axios.isAxiosError(error)) {
+    return <Navigate to="/activities" />;
+  }
   return (
     <div style={{ width: '100%' }}>
       <p>Something went wrong:</p>
