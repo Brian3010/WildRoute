@@ -1,5 +1,4 @@
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
-// import Carousel from 'react-material-ui-carousel';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/imageDisplayDetail.css';
