@@ -21,7 +21,7 @@ function App() {
 
   function logError(error: Error | AxiosError, info: { componentStack: string }) {
     console.error('Caught an error:', error, info);
-    if (axios.isAxiosError(error)) {
+    if (axios.isAxiosError(error) && error.response?.status != 500) {
       setFlashMsg(error.response?.data.error);
     }
   }

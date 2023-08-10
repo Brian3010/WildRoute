@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
@@ -41,9 +41,9 @@ function Activity() {
     return (
       <>
         <h1>Activity Detail {id}</h1>
-        <Box>
+        <Container maxWidth='lg'>
           <DetailImageDisplay actyData={actyDetail} />
-        </Box>
+        </Container>
         <Link to={`/activities/${id}/edit`}>Edit Activity</Link>
       </>
     );

@@ -1,4 +1,4 @@
-import { CardMedia } from '@mui/material';
+import { Box, CardMedia } from '@mui/material';
 
 interface ImageItemProps {
   key: string;
@@ -6,12 +6,13 @@ interface ImageItemProps {
 }
 
 export default function ImageItem(props: ImageItemProps) {
-  return (
-    <CardMedia
-      component="img"
-      sx={{ width: '100%', height: '100%' }}
-      image={props.imgItem}
-      alt="activity image"
-    ></CardMedia>
-  );
+  return <img style={{ height: '420px', objectFit: 'cover' }} src={props.imgItem} alt="image item" />;
+  // return (
+  //   <CardMedia
+  //     component="img"
+  //     sx={{ border: '2px solid green'}}
+  //     image={props.imgItem}
+  //     alt="activity image"
+  //   ></CardMedia>
+  // );
 }

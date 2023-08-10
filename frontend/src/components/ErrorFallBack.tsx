@@ -7,7 +7,8 @@ export default function ErrorFallBack(props: FallbackProps) {
 
   // console.log('file: ErrorFallBack.tsx:5 ~ ErrorFallBack ~ error:', error);
 
-  if (axios.isAxiosError(error)) {
+  if (axios.isAxiosError(error) && error.response?.status != 500) {
+    console.log('AXIOS ERROR: ', error.response?.status);
     return <Navigate to="/activities" />;
   }
   return (
