@@ -1,4 +1,6 @@
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import { CSSProperties } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/imageDisplayDetail.css';
@@ -42,9 +44,17 @@ export default function DetailImageDisplay(props: ImageDisplayProps) {
   //     </Box>
   //   </Card>
   // );
+  const arrowStyles: CSSProperties = {
+    position: 'absolute',
+    zIndex: 2,
+    top: 'calc(50% - 15px)',
+    width: 30,
+    height: 30,
+    cursor: 'pointer',
+  };
   return (
     <Grid container border={'2px solid #E7EDF3'}>
-      <Grid border={'2px solid red'} item xs={12} sm={6}>
+      <Grid item xs={12} md={6}>
         <Carousel
           className="carousel-image"
           showStatus={false}
@@ -52,6 +62,14 @@ export default function DetailImageDisplay(props: ImageDisplayProps) {
           swipeable={false}
           showThumbs={false}
           showArrows={true}
+          renderArrowNext={(onClickHandler, hasNext, label) =>
+            hasNext && (
+              <button type="button" onClick={onClickHandler} title={label} style={{ ...arrowStyles, right: 10 }}>
+                +
+              </button>
+              //https://freefrontend.com/css-arrows/
+            )
+          }
         >
           {actyDetail.image.map(img => (
             <ImageItem key={img._id} imgItem={img.url} />

@@ -6,7 +6,7 @@ interface ImageItemProps {
 }
 
 export default function ImageItem(props: ImageItemProps) {
-  return <img style={{ height: '420px', objectFit: 'cover' }} src={props.imgItem} alt="image item" />;
+  return <img style={{ width: '100%', objectFit: 'cover' }} src={props.imgItem} alt="image item" />;
   // return (
   //   <CardMedia
   //     component="img"
