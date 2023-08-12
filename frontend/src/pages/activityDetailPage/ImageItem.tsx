@@ -1,4 +1,4 @@
-import { Box, CardMedia } from '@mui/material';
+import { CSSProperties } from 'react';
 
 interface ImageItemProps {
   key: string;
@@ -6,7 +6,16 @@ interface ImageItemProps {
 }
 
 export default function ImageItem(props: ImageItemProps) {
-  return <img style={{ width: '100%', objectFit: 'cover' }} src={props.imgItem} alt="image item" />;
+  const imageStyles: CSSProperties = {
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
+  };
+  return <img style={{ ...imageStyles }} src={props.imgItem} alt="image item" />;
   // return (
   //   <CardMedia
   //     component="img"

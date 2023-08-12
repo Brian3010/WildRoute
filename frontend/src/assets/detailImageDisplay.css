@@ -1,0 +1,11 @@
+.carousel-image {
+  height: 100%;
+}
+
+.carousel.carousel-slider {
+  height: 45vh;
+}
+
+.slider-wrapper.axis-horizontal > * {
+  height: 45vh;
+}
