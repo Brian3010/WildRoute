@@ -20,7 +20,7 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
   const review = req.body.review;
 
   // find the activity
-  const acty = await ActivityList.findById(actyId);
+  const acty = await ActivityList.findById(actyId).populate('reviews');
   if (!acty) throw new AppError('activity not found', 404);
 
   //create new review document
@@ -28,7 +28,26 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
   reviewDoc.owner = req.user._id;
 
   //push review to activityList.reviews
-  acty.reviews!.push(reviewDoc.id);
+  // acty.reviews!.push(reviewDoc.id);
+
+  const reviewLength = acty.reviews!.push(reviewDoc.id);
+
+  // calculate rating and add rating to the activitylist document
+  if (acty.reviews) {
+    let sum = 0;
+    for (let i = 0; i < acty.reviews.length - 1; i++) {
+      sum += acty.reviews[i].rating;
+    }
+    acty.rating = Math.round((sum + review.rating) / reviewLength);
+  }
+
+  // {
+  //   _id: ObjectId("64c34f0188bb8afe5f28437e"),
+  //   body: 'this is amazing',
+  //   rating: 3,
+  //   owner: ObjectId("64c0bfdd503dd1eda3269195"),
+  //   __v: 0
+  // }
 
   await reviewDoc.save();
   await acty.save();

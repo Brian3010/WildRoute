@@ -11,6 +11,8 @@ export default function ErrorFallBack(props: FallbackProps) {
     console.log('AXIOS ERROR: ', error.response?.status);
     return <Navigate to="/activities" />;
   }
+
+  // *render this only with network error in production, other error types should be handled (redirect?)
   return (
     <div style={{ width: '100%' }}>
       <p>Something went wrong:</p>

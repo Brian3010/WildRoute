@@ -11,12 +11,19 @@ const createReview = async (req, res) => {
     console.log(`${req.originalUrl} POST request`);
     const actyId = req.params.id;
     const review = req.body.review;
-    const acty = await activities_1.default.findById(actyId);
+    const acty = await activities_1.default.findById(actyId).populate('reviews');
     if (!acty)
         throw new AppError_1.default('activity not found', 404);
     const reviewDoc = new review_1.default(review);
     reviewDoc.owner = req.user._id;
-    acty.reviews.push(reviewDoc.id);
+    const reviewLength = acty.reviews.push(reviewDoc.id);
+    if (acty.reviews) {
+        let sum = 0;
+        for (let i = 0; i < acty.reviews.length - 1; i++) {
+            sum += acty.reviews[i].rating;
+        }
+        acty.rating = Math.round((sum + review.rating) / reviewLength);
+    }
     await reviewDoc.save();
     await acty.save();
     res.status(200).json({ reviewCreated: reviewDoc });

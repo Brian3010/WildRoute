@@ -14,6 +14,9 @@ const ActivityListSchema = new Schema({
         type: String,
         required: true,
     },
+    rating: {
+        type: Number,
+    },
     location: {
         type: String,
         required: true,

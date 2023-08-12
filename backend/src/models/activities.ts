@@ -5,12 +5,13 @@ const { Schema } = mongoose;
 
 interface IActivityList {
   activity_title: string;
+  rating?: number;
   location: string;
   description: string;
   avg_price: number;
   image: Array<{ url: string }>;
   author?: Types.ObjectId;
-  reviews?: Array<Types.ObjectId>;
+  reviews?: Array<{ _id: Types.ObjectId; body: string; rating: number; owner: Types.ObjectId }>;
 }
 
 const schemaConfig: SchemaOptions = {
@@ -23,6 +24,9 @@ const ActivityListSchema = new Schema(
     activity_title: {
       type: String,
       required: true,
+    },
+    rating: {
+      type: Number,
     },
     location: {
       type: String,

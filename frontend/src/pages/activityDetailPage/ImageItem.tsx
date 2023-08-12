@@ -14,14 +14,7 @@ export default function ImageItem(props: ImageItemProps) {
     height: '100%',
     objectFit: 'cover',
     objectPosition: 'center',
+    borderRadius:'3%'
   };
   return <img style={{ ...imageStyles }} src={props.imgItem} alt="image item" />;
-  // return (
-  //   <CardMedia
-  //     component="img"
-  //     sx={{ border: '2px solid green'}}
-  //     image={props.imgItem}
-  //     alt="activity image"
-  //   ></CardMedia>
-  // );
 }

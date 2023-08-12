@@ -1,11 +1,17 @@
 .carousel-image {
   height: 100%;
+  border-radius: 3%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.carousel-image > * {
+  border-radius: 3%;
 }
 
 .carousel.carousel-slider {
-  height: 45vh;
+  height: 42vh;
 }
 
 .slider-wrapper.axis-horizontal > * {
-  height: 45vh;
+  height: 42vh;
 }
