@@ -55,8 +55,9 @@ export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
             </span>
           </Typography>
 
-          <Typography variant="body2" padding={'10px 0 20px 0'}>
-            {actyDetail.description}
+          <Typography maxHeight={'500px'} variant="body2" padding={'10px 0 20px 0'}>
+            {actyDetail.description} Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaque
+            saepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde?
           </Typography>
           <Typography variant="subtitle2" color="text.secondary">
             Submitted by {actyDetail.author.username}

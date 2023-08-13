@@ -3,8 +3,8 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/detailImageDisplay.css';
 import { TActyDetail } from '../../services/getActyById';
-import ImageItem from './ImageItem';
 import ActivitiyInfoItem from './ActivityInfoItem';
+import ImageItem from './ImageItem';
 interface ImageDisplayProps {
   actyData: TActyDetail;
 }
@@ -31,6 +31,7 @@ export default function DetailImageDisplay(props: ImageDisplayProps) {
       </Grid>
       <Grid item xs={12} md={6}>
         <ActivitiyInfoItem data={actyDetail} reviewTotal={actyDetail.reviews.length} />
+        <h3>Reviews</h3>
       </Grid>
     </Grid>
   );
