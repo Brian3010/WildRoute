@@ -8,6 +8,13 @@ type ActyItemProps = {
 
 export default function ActivityItem(props: ActyItemProps) {
   const data = props.data;
+
+  const trucateString = (text: string, numWords: number) => {
+    const words = text.split(' ');
+    const truncatedWords = words.slice(0, numWords);
+    return truncatedWords.join(' ');
+  };
+
   return (
     <>
       <Card sx={{ width: '100%', height: '100%' }}>
@@ -28,8 +35,12 @@ export default function ActivityItem(props: ActyItemProps) {
           >
             {data.activity_title}
           </Typography>
-          <Typography variant="body2" color="text.primary">
-            {data.description}
+          <Typography
+            sx={{ maxHeight: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'normal' }}
+            variant="body2"
+            color="text.primary"
+          >
+            {trucateString(data.description, 20)}...
           </Typography>
           <Typography variant="caption" color="text.secondary">
             {data.location}

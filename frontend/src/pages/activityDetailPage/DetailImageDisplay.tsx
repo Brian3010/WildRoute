@@ -31,8 +31,14 @@ export default function DetailImageDisplay(props: ImageDisplayProps) {
       </Grid>
       <Grid item xs={12} md={6}>
         <ActivitiyInfoItem data={actyDetail} reviewTotal={actyDetail.reviews.length} />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <h3>Render a map here</h3>
+      </Grid>
+      <Grid item xs={12} md={6}>
         <h3>Reviews</h3>
       </Grid>
     </Grid>
+    // https://mui.com/material-ui/react-grid/#interactive
   );
 }
