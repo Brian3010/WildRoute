@@ -23,7 +23,7 @@ export interface TActyDetail {
     owner: string;
   }>;
   message?: string;
-  rating?: string;
+  rating?: number;
 }
 
 export default async function getActyById(id: string): Promise<TActyDetail> {
