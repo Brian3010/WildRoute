@@ -28,7 +28,7 @@ export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
   const actyDetail = props.data;
   const reviewTotal = props.reviewTotal;
   return (
-    <Card sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 6px 0px' }}>
+    <Card  sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 6px 0px', height:'100%' }}>
       <CardContent sx={{ padding: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography
