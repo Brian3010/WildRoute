@@ -42,6 +42,5 @@ export default function DetailImageDisplay(props: ImageDisplayProps) {
     // https://mui.com/material-ui/react-grid/#interactive
   );
 }
-// TODO: add Tags: Adventure, Nature (display icon on the card based on the tags) to the model
 // TODO: add difficulty level as well
 // *note: remember to validate accordingly after adding those fields in the model, consider typesciprt to provide pre-set 'Tags' and 'difficulty'

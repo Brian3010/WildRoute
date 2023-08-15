@@ -1,4 +1,6 @@
+import { required } from 'joi';
 import mongoose, { SchemaOptions, Types } from 'mongoose';
+import { type } from 'os';
 import { activitySchema } from '../middleware/joiSchema';
 import Review from './review';
 const { Schema } = mongoose;
@@ -9,6 +11,7 @@ interface IActivityList {
   location: string;
   description: string;
   avg_price: number;
+  tags: 'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climping';
   image: Array<{ url: string }>;
   author?: Types.ObjectId;
   reviews?: Array<{ _id: Types.ObjectId; body: string; rating: number; owner: Types.ObjectId }>;
@@ -40,6 +43,12 @@ const ActivityListSchema = new Schema(
       type: Number,
       required: true,
     },
+    tags: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     image: {
       type: [
         {

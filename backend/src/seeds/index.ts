@@ -42,6 +42,20 @@ const getPhotoUrl = async (): Promise<string | undefined> => {
   return undefined;
 };
 
+const generateRandomTags = (): Array<string> => {
+  const tags = ['Adventure', 'Nature', 'Camping', 'Water Sport', 'Climping'];
+  const someTags: string[] = [];
+
+  while (someTags.length < 3) {
+    const randIndex = Math.floor(Math.random() * tags.length);
+    if (!someTags.includes(tags[randIndex])) {
+      someTags.push(tags[randIndex]);
+    }
+  }
+
+  return someTags;
+};
+
 const seedDb = async (): Promise<void> => {
   console.log('seedDb() TRIGGED');
   await ActivityList.deleteMany({});
@@ -54,13 +68,15 @@ const seedDb = async (): Promise<void> => {
     const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
     const cityIdx = randomIndex(cities)[0];
     const imgUrl = await getPhotoUrl();
+    const randTags = generateRandomTags();
 
     const ActList = new ActivityList({
       activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,
       location: `${cities[cityIdx].city}, ${cities[cityIdx].admin_name}`,
       description:
-        'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
+        'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaquesaepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde.',
       avg_price: 2,
+      tags: randTags,
       image: [
         {
           url: imgUrl,
@@ -69,7 +85,7 @@ const seedDb = async (): Promise<void> => {
           url: imgUrl,
         },
       ],
-      author: '64bf616a3694715302680542', // 64c0bfe1503dd1eda3269198
+      author: '64c0bfe1503dd1eda3269198', // 64bf616a3694715302680542
     });
 
     await ActList.save();

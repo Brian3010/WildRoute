@@ -37,6 +37,9 @@ exports.activitySchema = customJoi.object({
         location: customJoi.string().min(5).required().escapeHTML(),
         description: customJoi.string().min(5).max(50).required().escapeHTML(),
         avg_price: customJoi.number().max(10000).required(),
+        tags: customJoi
+            .array()
+            .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climping').required()),
         image: customJoi.array().items(customJoi
             .object({
             url: customJoi.string().required(),

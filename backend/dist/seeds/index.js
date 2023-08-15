@@ -40,6 +40,17 @@ const getPhotoUrl = async () => {
     }
     return undefined;
 };
+const generateRandomTags = () => {
+    const tags = ['Adventure', 'Nature', 'Camping', 'Water Sport', 'Climping'];
+    const someTags = [];
+    while (someTags.length < 3) {
+        const randIndex = Math.floor(Math.random() * tags.length);
+        if (!someTags.includes(tags[randIndex])) {
+            someTags.push(tags[randIndex]);
+        }
+    }
+    return someTags;
+};
 const seedDb = async () => {
     console.log('seedDb() TRIGGED');
     await activities_js_1.default.deleteMany({});
@@ -48,11 +59,13 @@ const seedDb = async () => {
         const placeIdx = randomIndex(seedHelpers_js_1.places);
         const cityIdx = randomIndex(cities_js_1.cities)[0];
         const imgUrl = await getPhotoUrl();
+        const randTags = generateRandomTags();
         const ActList = new activities_js_1.default({
             activity_title: `${seedHelpers_js_1.places[placeIdx[0]][1]} ${seedHelpers_js_1.descriptors[placeIdx[0]]}`,
             location: `${cities_js_1.cities[cityIdx].city}, ${cities_js_1.cities[cityIdx].admin_name}`,
-            description: 'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
+            description: 'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaquesaepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde.',
             avg_price: 2,
+            tags: randTags,
             image: [
                 {
                     url: imgUrl,
@@ -61,7 +74,7 @@ const seedDb = async () => {
                     url: imgUrl,
                 },
             ],
-            author: '64bf616a3694715302680542',
+            author: '64c0bfe1503dd1eda3269198',
         });
         await ActList.save();
     }
