@@ -39,7 +39,7 @@ exports.activitySchema = customJoi.object({
         avg_price: customJoi.number().max(10000).required(),
         tags: customJoi
             .array()
-            .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climping').required()),
+            .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
         image: customJoi.array().items(customJoi
             .object({
             url: customJoi.string().required(),

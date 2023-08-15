@@ -1,36 +1,46 @@
 import { Box, Card, CardContent, Rating, Typography } from '@mui/material';
 import '../../assets/ActivityInfoItem.css';
+import iconSrcs from '../../images/';
 import { TActyDetail } from '../../services/getActyById';
+import DipslayTagIcons from './DisplayTagIcons';
 
 interface ActivityInfoItemProps {
   data: Omit<TActyDetail, 'image' | 'reviews'>;
   reviewTotal: number;
 }
 
-// interface ActivityInfoItemProps {
-//   data: {
-//     activity_title: string;
-//     location: string;
-//     description: string;
-//     avg_price: number;
-//     author: {
-//       _id: string;
-//       email: string;
-//       username: string;
-//     };
-
-//     rating: number;
-//   };
-//   reviewTotal: number;
-// }
-
 export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
   const actyDetail = props.data;
   const reviewTotal = props.reviewTotal;
+
+  // convert the tags to icons
+  const convertToIcon = (tags: typeof actyDetail.tags) => {
+    const iconTags = tags.map(t => {
+      // create a dictionary to map the tags to the icons
+      const iconDict: { name: typeof t; icon: string }[] = [
+        { name: 'Adventure', icon: iconSrcs.adventureIcon }, // todo:add icon image
+        { name: 'Camping', icon: iconSrcs.campingIcon },
+        { name: 'Climbing', icon: iconSrcs.climbingIcon },
+        { name: 'Nature', icon: iconSrcs.natureIcon },
+        { name: 'Water Sport', icon: iconSrcs.waterSportIcon },
+      ];
+      // find out the name
+      const icons = iconDict.find(el => el.name === t);
+      if (icons) return { name: icons.name, icon: icons.icon };
+      // return only the icon
+
+      return null;
+    });
+    //return a new array with icons
+    return iconTags;
+  };
+
+  const actyTags = convertToIcon(actyDetail.tags);
+  console.log(actyTags);
   return (
-    <Card  sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 6px 0px', height:'100%' }}>
-      <CardContent sx={{ padding: 3 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 6px 0px', height: '100%' }}>
+      <CardContent sx={{ padding: 2, height: '100%', position: 'relative' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignContent:'center' }}>
           <Typography
             variant="h5"
             component="div"
@@ -48,17 +58,22 @@ export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
           </Typography>
           <hr className="line-break" />
 
-          <Typography sx={{ display: 'flex' }}>
+          <Typography sx={{ display: 'flex', marginBottom: 1 }}>
             <Rating size="small" name="read-only" value={actyDetail.rating} readOnly />
             <span style={{ fontSize: 'smaller', alignSelf: 'end', paddingLeft: 5, color: 'rgba(0, 0, 0, 0.6)' }}>
               {reviewTotal > 1 ? `${reviewTotal} reviews` : `${reviewTotal} review`}
             </span>
           </Typography>
 
-          <Typography maxHeight={'500px'} variant="body2" padding={'10px 0 20px 0'}>
+          <Typography maxHeight={'500px'} variant="body2" margin="10px 0 10px 0">
             {actyDetail.description}
           </Typography>
-          <Typography variant="subtitle2" color="text.secondary">
+
+          <Box sx={{ display: 'flex', gap: '5%' }} paddingTop={{lg:'10px'}}>
+            {actyTags.map((tag, i) => tag && <DipslayTagIcons key={i} tags={tag} />)}
+          </Box>
+
+          <Typography variant="subtitle2" color="text.secondary" paddingTop={{md:'10px',lg:'40px'}}>
             Submitted by {actyDetail.author.username}
           </Typography>
         </Box>

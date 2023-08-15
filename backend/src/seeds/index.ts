@@ -43,7 +43,7 @@ const getPhotoUrl = async (): Promise<string | undefined> => {
 };
 
 const generateRandomTags = (): Array<string> => {
-  const tags = ['Adventure', 'Nature', 'Camping', 'Water Sport', 'Climping'];
+  const tags = ['Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing'];
   const someTags: string[] = [];
 
   while (someTags.length < 3) {

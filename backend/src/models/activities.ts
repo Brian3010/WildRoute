@@ -11,7 +11,7 @@ interface IActivityList {
   location: string;
   description: string;
   avg_price: number;
-  tags: 'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climping';
+  tags: 'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climbing';
   image: Array<{ url: string }>;
   author?: Types.ObjectId;
   reviews?: Array<{ _id: Types.ObjectId; body: string; rating: number; owner: Types.ObjectId }>;

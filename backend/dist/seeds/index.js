@@ -41,7 +41,7 @@ const getPhotoUrl = async () => {
     return undefined;
 };
 const generateRandomTags = () => {
-    const tags = ['Adventure', 'Nature', 'Camping', 'Water Sport', 'Climping'];
+    const tags = ['Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing'];
     const someTags = [];
     while (someTags.length < 3) {
         const randIndex = Math.floor(Math.random() * tags.length);

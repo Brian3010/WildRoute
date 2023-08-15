@@ -13,7 +13,7 @@ interface ImageDisplayProps {
 export default function DetailImageDisplay(props: ImageDisplayProps) {
   const actyDetail = props.actyData;
   return (
-    <Grid container spacing={2}>
+    <Grid container rowSpacing={2} columnSpacing={3}>
       <Grid item xs={12} md={6}>
         <Carousel
           className="carousel-image"
@@ -42,5 +42,3 @@ export default function DetailImageDisplay(props: ImageDisplayProps) {
     // https://mui.com/material-ui/react-grid/#interactive
   );
 }
-// TODO: add difficulty level as well
-// *note: remember to validate accordingly after adding those fields in the model, consider typesciprt to provide pre-set 'Tags' and 'difficulty'
