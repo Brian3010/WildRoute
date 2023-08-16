@@ -1,16 +1,17 @@
-import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/detailImageDisplay.css';
 import { TActyDetail } from '../../services/getActyById';
-import ActivitiyInfoItem from './ActivityInfoItem';
+import ActyInfoItem from './ActyInfoItem';
+import ActyReviews from './ActyReviews';
 import ImageItem from './ImageItem';
 interface ImageDisplayProps {
   actyData: TActyDetail;
 }
 // TODO: style iamge and detail side by side
 
-export default function DetailImageDisplay(props: ImageDisplayProps) {
+export default function ActyDetailDisplay(props: ImageDisplayProps) {
   const actyDetail = props.actyData;
   return (
     <Grid container rowSpacing={2} columnSpacing={3}>
@@ -30,13 +31,18 @@ export default function DetailImageDisplay(props: ImageDisplayProps) {
         </Carousel>
       </Grid>
       <Grid item xs={12} md={6}>
-        <ActivitiyInfoItem data={actyDetail} reviewTotal={actyDetail.reviews.length} />
+        <ActyInfoItem data={actyDetail} reviewTotal={actyDetail.reviews.length} />
       </Grid>
       <Grid item xs={12} md={6}>
         <h3>Display a map here</h3>
       </Grid>
       <Grid item xs={12} md={6}>
-        <h3>Reviews</h3>
+        <Typography variant="h5" margin={'20px 0 10px 0'}>
+          Reviews
+        </Typography>
+        {actyDetail.reviews.map(r => {
+          return <ActyReviews key={r._id} review={r} />;
+        })}
       </Grid>
     </Grid>
     // https://mui.com/material-ui/react-grid/#interactive

@@ -21,7 +21,10 @@ export interface TActyDetail {
     _id: string;
     body: string;
     rating: number;
-    owner: string;
+    owner: {
+      _id: string;
+      username: string;
+    };
   }>;
   message?: string;
   rating?: number;

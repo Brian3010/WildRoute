@@ -1,15 +1,15 @@
 import { Box, Card, CardContent, Rating, Typography } from '@mui/material';
 import '../../assets/ActivityInfoItem.css';
-import iconSrcs from '../../images/';
+import iconSrcs from '../../images';
 import { TActyDetail } from '../../services/getActyById';
 import DipslayTagIcons from './DisplayTagIcons';
 
-interface ActivityInfoItemProps {
+interface ActyInfoItemProps {
   data: Omit<TActyDetail, 'image' | 'reviews'>;
   reviewTotal: number;
 }
 
-export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
+export default function ActyInfoItem(props: ActyInfoItemProps) {
   const actyDetail = props.data;
   const reviewTotal = props.reviewTotal;
 
@@ -40,7 +40,7 @@ export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
   return (
     <Card sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 6px 0px', height: '100%' }}>
       <CardContent sx={{ padding: 2, height: '100%', position: 'relative' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignContent:'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignContent: 'center' }}>
           <Typography
             variant="h5"
             component="div"
@@ -59,7 +59,7 @@ export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
           <hr className="line-break" />
 
           <Typography sx={{ display: 'flex', marginBottom: 1 }}>
-            <Rating size="small" name="read-only" value={actyDetail.rating} readOnly />
+            <Rating   size="small" name="read-only" value={actyDetail.rating} readOnly />
             <span style={{ fontSize: 'smaller', alignSelf: 'end', paddingLeft: 5, color: 'rgba(0, 0, 0, 0.6)' }}>
               {reviewTotal > 1 ? `${reviewTotal} reviews` : `${reviewTotal} review`}
             </span>
@@ -69,11 +69,11 @@ export default function ActivitiyInfoItem(props: ActivityInfoItemProps) {
             {actyDetail.description}
           </Typography>
 
-          <Box sx={{ display: 'flex', gap: '5%' }} paddingTop={{lg:'10px'}}>
+          <Box sx={{ display: 'flex', gap: '5%' }} paddingTop={{ lg: '10px' }}>
             {actyTags.map((tag, i) => tag && <DipslayTagIcons key={i} tags={tag} />)}
           </Box>
 
-          <Typography variant="subtitle2" color="text.secondary" paddingTop={{md:'10px',lg:'40px'}}>
+          <Typography variant="subtitle2" color="text.secondary" paddingTop={{ md: '10px', lg: '40px' }}>
             Submitted by {actyDetail.author.username}
           </Typography>
         </Box>

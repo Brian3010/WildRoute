@@ -21,7 +21,9 @@ const displayActivity = async (req, res, next) => {
     if (!(0, isValidId_1.isValidMongooseId)(id)) {
         throw new AppError_1.default('Invalid Activity ID', 404);
     }
-    const acty = await activities_1.default.findById(id).populate('author').populate('reviews');
+    const acty = await activities_1.default.findById(id)
+        .populate('author')
+        .populate({ path: 'reviews', populate: { path: 'owner' } });
     if (!acty)
         throw new AppError_1.default('Activity does not exist', 404);
     if (!acty.populated)

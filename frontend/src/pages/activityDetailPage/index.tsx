@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import { Link, useParams } from 'react-router-dom';
 import getActyById, { TActyDetail } from '../../services/getActyById';
-import DetailImageDisplay from './DetailImageDisplay';
+import ActyDetailDisplay from './ActyDetailDisplay';
 
 function Activity() {
   const { showBoundary } = useErrorBoundary();
@@ -42,7 +42,7 @@ function Activity() {
       <>
         <h1>Activity Detail {actyDetail.activity_title}</h1>
         <Container maxWidth="lg">
-          <DetailImageDisplay actyData={actyDetail} />
+          <ActyDetailDisplay actyData={actyDetail} />
         </Container>
         <Link to={`/activities/${id}/edit`}>Edit Activity</Link>
       </>

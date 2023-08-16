@@ -25,7 +25,9 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
     throw new AppError('Invalid Activity ID', 404);
   }
 
-  const acty = await ActivityList.findById(id).populate('author').populate('reviews');
+  const acty = await ActivityList.findById(id)
+    .populate('author')
+    .populate({ path: 'reviews', populate: { path: 'owner' } }); // poplute the reviews, then populate on each one of them their owners
   if (!acty) throw new AppError('Activity does not exist', 404);
   if (!acty.populated) throw new AppError('Cannot populate the data', 400);
 
