@@ -36,7 +36,7 @@ export default function ActyInfoItem(props: ActyInfoItemProps) {
   };
 
   const actyTags = convertToIcon(actyDetail.tags);
-  console.log(actyTags);
+  // console.log(actyTags);
   return (
     <Card sx={{ boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 6px 0px', height: '100%' }}>
       <CardContent sx={{ padding: 2, height: '100%', position: 'relative' }}>
@@ -59,7 +59,7 @@ export default function ActyInfoItem(props: ActyInfoItemProps) {
           <hr className="line-break" />
 
           <Typography sx={{ display: 'flex', marginBottom: 1 }}>
-            <Rating   size="small" name="read-only" value={actyDetail.rating} readOnly />
+            <Rating size="small" name="read-only" value={actyDetail.rating} readOnly />
             <span style={{ fontSize: 'smaller', alignSelf: 'end', paddingLeft: 5, color: 'rgba(0, 0, 0, 0.6)' }}>
               {reviewTotal > 1 ? `${reviewTotal} reviews` : `${reviewTotal} review`}
             </span>

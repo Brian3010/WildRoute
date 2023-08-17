@@ -40,7 +40,7 @@ function Activity() {
   if (actyDetail) {
     return (
       <>
-        <h1>Activity Detail {actyDetail.activity_title}</h1>
+        {/* <h1>Activity Detail {actyDetail.activity_title}</h1> */}
         <Container maxWidth="lg">
           <ActyDetailDisplay actyData={actyDetail} />
         </Container>

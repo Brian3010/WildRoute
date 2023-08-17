@@ -6,6 +6,7 @@ import { TActyDetail } from '../../services/getActyById';
 import ActyInfoItem from './ActyInfoItem';
 import ActyReviews from './ActyReviews';
 import ImageItem from './ImageItem';
+import MapDisplay from './MapDisplay';
 interface ImageDisplayProps {
   actyData: TActyDetail;
 }
@@ -34,15 +35,13 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
         <ActyInfoItem data={actyDetail} reviewTotal={actyDetail.reviews.length} />
       </Grid>
       <Grid item xs={12} md={6}>
-        <h3>Display a map here</h3>
+        <MapDisplay />
       </Grid>
       <Grid item xs={12} md={6}>
         <Typography variant="h5" margin={'20px 0 10px 0'}>
           Reviews
         </Typography>
-        {actyDetail.reviews.map(r => {
-          return <ActyReviews key={r._id} review={r} />;
-        })}
+        {actyDetail.reviews.length > 0 ? <ActyReviews reviews={actyDetail.reviews} /> : <h4>No reviews yet</h4>}
       </Grid>
     </Grid>
     // https://mui.com/material-ui/react-grid/#interactive
