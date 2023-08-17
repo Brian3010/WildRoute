@@ -1,0 +1,9 @@
+.h4-custom {
+  color: rgba(34, 51, 84, 0.7);
+}
+
+.signin-btn {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  font-weight: bold;
+}

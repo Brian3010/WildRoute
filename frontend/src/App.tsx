@@ -55,8 +55,17 @@ function App() {
                   }
                 />
                 <Route path="new" element={<NewActivity />} />
+
                 <Route path=":id/edit" element={<EditActivity />} />
-                <Route path="user/login" element={<LoginPage />} />
+
+                <Route
+                  path="user/login"
+                  element={
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError}>
+                      <LoginPage />
+                    </ErrorBoundary>
+                  }
+                />
               </Route>
 
               <Route path="*" element={<PageNotFound />} />
