@@ -1,7 +1,14 @@
 import { Box, Button, Container, Paper, TextField, Typography } from '@mui/material';
+import { FormEvent } from 'react';
 import '../../assets/LoginPage.css';
 
 export default function LoginPage() {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log('Form Submited');
+  };
+
   return (
     <Container maxWidth="sm" sx={{ border: '1px solid yellow' }}>
       <Paper elevation={1} sx={{ padding: 4 }}>
@@ -13,12 +20,13 @@ export default function LoginPage() {
             Fill in the fields below to sign into your account.
           </Typography>
 
-          <form action="">
+          <form action="" onSubmit={handleSubmit}>
             <TextField id="outlined-controlled" label="Username" fullWidth />
 
             <TextField id="outlined-controlled" label="Password" fullWidth sx={{ margin: '16px 0 8px' }} />
 
             <Button
+              type="submit"
               fullWidth
               size="large"
               variant="contained"
