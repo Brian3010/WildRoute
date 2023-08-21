@@ -116,7 +116,10 @@ export default function LoginPage() {
                 <FormHelperText error>{errors.password.message}</FormHelperText>
               )}
             </FormControl>
-
+            <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }} paddingX={2}>  
+            <Typography variant="h4"  fontSize={'16px'} >Don't have an account yet? Sign up here.</Typography>
+            </Box>
+          
             <Button
               type="submit"
               fullWidth
