@@ -7,9 +7,24 @@ export default function ErrorFallBack(props: FallbackProps) {
 
   // console.log('file: ErrorFallBack.tsx:5 ~ ErrorFallBack ~ error:', error);
 
-  if (axios.isAxiosError(error) && error.response?.status != 500) {
-    console.log('AXIOS ERROR: ', error.response?.status);
-    return <Navigate to="/activities" />;
+  // if (axios.isAxiosError(error) && error.response?.status != 500) {
+  //   console.log('AXIOS ERROR: ', error.response?.status);
+  //   return <Navigate to="/activities" />;
+  // }
+
+  if (axios.isAxiosError(error)) {
+    if (
+      error.response?.status === 404 &&
+      error.response?.data.error === 'username and password not found (redirect to login)'
+    ) {
+      console.log(error.response?.data.error);
+      return <Navigate to="/activities/user/login" />;
+    }
+
+    if (error.response?.status != 500) {
+      console.log('AXIOS ERROR: ', error.response?.status);
+      return <Navigate to="/activities" />;
+    }
   }
 
   // *render this only with network error in production, other error types should be handled (redirect?)

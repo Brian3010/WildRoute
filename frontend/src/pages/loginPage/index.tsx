@@ -13,10 +13,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { TypeMapper } from '../../@types/TypeMapper';
 import '../../assets/LoginPage.css';
+
+import axios from 'axios';
+import { useErrorBoundary } from 'react-error-boundary';
+import AuthContext, { TAuthContext } from '../../context/AuthProvider';
+import loginUserIn from '../../services/logUserIn';
 
 interface LoginData {
   username: string;
@@ -27,6 +32,10 @@ type RegisterLogin = TypeMapper<LoginData, RegisterOptions>;
 
 export default function LoginPage() {
   console.log('LoginPage render');
+  const { showBoundary } = useErrorBoundary();
+  const { setAuth } = useContext(AuthContext) as TAuthContext;
+  // console.log('file: index.tsx:33 ~ LoginPage ~ setAuth:', setAuth);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -60,9 +69,15 @@ export default function LoginPage() {
     },
   };
 
-  const submit: SubmitHandler<LoginData> = data => {
+  const submit: SubmitHandler<LoginData> = async data => {
     console.log('Form Submited');
-    console.log(data);
+
+    try {
+      const res = await loginUserIn(data.username, data.password);
+      console.log(res);
+    } catch (error) {
+      showBoundary(error);
+    }
 
     reset();
   };
@@ -116,10 +131,12 @@ export default function LoginPage() {
                 <FormHelperText error>{errors.password.message}</FormHelperText>
               )}
             </FormControl>
-            <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }} paddingX={2}>  
-            <Typography variant="h4"  fontSize={'16px'} >Don't have an account yet? Sign up here.</Typography>
+            <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }} paddingX={2}>
+              <Typography variant="h4" fontSize={'16px'}>
+                Don't have an account yet? Sign up here.
+              </Typography>
             </Box>
-          
+
             <Button
               type="submit"
               fullWidth

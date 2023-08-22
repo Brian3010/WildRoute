@@ -31,7 +31,7 @@ async function main() {
 }
 
 const app: Express = express();
-
+// use this so dont need to set Content-Type': 'application/json' on client
 app.use(express.json());
 
 // *sanitize route to prevent mongo injection

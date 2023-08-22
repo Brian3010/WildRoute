@@ -1,10 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactElement, createContext, useState } from 'react';
 
-const AuthContext = createContext({});
+export interface TAuthContext {
+  auth: Record<string, string>;
+  setAuth: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+}
 
 interface AuthProviderProps {
   children: ReactElement;
 }
+
+const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
 export function AuthProvider(props: AuthProviderProps) {
   const children = props.children;
