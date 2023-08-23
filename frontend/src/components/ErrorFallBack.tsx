@@ -1,21 +1,24 @@
 import axios from 'axios';
+import { useEffect } from 'react';
 import { FallbackProps } from 'react-error-boundary';
-import { Navigate } from 'react-router-dom';
-import LoginPage from '../pages/loginPage';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function ErrorFallBack(props: FallbackProps) {
   const { error, resetErrorBoundary } = props;
+  const navigate = useNavigate();
+  // console.log(error);
+
   !axios.isAxiosError && console.log('Other Error', error.name);
 
-  // if (
-  //   error.response?.status === 404 &&
-  //   error.response?.data.error === 'username and password not found (redirect to login)'
-  // ) {
-  //   console.log(error.response?.data.error);
-  // }
+  useEffect(() => {
+    if (error.response?.data.error === 'Incorrect username and password') {
+      resetErrorBoundary();
+      navigate('/activities/user/login');
+    }
+  }, [error, resetErrorBoundary, navigate]);
 
   if (axios.isAxiosError(error)) {
-    console.log('Axios Error: ', error.name);
+    // console.log('Axios Error: ', error.name);
     const errorMessage = error.response?.data.error;
     // const errorMessage = error.response?.data;
 
@@ -40,11 +43,17 @@ export default function ErrorFallBack(props: FallbackProps) {
       }
 
       if (error.response?.data.error === 'Incorrect username and password') {
-        console.log(error.response);
+        // console.log(error.response);
         // * reset the error boundary state, clearing the error and attempting to render the component tree again.
         // * error persists when navigating, so need to reset/
-        resetErrorBoundary();
-        return <Navigate to={'/activities/user/login'} />;
+        // resetErrorBoundary();
+        // return <Navigate to={'/activities/user/login'} />;
+
+        setTimeout(() => {
+          resetErrorBoundary();
+          <Navigate to={'/activities/user/login'} />;
+        }, 0);
+        return null;
       }
     }
   }
@@ -53,22 +62,7 @@ export default function ErrorFallBack(props: FallbackProps) {
     <div style={{ width: '100%' }}>
       <p>Something went wrong</p>
       {/* <LoginPage /> */}
-      <button onClick={resetErrorBoundary}>Try again</button>
+      <button onClick={() => resetErrorBoundary()}>Try again</button>
     </div>
   );
-
-  // if (
-  //   axios.isAxiosError(error) &&
-  //   error.response?.status === 500 &&
-  //   error.response.data.error.includes('ECONNREFUSED')
-  // ) {
-  //   return (
-  //     <div style={{ width: '100%' }}>
-  //       <p>Something went wrong:</p>
-  //       <pre style={{ color: 'red' }}>{error.message}</pre>
-  //       <pre style={{ color: 'red', whiteSpace: 'pre-wrap' }}>{error.stack}</pre>
-  //       <button onClick={resetErrorBoundary}>Try again</button>
-  //     </div>
-  //   );
-  // }
 }

@@ -1,7 +1,6 @@
-import { Details } from '@mui/icons-material';
 import { Container, CssBaseline } from '@mui/material';
 import axios, { AxiosError } from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
@@ -21,12 +20,18 @@ function App() {
   const flashMsg = useRef<string>();
 
   function setFlashError(error: Error | AxiosError, info: { componentStack: string }) {
-    console.error('Caught an error:', error, info);
+    console.warn('Caught an error:', error, info);
     if (axios.isAxiosError(error) && error.response?.status != 500) {
       flashMsg.current = error.response?.data.error;
-      // console.log('file: App.tsx:30 ~ setFlashError ~ flashMsg.current:', flashMsg.current);
+      console.log('file: App.tsx:30 ~ setFlashError ~ flashMsg.current:', flashMsg.current);
     }
+    return;
   }
+
+  // clear flashMsg after render
+  useEffect(() => {
+    flashMsg.current = undefined;
+  });
 
   return (
     <div className="App">
