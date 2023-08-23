@@ -50,7 +50,7 @@ const authLoginInfo = (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            throw new AppError_1.default('username and password not found (redirect to login)', 404);
+            throw new AppError_1.default('Incorrect username and password', 404);
         }
         if (info) {
             throw new AppError_1.default(info.message, 401);

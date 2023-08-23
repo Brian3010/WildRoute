@@ -1,6 +1,7 @@
+import { Details } from '@mui/icons-material';
 import { Container, CssBaseline } from '@mui/material';
 import axios, { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
@@ -17,12 +18,13 @@ import NewActivity from './pages/newPage';
 
 function App() {
   const location = useLocation();
-  const [flashMsg, setFlashMsg] = useState<string>();
+  const flashMsg = useRef<string>();
 
-  function logError(error: Error | AxiosError, info: { componentStack: string }) {
+  function setFlashError(error: Error | AxiosError, info: { componentStack: string }) {
     console.error('Caught an error:', error, info);
     if (axios.isAxiosError(error) && error.response?.status != 500) {
-      setFlashMsg(error.response?.data.error);
+      flashMsg.current = error.response?.data.error;
+      // console.log('file: App.tsx:30 ~ setFlashError ~ flashMsg.current:', flashMsg.current);
     }
   }
 
@@ -31,7 +33,7 @@ function App() {
       <CssBaseline />
       <>
         <NavBar />
-        {flashMsg && <FlashMessage flashMsg={flashMsg} />}
+        {flashMsg.current && <FlashMessage flashMsg={flashMsg.current} key={Math.random()} />}
         <main style={{ marginTop: '2em' }}>
           <Container maxWidth="xl">
             <Routes>
@@ -40,7 +42,7 @@ function App() {
                 <Route
                   index
                   element={
-                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} key={location.pathname}>
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} key={location.pathname}>
                       <ActivityList />
                     </ErrorBoundary>
                   }
@@ -49,7 +51,7 @@ function App() {
                 <Route
                   path=":id"
                   element={
-                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError}>
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError}>
                       <Activity />
                     </ErrorBoundary>
                   }
@@ -61,7 +63,7 @@ function App() {
                 <Route
                   path="user/login"
                   element={
-                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError}>
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError}>
                       <LoginPage />
                     </ErrorBoundary>
                   }

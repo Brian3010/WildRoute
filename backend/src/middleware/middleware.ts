@@ -61,7 +61,7 @@ export const authLoginInfo: RequestHandler = (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      throw new AppError('username and password not found (redirect to login)', 404);
+      throw new AppError('Incorrect username and password', 404);
     }
     if (info) {
       throw new AppError(info.message, 401);
