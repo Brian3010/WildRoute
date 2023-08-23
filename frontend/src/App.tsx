@@ -1,4 +1,4 @@
-import { Container, CssBaseline } from '@mui/material';
+import { Container } from '@mui/material';
 import axios, { AxiosError } from 'axios';
 import { useEffect, useRef } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -35,7 +35,6 @@ function App() {
 
   return (
     <div className="App">
-      <CssBaseline />
       <>
         <NavBar />
         {flashMsg.current && <FlashMessage flashMsg={flashMsg.current} key={Math.random()} />}
@@ -47,18 +46,19 @@ function App() {
                 <Route
                   index
                   element={
-                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} key={location.pathname}>
-                      <ActivityList />
-                    </ErrorBoundary>
+                    <ErrorBoundary
+                      FallbackComponent={ErrorFallBack}
+                      onError={setFlashError}
+                      key={location.pathname}
+                      children={<ActivityList />}
+                    />
                   }
                 />
 
                 <Route
                   path=":id"
                   element={
-                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError}>
-                      <Activity />
-                    </ErrorBoundary>
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} children={<Activity />} />
                   }
                 />
                 <Route path="new" element={<NewActivity />} />
@@ -68,9 +68,7 @@ function App() {
                 <Route
                   path="user/login"
                   element={
-                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError}>
-                      <LoginPage />
-                    </ErrorBoundary>
+                    <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} children={<LoginPage />} />
                   }
                 />
               </Route>

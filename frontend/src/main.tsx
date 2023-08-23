@@ -5,9 +5,11 @@ import App from './App.tsx';
 import { AuthProvider } from './context/AuthProvider.tsx';
 
 import './assets/index.css';
+import { CssBaseline } from '@mui/material';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
+    <CssBaseline />
     <BrowserRouter>
       <AuthProvider>
         <App />
