@@ -80,7 +80,7 @@ import AppPagination from './Pagination';
 // ];
 
 function ActivityList() {
-  console.log('ActivityList component render');
+  // console.log('ActivityList component render');
   const { showBoundary } = useErrorBoundary();
   const [actyData, setActyData] = useState<TActies[]>([]);
   // activities per page
@@ -92,7 +92,7 @@ function ActivityList() {
   // fetch data from backend
   useEffect(() => {
     setLoading(true);
-    console.log('useEffect run');
+    // console.log('useEffect run');
     (async () => {
       try {
         const res = await getActies();

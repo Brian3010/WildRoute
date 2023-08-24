@@ -6,7 +6,9 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
 import ErrorFallBack from './components/ErrorFallBack';
 import FlashMessage from './components/FlashMessage';
+import IsOwner from './components/IsOwner';
 import NavBar from './components/NavBar';
+import RequireAuth from './components/requireAuth';
 import PageNotFound from './pages/PageNotFound';
 import Activity from './pages/activityDetailPage';
 import ActivityList from './pages/activityListPage';
@@ -23,7 +25,7 @@ function App() {
     console.warn('Caught an error:', error, info);
     if (axios.isAxiosError(error) && error.response?.status != 500) {
       flashMsg.current = error.response?.data.error;
-      console.log('file: App.tsx:30 ~ setFlashError ~ flashMsg.current:', flashMsg.current);
+      // console.log('file: App.tsx:30 ~ setFlashError ~ flashMsg.current:', flashMsg.current);
     }
     return;
   }
@@ -43,6 +45,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/activities">
+                {/* public routes */}
                 <Route
                   index
                   element={
@@ -61,16 +64,22 @@ function App() {
                     <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} children={<Activity />} />
                   }
                 />
-                <Route path="new" element={<NewActivity />} />
-
-                <Route path=":id/edit" element={<EditActivity />} />
-
                 <Route
                   path="user/login"
                   element={
                     <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} children={<LoginPage />} />
                   }
                 />
+
+                {/* private routes */}
+                <Route element={<RequireAuth />}>
+                  <Route path="new" element={<NewActivity />} />
+                  <Route path="user/logout" element={<div>logout </div>} />
+                </Route>
+
+                <Route element={<IsOwner />}>
+                  <Route path=":id/edit" element={<EditActivity />} />
+                </Route>
               </Route>
 
               <Route path="*" element={<PageNotFound />} />
@@ -82,36 +91,6 @@ function App() {
   );
 }
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <nav>
-//         <ul>
-//           <li>
-//             <Link to="/">Home</Link>
-//           </li>
-//           <li>
-//             <Link to="/activities">Activity List</Link>
-//           </li>
-//           <li>
-//             <Link to="/activities/new">New Activity</Link>
-//           </li>
-//         </ul>
-//       </nav>
-
-//       <Routes>
-//         <Route path="/" element={<HomePage />} />
-//         <Route path="/activities">
-//           <Route index element={<ActivityList />} />
-//           <Route path=":id" element={<Activity />} />
-//           <Route path="new" element={<NewActivity />} />
-//           <Route path=":id/edit" element={<EditActivity />} />
-//         </Route>
-//         <Route path="*" element={<NotFound />} />
-//       </Routes>
-//     </div>
-//   );
-// }
 // TODO: implement navigation refer to this https://youtu.be/Ul3y1LXxzdU?t=1010
 
 export default App;

@@ -4,6 +4,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../assets/NavBar.css';
+import { IAuthContext } from '../context/AuthProvider';
+import useAuth from '../hooks/useAuth';
 
 const darkTheme = createTheme({
   palette: {
@@ -17,6 +19,8 @@ const darkTheme = createTheme({
 const drawerWidth = '240px';
 function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { auth } = useAuth() as IAuthContext;
+  console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
   const handleDrawerToggle = () => {
     setMobileOpen(prevState => !prevState);
@@ -72,12 +76,27 @@ function NavBar() {
                 <Link to="/activities" className="custom-link">
                   Activities
                 </Link>
-                <Link to="/activities/new" className="custom-link">
-                  New Activity
-                </Link>
-                <Link to="/activities/user/login" className="custom-link">
+
+                {auth.user.username.length > 0 ? (
+                  <>
+                    <Link to="/activities/new" className="custom-link">
+                      New Activity
+                    </Link>
+                    <Link to="/activities/user/logout" className="custom-link">
+                      Logout
+                    </Link>
+                  </>
+                ) : (
+                  <Link to="/activities/user/login" className="custom-link">
+                    Login
+                  </Link>
+                )}
+                {/* <Link to="/activities/user/login" className="custom-link" style={{ color: 'orange' }}>
                   Login
-                </Link>
+                </Link> */}
+                {/* <Link to="/activities/user/logout" className="custom-link">
+                  Logout
+                </Link> */}
               </Box>
 
               {/* display on small screen */}

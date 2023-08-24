@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 export default function FlashMessage(props: { flashMsg: string }) {
   const { flashMsg } = props;
   const [open, setOpen] = useState(true);
-  console.log('flashMessage render ', open);
+  // console.log('flashMessage render ', open);
 
   useEffect(() => {
     // when the component is mounted, the alert is displayed for 3 seconds

@@ -10,7 +10,7 @@ function Activity() {
   const { showBoundary } = useErrorBoundary();
 
   const { id } = useParams();
-  console.log('Activity ID: ', id);
+  // console.log('Activity ID: ', id);
 
   const [actyDetail, setActyDetail] = useState<TActyDetail | undefined>(undefined);
 
@@ -18,7 +18,7 @@ function Activity() {
   // * check if id exist then return details, otherwise, navigate to not found
   useEffect(() => {
     console.log('useEffect runs');
-    // TODO: errors occur -> return to the activities page and flash the message
+
     (async () => {
       if (!id) return showBoundary('id not found in useParams');
 
@@ -27,7 +27,7 @@ function Activity() {
         setActyDetail(actyDetail);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.log('file: index.tsx:29 ~ error:', error.response);
+          // console.log('file: index.tsx:29 ~ error:', error.response);
           // showBoundary(new Error(error.response?.data.error));
           showBoundary(error);
         } else {
@@ -40,7 +40,6 @@ function Activity() {
   if (actyDetail) {
     return (
       <>
-        {/* <h1>Activity Detail {actyDetail.activity_title}</h1> */}
         <Container maxWidth="lg">
           <ActyDetailDisplay actyData={actyDetail} />
         </Container>

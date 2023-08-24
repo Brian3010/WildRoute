@@ -6,6 +6,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 export default function ErrorFallBack(props: FallbackProps) {
   const { error, resetErrorBoundary } = props;
   const navigate = useNavigate();
+
   // console.log(error);
 
   !axios.isAxiosError && console.log('Other Error', error.name);

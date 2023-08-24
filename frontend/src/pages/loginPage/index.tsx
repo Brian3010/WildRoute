@@ -13,13 +13,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { TypeMapper } from '../../@types/TypeMapper';
 import '../../assets/LoginPage.css';
 
 import { useErrorBoundary } from 'react-error-boundary';
-import AuthContext, { IAuthContext } from '../../context/AuthProvider';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { IAuthContext } from '../../context/AuthProvider';
+import useAuth from '../../hooks/useAuth';
 import loginUserIn from '../../services/logUserIn';
 
 interface LoginData {
@@ -31,8 +33,14 @@ type RegisterLogin = TypeMapper<LoginData, RegisterOptions>;
 
 export default function LoginPage() {
   console.log('LoginPage render');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from.pathname || '/';
+  // console.log('file: index.tsx:39 ~ LoginPage ~ from:', from);
+
   const { showBoundary } = useErrorBoundary();
-  const { setAuth } = useContext(AuthContext) as IAuthContext;
+  const { setAuth } = useAuth() as IAuthContext;
+
   // console.log('file: index.tsx:33 ~ LoginPage ~ setAuth:', setAuth);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -70,15 +78,16 @@ export default function LoginPage() {
 
   const submit: SubmitHandler<LoginData> = async data => {
     console.log('Form Submited');
-    
+
     try {
       const res = await loginUserIn(data.username, data.password);
       console.log(res);
       if (res) setAuth(res);
+      navigate(from, { replace: true });
     } catch (error) {
       showBoundary(error);
     }
-    
+
     reset();
   };
 
