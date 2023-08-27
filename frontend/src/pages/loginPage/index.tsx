@@ -36,7 +36,7 @@ export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from.pathname || '/';
-  // console.log('file: index.tsx:39 ~ LoginPage ~ from:', from);
+  console.log('file: index.tsx:39 ~ LoginPage ~ from:',from );
 
   const { showBoundary } = useErrorBoundary();
   const { setAuth } = useAuth() as IAuthContext;
@@ -83,7 +83,7 @@ export default function LoginPage() {
       const res = await loginUserIn(data.username, data.password);
       console.log(res);
       if (res) setAuth(res);
-      navigate(from, { replace: true });
+      return navigate(from, { replace: true });
     } catch (error) {
       showBoundary(error);
     }

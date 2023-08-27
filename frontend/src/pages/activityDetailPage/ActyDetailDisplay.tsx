@@ -7,12 +7,18 @@ import ActyInfoItem from './ActyInfoItem';
 import ActyReviews from './ActyReviews';
 import ImageItem from './ImageItem';
 import MapDisplay from './MapDisplay';
+import useAuth from '../../hooks/useAuth';
+import { IAuthContext } from '../../context/AuthProvider';
+import LeaveReview from './LeaveReview';
 interface ImageDisplayProps {
   actyData: TActyDetail;
 }
 // TODO: style iamge and detail side by side
 
 export default function ActyDetailDisplay(props: ImageDisplayProps) {
+  const { auth } = useAuth() as IAuthContext;
+  console.log("file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:", auth)
+  
   const actyDetail = props.actyData;
   return (
     <Grid container rowSpacing={2} columnSpacing={3}>
@@ -41,6 +47,8 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
         <Typography variant="h5" margin={'20px 0 10px 0'}>
           Reviews
         </Typography>
+        {/* // display review input text */}
+        <LeaveReview/>
         {actyDetail.reviews.length > 0 ? <ActyReviews reviews={actyDetail.reviews} /> : <h4>No reviews yet</h4>}
       </Grid>
     </Grid>
