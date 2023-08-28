@@ -29,7 +29,8 @@ const loginUser = async (req, res, next) => {
     console.log(user._id);
     await (0, redis_1.setRedisToken)(refreshToken, user._id);
     const { salt, hash, ...userTosend } = user._doc;
-    res.status(200).json({ accessToken, refreshToken, user: userTosend });
+    res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+    res.status(200).json({ accessToken, user: userTosend });
 };
 exports.loginUser = loginUser;
 const logoutUser = async (req, res, next) => {

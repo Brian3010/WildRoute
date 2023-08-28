@@ -2,14 +2,14 @@ import { Grid, Typography } from '@mui/material';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/detailImageDisplay.css';
+import { IAuthContext } from '../../context/AuthProvider';
+import useAuth from '../../hooks/useAuth';
 import { TActyDetail } from '../../services/getActyById';
 import ActyInfoItem from './ActyInfoItem';
 import ActyReviews from './ActyReviews';
 import ImageItem from './ImageItem';
-import MapDisplay from './MapDisplay';
-import useAuth from '../../hooks/useAuth';
-import { IAuthContext } from '../../context/AuthProvider';
 import LeaveReview from './LeaveReview';
+import MapDisplay from './MapDisplay';
 interface ImageDisplayProps {
   actyData: TActyDetail;
 }
@@ -17,8 +17,8 @@ interface ImageDisplayProps {
 
 export default function ActyDetailDisplay(props: ImageDisplayProps) {
   const { auth } = useAuth() as IAuthContext;
-  console.log("file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:", auth)
-  
+  console.log('file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:', auth);
+
   const actyDetail = props.actyData;
   return (
     <Grid container rowSpacing={2} columnSpacing={3}>
@@ -48,7 +48,8 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
           Reviews
         </Typography>
         {/* // display review input text */}
-        <LeaveReview/>
+
+        <LeaveReview />
         {actyDetail.reviews.length > 0 ? <ActyReviews reviews={actyDetail.reviews} /> : <h4>No reviews yet</h4>}
       </Grid>
     </Grid>

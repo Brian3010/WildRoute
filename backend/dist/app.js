@@ -33,7 +33,8 @@ app.use((0, express_mongo_sanitize_1.default)({
     replaceWith: '_',
 }));
 app.use((0, cors_1.default)({
-    origin: '*',
+    origin: 'http://localhost:5173',
+    credentials: true,
 }));
 const jwtOpts = {
     jwtFromRequest: passport_jwt_1.default.ExtractJwt.fromAuthHeaderAsBearerToken(),

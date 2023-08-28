@@ -47,7 +47,10 @@ export const loginUser: RequestHandler = async (req, res, next) => {
   await setRedisToken(refreshToken, user._id);
 
   const { salt, hash, ...userTosend } = user._doc; // ._doc contain user data
-  res.status(200).json({ accessToken, refreshToken, user: userTosend });
+  // send refreshToken as cookie
+  // the option secure: true, can be set when in production, as  the cookie will only be sent over secure (HTTPS) connections.
+  res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+  res.status(200).json({ accessToken, user: userTosend });
 };
 
 type logoutBody = {

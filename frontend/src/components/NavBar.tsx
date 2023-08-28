@@ -22,6 +22,8 @@ function NavBar() {
   const { auth } = useAuth() as IAuthContext;
   console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
+  const isLogin = auth.user._id.length > 0;
+
   const handleDrawerToggle = () => {
     setMobileOpen(prevState => !prevState);
   };
@@ -37,12 +39,20 @@ function NavBar() {
           <Link to={'/activities'} className="custom-link">
             Activities
           </Link>
-          <Link to="/activities/new" className="custom-link">
-            New Activity
-          </Link>
-          <Link to="/activities/user/login" className="custom-link">
-            Login
-          </Link>
+          {isLogin ? (
+            <>
+              <Link to="/activities/new" className="custom-link">
+                New Activity
+              </Link>
+              <Link to="/activities/user/logout" className="custom-link">
+                Logout
+              </Link>
+            </>
+          ) : (
+            <Link to="/activities/user/login" className="custom-link">
+              Login
+            </Link>
+          )}
         </ListItem>
       </List>
     </Box>
@@ -77,7 +87,7 @@ function NavBar() {
                   Activities
                 </Link>
 
-                {auth.user.username.length > 0 ? (
+                {isLogin ? (
                   <>
                     <Link to="/activities/new" className="custom-link">
                       New Activity

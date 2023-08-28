@@ -36,7 +36,7 @@ export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from.pathname || '/';
-  console.log('file: index.tsx:39 ~ LoginPage ~ from:',from );
+  console.log('file: index.tsx:39 ~ LoginPage ~ from:', from);
 
   const { showBoundary } = useErrorBoundary();
   const { setAuth } = useAuth() as IAuthContext;
