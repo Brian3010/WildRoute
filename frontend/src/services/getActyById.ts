@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { BACKEND_URL } from './config';
+import axios from '../services/axios';
 
 export type TTags = 'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climbing';
 export interface TActyDetail {
@@ -33,7 +32,7 @@ export interface TActyDetail {
 
 export default async function getActyById(id: string): Promise<TActyDetail> {
   // console.log(id);
-  const res = await axios.get<TActyDetail>(`${BACKEND_URL}/activities/${id}`);
+  const res = await axios.get<TActyDetail>(`/activities/${id}`);
 
   // console.log('file: getActyById.ts:30 ~ getActyById ~ res:', res);
   return res.data;

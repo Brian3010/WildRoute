@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { BACKEND_URL } from './config';
+import axios from '../services/axios';
 
 export type TActies = {
   _id: number;
@@ -13,6 +12,6 @@ export type TActies = {
 };
 
 export default async function getActies(): Promise<TActies[]> {
-  const res = await axios.get<TActies[]>(`${BACKEND_URL}/activities`);
+  const res = await axios.get<TActies[]>('/activities');
   return res.data.reverse();
 }

@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { BACKEND_URL } from './config';
+import axios from '../services/axios';
 
 export interface ILoginInfo {
   accessToken: string;
@@ -13,7 +12,7 @@ export interface ILoginInfo {
 
 export default async function loginUserIn(username: string, password: string): Promise<ILoginInfo> {
   const res = await axios.post<ILoginInfo>(
-    `${BACKEND_URL}/user/login`,
+    '/user/login',
     {
       username,
       password,
