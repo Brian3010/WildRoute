@@ -2,11 +2,12 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { FallbackProps } from 'react-error-boundary';
 import { Navigate, useNavigate } from 'react-router-dom';
+import useFlashMessage from '../hooks/useFLashMessage';
 
 export default function ErrorFallBack(props: FallbackProps) {
   const { error, resetErrorBoundary } = props;
   const navigate = useNavigate();
-
+  const { setFlashMsg } = useFlashMessage();
   // console.log(error);
 
   !axios.isAxiosError && console.log('Other Error', error.name);
@@ -40,6 +41,7 @@ export default function ErrorFallBack(props: FallbackProps) {
 
     if (error.response?.status === 404) {
       if (errorMessage.includes('Invalid Activity ID') || errorMessage.includes('Activity does not exist')) {
+        setFlashMsg(errorMessage);
         return <Navigate to={'/activities'} />;
       }
 
@@ -50,11 +52,14 @@ export default function ErrorFallBack(props: FallbackProps) {
         // resetErrorBoundary();
         // return <Navigate to={'/activities/user/login'} />;
 
-        setTimeout(() => {
-          resetErrorBoundary();
-          <Navigate to={'/activities/user/login'} />;
-        }, 0);
-        return null;
+        // setTimeout(() => {
+        //   resetErrorBoundary();
+        //   <Navigate to={'/activities/user/login'} />;
+        // }, 0);
+        // return null;
+
+        setFlashMsg(errorMessage);
+        return <Navigate to={'/activities/user/login'} />;
       }
     }
   }

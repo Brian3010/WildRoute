@@ -6,13 +6,17 @@ import { AuthProvider } from './context/AuthProvider.tsx';
 
 import { CssBaseline } from '@mui/material';
 import './assets/index.css';
+// import FlashMsgProvider from './context/FlashMsgProvider.tsx';
+import { FlashMsgProvider } from './context/FlashMsgProvider';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <CssBaseline />
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <FlashMsgProvider>
+          <App />
+        </FlashMsgProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

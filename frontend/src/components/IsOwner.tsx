@@ -27,6 +27,7 @@ export default function IsOwner() {
           setIsLoading(false);
         } catch (error) {
           console.error(error);
+          
           return navigate('/activities');
         }
       })();

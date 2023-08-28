@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import '../../assets/LeaveReview.css';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
+import useFlashMessage from '../../hooks/useFLashMessage';
 
 interface IReviewData {
   textBody: string;
@@ -23,15 +24,20 @@ const LeaveReview = () => {
   const { auth } = useAuth() as IAuthContext;
   const navigate = useNavigate();
   const location = useLocation();
+  const { setFlashMsg } = useFlashMessage();
 
   const submit: SubmitHandler<IReviewData> = data => {
-    if (auth.user._id.length <= 0) return navigate('/activities/user/login', { state: { from: location } });
+    if (auth.user._id.length <= 0) {
+      setFlashMsg('You must be signed in first!');
+      return navigate('/activities/user/login', { state: { from: location } });
+    }
+
     console.log(data);
 
     reset();
   };
 
-  // TODO: send data to backend
+  // TODO: handle token
   return (
     <form onSubmit={handleSubmit(submit)}>
       <Controller

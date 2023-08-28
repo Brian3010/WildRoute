@@ -17,7 +17,7 @@ export function AuthProvider(props: AuthProviderProps) {
   const children = props.children;
   const [auth, setAuth] = useState<ILoginInfo>({
     accessToken: '',
-    refreshToken: '',
+    // refreshToken: '',
     user: { _id: '', email: '', username: '' },
   });
 

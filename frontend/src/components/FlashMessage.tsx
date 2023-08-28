@@ -7,13 +7,13 @@ export default function FlashMessage(props: { flashMsg: string }) {
   const [open, setOpen] = useState(true);
   // console.log('flashMessage render ', open);
 
-  useEffect(() => {
-    // when the component is mounted, the alert is displayed for 3 seconds
+  // useEffect(() => {
+  //   // when the component is mounted, the alert is displayed for 3 seconds
 
-    setTimeout(() => {
-      setOpen(false);
-    }, 5000);
-  }, []);
+  //   setTimeout(() => {
+  //     setOpen(false);
+  //   }, 5000);
+  // }, []);
 
   return (
     <Collapse in={open}>
