@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Navigate, Outlet, redirect, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
 import getActyById from '../services/getActyById';
@@ -27,7 +27,7 @@ export default function IsOwner() {
           setIsLoading(false);
         } catch (error) {
           console.error(error);
-          
+
           return navigate('/activities');
         }
       })();

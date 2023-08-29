@@ -49,7 +49,8 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
         </Typography>
         {/* // display review input text */}
 
-        <LeaveReview />
+        <LeaveReview /> // ! submit
+        
         {actyDetail.reviews.length > 0 ? <ActyReviews reviews={actyDetail.reviews} /> : <h4>No reviews yet</h4>}
       </Grid>
     </Grid>

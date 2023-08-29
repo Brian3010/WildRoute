@@ -7,6 +7,7 @@ import getActyById, { TActyDetail } from '../../services/getActyById';
 import ActyDetailDisplay from './ActyDetailDisplay';
 
 function Activity() {
+  console.log('asdasdasdasdasdasdasdasd');
   const { showBoundary } = useErrorBoundary();
 
   const { id } = useParams();
@@ -36,7 +37,7 @@ function Activity() {
       }
     })();
   }, [id, showBoundary]);
-
+  //? passing funcrtion to update the actyDetail
   if (actyDetail) {
     return (
       <>

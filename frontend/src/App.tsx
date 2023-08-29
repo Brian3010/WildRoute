@@ -21,7 +21,7 @@ import NewActivity from './pages/newPage';
 function App() {
   const location = useLocation();
   // const flashMsg = useRef<string>();
-  const { flashMsg, clearFlashMsg } = useFlashMessage();
+  const { flashMsg } = useFlashMessage();
   console.log('file: App.tsx:24 ~ App ~ flashContext:', flashMsg);
 
   function setFlashError(error: Error | AxiosError, info: { componentStack: string }) {
@@ -36,9 +36,9 @@ function App() {
   useEffect(() => {
     // flashMsg.current = undefined;
     // clearFlashMsg();
-    setTimeout(() => {
-      clearFlashMsg();
-    }, 7000);
+    // setTimeout(() => {
+    //   clearFlashMsg();
+    // }, 7000);
   });
 
   return (
