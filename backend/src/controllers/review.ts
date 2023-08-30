@@ -32,13 +32,9 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
   const numOfReviews = acty.reviews!.push(reviewDoc.id);
 
   if (acty.reviews) {
-    let sum = 0;
     const copiedReviews = acty.reviews.slice(0, -1);
-    console.log(
-      'file: review.ts:36 ~ constcreateReview:RequestHandler<reviewParams,unknown,reviewBody,unknown>= ~ copiedReviews:',
-      copiedReviews
-    );
 
+    let sum = 0;
     for (let i = 0; i < copiedReviews.length; i++) {
       console.log(copiedReviews[i].rating);
       sum += copiedReviews[i].rating;
