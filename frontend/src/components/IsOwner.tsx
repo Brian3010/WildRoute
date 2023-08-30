@@ -40,6 +40,13 @@ export default function IsOwner() {
     // console.log('file: IsOwner.tsx:32 ~ IsOwner ~ auth.user._id:', auth.user._id);
     // console.log('file: IsOwner.tsx:29 ~ IsOwner ~ isOwner:', isOwner);
 
-    return isOwner ? <Outlet /> : <Navigate to="/activities" />;
+    return isOwner ? (
+      <Outlet />
+    ) : (
+      <Navigate
+        to="/activities"
+        state={{ flashMessage: { type: 'error', message: 'You do not have permission to do that' } }}
+      />
+    );
   }
 }

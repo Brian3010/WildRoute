@@ -13,8 +13,8 @@ export default async function createReview(id: string, rating: number, body: str
     `/activities/${id}/review`,
     {
       review: {
-        rating,
         body,
+        rating,
       },
     },
     { withCredentials: true, headers: { Authorization: `bearer ${accessToken}` } }
