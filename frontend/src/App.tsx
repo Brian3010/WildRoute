@@ -1,6 +1,5 @@
 import { Container } from '@mui/material';
-import axios, { AxiosError } from 'axios';
-import { useEffect } from 'react';
+import { AxiosError } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
@@ -9,7 +8,6 @@ import FlashMessage from './components/FlashMessage';
 import IsOwner from './components/IsOwner';
 import NavBar from './components/NavBar';
 import RequireAuth from './components/requireAuth';
-import useFlashMessage from './hooks/useFlashMessage';
 import PageNotFound from './pages/PageNotFound';
 import Activity from './pages/activityDetailPage';
 import ActivityList from './pages/activityListPage';
@@ -20,28 +18,26 @@ import NewActivity from './pages/newPage';
 
 function App() {
   const location = useLocation();
-  // console.log('file: App.tsx:23 ~ App ~ location:', location.pathname);
 
-  // const flashMsg = useRef<string>();
-  const { flashMsg, clearFlashMsg } = useFlashMessage();
-  console.log('file: App.tsx:24 ~ App ~ flashContext:', flashMsg);
-  const testFlash: string = location.state?.flashMessage || ' ';
-  console.log("file: App.tsx:29 ~ App ~ testFlash:", testFlash)
+  // const { flashMsg } = useFlashMessage();
+  // console.log('file: App.tsx:24 ~ App ~ flashContext:', flashMsg);
 
-  function setFlashError(error: Error | AxiosError, info: { componentStack: string }) {
+  const flashMsg: { type:'error' | 'success', message:string} = location.state?.flashMessage;
+
+  function logError(error: Error | AxiosError, info: { componentStack: string }) {
     console.warn('Caught an error:', error, info);
-    if (axios.isAxiosError(error) && error.response?.status != 500) {
-      // flashMsg.current = error.response?.data.error;
-      // console.log('file: App.tsx:30 ~ setFlashError ~ flashMsg.current:', flashMsg.current);
-    }
+    // if (axios.isAxiosError(error) && error.response?.status != 500) {
+    //   // flashMsg.current = error.response?.data.error;
+    //   // console.log('file: App.tsx:30 ~ logError ~ flashMsg.current:', flashMsg.current);
+    // }
   }
 
   return (
     <div className="App">
       <NavBar />
       {/* {flashMsg.current && <FlashMessage flashMsg={flashMsg.current} key={Math.random()} />} */}
-      {flashMsg.length > 0 && <FlashMessage flashMsg={flashMsg} />}
-      {/* {testFlash.length > 0 && <FlashMessage flashMsg={testFlash} />} */}
+      {/* {flashMsg.length > 0 && <FlashMessage flashMsg={flashMsg} />} */}
+      {flashMsg && <FlashMessage flashMsg={flashMsg} />}
       <main style={{ marginTop: '2em' }}>
         <Container maxWidth="xl">
           <Routes>
@@ -53,7 +49,7 @@ function App() {
                 element={
                   <ErrorBoundary
                     FallbackComponent={ErrorFallBack}
-                    onError={setFlashError}
+                    onError={logError}
                     key={location.pathname}
                     children={<ActivityList />}
                   />
@@ -62,14 +58,12 @@ function App() {
 
               <Route
                 path=":id"
-                element={
-                  <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} children={<Activity />} />
-                }
+                element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<Activity />} />}
               />
               <Route
                 path="user/login"
                 element={
-                  <ErrorBoundary FallbackComponent={ErrorFallBack} onError={setFlashError} children={<LoginPage />} />
+                  <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />
                 }
               />
 

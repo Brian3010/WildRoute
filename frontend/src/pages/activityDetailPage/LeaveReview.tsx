@@ -4,7 +4,6 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import '../../assets/LeaveReview.css';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
-import useFlashMessage from '../../hooks/useFlashMessage';
 import createReview from '../../services/createReview';
 
 interface IReviewData {
@@ -24,14 +23,15 @@ const LeaveReview = () => {
   const { auth } = useAuth() as IAuthContext;
   const navigate = useNavigate();
   const location = useLocation();
-  const { showMessage } = useFlashMessage();
   const { id } = useParams();
 
   const submit: SubmitHandler<IReviewData> = async data => {
     // set flash message
     if (auth.user._id.length <= 0) {
-      showMessage('You must be signed in first!');
-      return navigate('/activities/user/login', { state: { from: location } });
+      // showMessage('You must be signed in first!');
+      return navigate('/activities/user/login', {
+        state: { from: location, flashMessage: { type: 'error', message: 'You must be signed in first!' } },
+      });
     }
     if (!id) throw new Error('Cannot find id param from LeaveReview component ');
     // TODO: handle token

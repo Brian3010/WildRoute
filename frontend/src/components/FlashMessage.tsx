@@ -3,7 +3,7 @@ import { Alert, Collapse, IconButton } from '@mui/material';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export default function FlashMessage(props: { flashMsg: string }) {
+export default function FlashMessage(props: { flashMsg: {type:"error"| 'success', message:string} }) {
   const { flashMsg } = props;
   const location = useLocation();
   console.log('file: FlashMessage.tsx:10 ~ FlashMessage ~ location:', location);
@@ -12,7 +12,7 @@ export default function FlashMessage(props: { flashMsg: string }) {
   return (
     <Collapse in={open}>
       <Alert
-        severity="error"
+        severity={flashMsg.type}
         action={
           <IconButton
             aria-label="close"
@@ -26,7 +26,7 @@ export default function FlashMessage(props: { flashMsg: string }) {
           </IconButton>
         }
       >
-        {flashMsg}
+        {flashMsg.message}
       </Alert>
     </Collapse>
   );

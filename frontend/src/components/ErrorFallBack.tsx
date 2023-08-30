@@ -1,23 +1,19 @@
 import axios from 'axios';
-import { useEffect } from 'react';
 import { FallbackProps } from 'react-error-boundary';
-import { Navigate, useNavigate } from 'react-router-dom';
-import useFlashMessage from '../hooks/useFlashMessage';
+import { Navigate} from 'react-router-dom';
 
 export default function ErrorFallBack(props: FallbackProps) {
   const { error, resetErrorBoundary } = props;
-  const navigate = useNavigate();
-  const { showMessage } = useFlashMessage();
   // console.log(error);
 
   !axios.isAxiosError && console.log('Other Error', error.name);
 
-  useEffect(() => {
-    if (error.response?.data.error === 'Incorrect username and password') {
-      resetErrorBoundary();
-      navigate('/activities/user/login');
-    }
-  }, [error, resetErrorBoundary, navigate]);
+  // useEffect(() => {
+  //   if (error.response?.data.error === 'Incorrect username and password') {
+  //     resetErrorBoundary();
+  //     navigate('/activities/user/login');
+  //   }
+  // }, [error, resetErrorBoundary, navigate]);
 
   if (axios.isAxiosError(error)) {
     // console.log('Axios Error: ', error.name);
@@ -41,26 +37,26 @@ export default function ErrorFallBack(props: FallbackProps) {
 
     if (error.response?.status === 404) {
       if (errorMessage.includes('Invalid Activity ID') || errorMessage.includes('Activity does not exist')) {
-        showMessage(errorMessage);
-        return <Navigate to={'/activities'} />;
+        // showMessage(errorMessage);
+        return <Navigate to={'/activities'} state={{flashMessage:{type:'error', message: errorMessage}}} />;
       }
 
-      if (error.response?.data.error === 'Incorrect username and password') {
-        // console.log(error.response);
-        // * reset the error boundary state, clearing the error and attempting to render the component tree again.
-        // * error persists when navigating, so need to reset/
-        // resetErrorBoundary();
-        // return <Navigate to={'/activities/user/login'} />;
+      // if (error.response?.data.error === 'Incorrect username and password') {
+      //   // console.log(error.response);
+      //   // * reset the error boundary state, clearing the error and attempting to render the component tree again.
+      //   // * error persists when navigating, so need to reset/
+      //   // resetErrorBoundary();
+      //   // return <Navigate to={'/activities/user/login'} />;
 
-        // setTimeout(() => {
-        //   resetErrorBoundary();
-        //   <Navigate to={'/activities/user/login'} />;
-        // }, 0);
-        // return null;
+      //   // setTimeout(() => {
+      //   //   resetErrorBoundary();
+      //   //   <Navigate to={'/activities/user/login'} />;
+      //   // }, 0);
+      //   // return null;
 
-        showMessage(errorMessage);
-        return <Navigate to={'/activities/user/login'} />;
-      }
+      //   showMessage(errorMessage);
+      //   return <Navigate to={'/activities/user/login'} />;
+      // }
     }
   }
 

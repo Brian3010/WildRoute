@@ -18,7 +18,7 @@ import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { TypeMapper } from '../../@types/TypeMapper';
 import '../../assets/LoginPage.css';
 
-import { useErrorBoundary } from 'react-error-boundary';
+// import { useErrorBoundary } from 'react-error-boundary';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
@@ -38,7 +38,7 @@ export default function LoginPage() {
   const from = location.state?.from.pathname || '/';
   // console.log('file: index.tsx:39 ~ LoginPage ~ from:', from);
 
-  const { showBoundary } = useErrorBoundary();
+  // const { showBoundary } = useErrorBoundary();
   const { setAuth } = useAuth() as IAuthContext;
 
   // console.log('file: index.tsx:33 ~ LoginPage ~ setAuth:', setAuth);
@@ -85,9 +85,13 @@ export default function LoginPage() {
 
       if (res) setAuth(res);
 
-      return navigate(from, { replace: true });
+      return navigate(from, { replace: true, state: { flashMessage: { type: 'success', message: 'Welcome back' } } });
     } catch (error) {
-      showBoundary(error);
+      // showBoundary(error);
+      navigate('/activities/user/login', {
+        state: { flashMessage: { type: 'error', message: 'Incorrect username and password' }, from },
+        replace: true,
+      });
     }
 
     reset();
