@@ -7,7 +7,6 @@ import getActyById, { TActyDetail } from '../../services/getActyById';
 import ActyDetailDisplay from './ActyDetailDisplay';
 
 function Activity() {
-  console.log('asdasdasdasdasdasdasdasd');
   const { showBoundary } = useErrorBoundary();
 
   const { id } = useParams();
@@ -16,9 +15,9 @@ function Activity() {
   const [actyDetail, setActyDetail] = useState<TActyDetail | undefined>(undefined);
 
   // * if want to check if id is in database, use id param
-  // * check if id exist then return details, otherwise, navigate to not found
+
   useEffect(() => {
-    console.log('useEffect runs');
+    // console.log('useEffect runs');
 
     (async () => {
       if (!id) return showBoundary('id not found in useParams');

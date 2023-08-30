@@ -1,19 +1,13 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Alert, Collapse, IconButton } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function FlashMessage(props: { flashMsg: string }) {
   const { flashMsg } = props;
+  const location = useLocation();
+  console.log('file: FlashMessage.tsx:10 ~ FlashMessage ~ location:', location);
   const [open, setOpen] = useState(true);
-  // console.log('flashMessage render ', open);
-
-  // useEffect(() => {
-  //   // when the component is mounted, the alert is displayed for 3 seconds
-
-  //   setTimeout(() => {
-  //     setOpen(false);
-  //   }, 5000);
-  // }, []);
 
   return (
     <Collapse in={open}>

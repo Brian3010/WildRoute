@@ -2,8 +2,6 @@ import { Grid, Typography } from '@mui/material';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/detailImageDisplay.css';
-import { IAuthContext } from '../../context/AuthProvider';
-import useAuth from '../../hooks/useAuth';
 import { TActyDetail } from '../../services/getActyById';
 import ActyInfoItem from './ActyInfoItem';
 import ActyReviews from './ActyReviews';
@@ -16,8 +14,8 @@ interface ImageDisplayProps {
 // TODO: style iamge and detail side by side
 
 export default function ActyDetailDisplay(props: ImageDisplayProps) {
-  const { auth } = useAuth() as IAuthContext;
-  console.log('file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:', auth);
+  // const { auth } = useAuth() as IAuthContext;
+  // console.log('file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:', auth);
 
   const actyDetail = props.actyData;
   return (
@@ -49,7 +47,7 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
         </Typography>
         {/* // display review input text */}
 
-        <LeaveReview /> // ! submit
+        <LeaveReview /> 
         
         {actyDetail.reviews.length > 0 ? <ActyReviews reviews={actyDetail.reviews} /> : <h4>No reviews yet</h4>}
       </Grid>
