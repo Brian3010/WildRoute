@@ -29,28 +29,29 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
 
   //push review to activityList.reviews
   // acty.reviews!.push(reviewDoc.id);
+  const numOfReviews = acty.reviews!.push(reviewDoc.id);
 
-  const reviewLength = acty.reviews!.push(reviewDoc.id);
-
-  // calculate rating and add rating to the activitylist document
   if (acty.reviews) {
     let sum = 0;
-    for (let i = 0; i < acty.reviews.length - 1; i++) {
-      sum += acty.reviews[i].rating;
+    const copiedReviews = acty.reviews.slice(0, -1);
+    console.log(
+      'file: review.ts:36 ~ constcreateReview:RequestHandler<reviewParams,unknown,reviewBody,unknown>= ~ copiedReviews:',
+      copiedReviews
+    );
+
+    for (let i = 0; i < copiedReviews.length; i++) {
+      console.log(copiedReviews[i].rating);
+      sum += copiedReviews[i].rating;
     }
-    acty.rating = Math.round((sum + review.rating) / reviewLength);
+    const totalRating = sum + Number(review.rating);
+    const averageRating = Math.round(totalRating / numOfReviews);
+
+    // save calculated rating to activity
+    acty.rating = averageRating;
   }
 
-  // {
-  //   _id: ObjectId("64c34f0188bb8afe5f28437e"),
-  //   body: 'this is amazing',
-  //   rating: 3,
-  //   owner: ObjectId("64c0bfdd503dd1eda3269195"),
-  //   __v: 0
-  // }
-
-  await reviewDoc.save();
   await acty.save();
+  await reviewDoc.save();
 
   res.status(200).json({ reviewCreated: reviewDoc });
 };
