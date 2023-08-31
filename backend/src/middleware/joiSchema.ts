@@ -59,7 +59,7 @@ export const activitySchema = customJoi.object({
 
 export const reviewSchema = Joi.object({
   review: Joi.object({
-    body: Joi.string().min(5).max(50),
+    body: Joi.string().min(5).max(50).allow('').empty(''),
     rating: Joi.number().max(5).min(1).required(),
   }).required(),
 });

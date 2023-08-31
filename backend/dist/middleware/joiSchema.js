@@ -50,7 +50,7 @@ exports.activitySchema = customJoi.object({
 });
 exports.reviewSchema = joi_1.default.object({
     review: joi_1.default.object({
-        body: joi_1.default.string().min(5).max(50),
+        body: joi_1.default.string().min(5).max(50).allow('').empty(''),
         rating: joi_1.default.number().max(5).min(1).required(),
     }).required(),
 });
