@@ -1,15 +1,18 @@
 import { IAuthContext } from '../context/AuthProvider';
-import axios from '../services/axios';
+import getRefreshToken from '../services/getRefreshToken';
 import useAuth from './useAuth';
 // import from '../hooks/useAuth';
 
 const useRefeshToken = () => {
   const { auth, setAuth } = useAuth() as IAuthContext;
 
-  const refresh = async () => {
-    // const res = await axios.post('/user/refresh-token',{username:auth.user.username})
-    // ! refreshtoken granted when passing different _id
+  const refreshToken = async () => {
+    const data = await getRefreshToken(auth.user._id, auth.user.username);
+    console.log('file: useRefreshToken.ts:13 ~ refresh ~ res:', data);
+    return data
   };
+
+  return refreshToken;
 };
 
 export default useRefeshToken;

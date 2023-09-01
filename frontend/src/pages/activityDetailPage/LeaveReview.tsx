@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import '../../assets/LeaveReview.css';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
+import useRefreshToken from '../../hooks/useRefreshToken';
 import createReview from '../../services/createReview';
 
 interface IReviewData {
@@ -25,6 +26,8 @@ const LeaveReview = () => {
   const location = useLocation();
   const { id } = useParams();
 
+  const refreshToken = useRefreshToken();
+
   const submit: SubmitHandler<IReviewData> = async data => {
     // set flash message
     if (auth.user._id.length <= 0) {
@@ -33,15 +36,20 @@ const LeaveReview = () => {
         state: { from: location, flashMessage: { type: 'error', message: 'You must be signed in first!' } },
       });
     }
-    if (!id) throw new Error('Cannot find id param from LeaveReview component ');
-    // TODO: handle token
-    console.log(data);
-    try {
-      const res = await createReview(id, data.rating, data.textBody, auth.accessToken);
-      console.log('file: LeaveReview.tsx:42 ~ constsubmit:SubmitHandler<IReviewData>= ~ res:', res);
-    } catch (error) {
-      console.warn(error);
-    }
+
+    const test = await refreshToken();
+    console.log('file: LeaveReview.tsx:41 ~ LeaveReview ~ test:', test);
+
+    // if (!id) throw new Error('Cannot find id param from LeaveReview component ');
+    // // TODO: handle token
+    // console.log(data);
+    // try {
+    //   const res = await createReview(id, data.rating, data.textBody, auth.accessToken);
+    //   console.log('file: LeaveReview.tsx:42 ~ constsubmit:SubmitHandler<IReviewData>= ~ res:', res); // ? do something with this ?
+
+    // } catch (error) {
+    //   console.warn(error);
+    // }
 
     reset();
   };

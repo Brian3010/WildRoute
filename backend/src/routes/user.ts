@@ -16,6 +16,7 @@ router.route('/logout').post(isLoggedIn, catchAsync(userController.logoutUser));
 // /refresh-token route to send new tokens
 // router.route('/refresh-token').post(authLoginInfo, isValidBody, catchAsync(userController.refreshToken));
 router.route('/refresh-token').post(
+  isValidBody,
   (req, _res, next) => {
     const { _id, username } = req.body;
     const user = { _id, username };
@@ -23,7 +24,6 @@ router.route('/refresh-token').post(
     req.user = user;
     return next();
   },
-  isValidBody,
   catchAsync(userController.refreshToken)
 );
 
