@@ -48,8 +48,8 @@ const logoutUser = async (req, res, next) => {
 };
 exports.logoutUser = logoutUser;
 const refreshToken = async (req, res, next) => {
-    console.log(`${req.originalUrl} POST method`);
-    const refreshToken = req.cookies.jwt;
+    console.log(`${req.originalUrl} GET method`);
+    const refreshToken = req.cookies.jwt || undefined;
     if (!refreshToken)
         throw new AppError_1.default('token or id must be provided', 400);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET);

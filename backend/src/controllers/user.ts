@@ -76,9 +76,9 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
 //   refreshToken: string;
 // }
 export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = async (req, res, next) => {
-  console.log(`${req.originalUrl} POST method`);
+  console.log(`${req.originalUrl} GET method`);
   // const { refreshToken } = req.body;
-  const refreshToken = req.cookies.jwt;
+  const refreshToken = req.cookies.jwt || undefined;
   // if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
   if (!refreshToken) throw new AppError('token or id must be provided', 400);
   // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);

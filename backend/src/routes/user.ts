@@ -14,6 +14,17 @@ router.route('/login').post(authLoginInfo, catchAsync(userController.loginUser))
 router.route('/logout').post(isLoggedIn, catchAsync(userController.logoutUser));
 
 // /refresh-token route to send new tokens
-router.route('/refresh-token').post(authLoginInfo, isValidBody, catchAsync(userController.refreshToken));
+// router.route('/refresh-token').post(authLoginInfo, isValidBody, catchAsync(userController.refreshToken));
+router.route('/refresh-token').post(
+  (req, _res, next) => {
+    const { _id, username } = req.body;
+    const user = { _id, username };
+    //attach _id and username to req, in order to process them in the next middleware
+    req.user = user;
+    return next();
+  },
+  isValidBody,
+  catchAsync(userController.refreshToken)
+);
 
 export default router;
