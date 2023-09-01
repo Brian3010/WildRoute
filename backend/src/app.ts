@@ -14,6 +14,7 @@ import reviewRoute from './routes/review';
 import userRoute from './routes/user';
 import AppError from './utils/AppError';
 import { connectToRedis } from './utils/redis';
+import cookieParser from 'cookie-parser';
 
 const PORT = 3000;
 
@@ -33,6 +34,8 @@ async function main() {
 const app: Express = express();
 // use this so dont need to set Content-Type': 'application/json' on client
 app.use(express.json());
+// Use the cookie-parser middleware
+app.use(cookieParser());
 
 // *sanitize route to prevent mongo injection
 app.use(

@@ -72,12 +72,13 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
 };
 
 // todo: refreshToken route implementation
-interface refreshTokenBody {
-  refreshToken: string;
-}
-export const refreshToken: RequestHandler<unknown, unknown, refreshTokenBody, unknown> = async (req, res, next) => {
+// interface refreshTokenBody {
+//   refreshToken: string;
+// }
+export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = async (req, res, next) => {
   console.log(`${req.originalUrl} POST method`);
-  const { refreshToken } = req.body;
+  // const { refreshToken } = req.body;
+  const refreshToken = req.cookies.jwt;
   // if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
   if (!refreshToken) throw new AppError('token or id must be provided', 400);
   // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);

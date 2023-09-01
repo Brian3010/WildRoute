@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../services/axios';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from './useAuth';
 // import from '../hooks/useAuth';
@@ -6,7 +6,10 @@ import useAuth from './useAuth';
 const useRefeshToken = () => {
   const { setAuth } = useAuth() as IAuthContext;
 
-  // const refrehs
+  // const refresh = async () => {
+  //   const res = await axios.
+
+  // }
 };
 
 export default useRefeshToken;
