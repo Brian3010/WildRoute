@@ -42,7 +42,8 @@ export const disconnectRedis = async () => {
 //     }
 //   });
 // };
-
+// Set user information for a user with _id 12345
+// HSET user:12345 _id 12345 username "john_doe" token "your_token_here"
 export const setRedisToken = (refreshToken: string, id: string) => {
   // would need to store refreshToken as array in redis dbs
   // const refreshTokenArr = [refreshToken];
@@ -60,6 +61,7 @@ export const setRedisToken = (refreshToken: string, id: string) => {
   });
 };
 
+// HGET user:12345 username token
 export const getRedisToken: (id: string) => Promise<string | undefined> = id => {
   const key = `userToken:${id}`;
   const field = 'refreshTokens';
@@ -78,6 +80,7 @@ export const getRedisToken: (id: string) => Promise<string | undefined> = id => 
   });
 };
 
+// HDEL user:12345 token
 export const deleteRedisToken: (id: string, refreshToken: string) => Promise<string | number | void> = (
   id,
   refreshToken
