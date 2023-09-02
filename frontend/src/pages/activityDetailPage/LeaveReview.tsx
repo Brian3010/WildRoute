@@ -37,19 +37,15 @@ const LeaveReview = () => {
       });
     }
 
-    const test = await refreshToken();
-    console.log('file: LeaveReview.tsx:41 ~ LeaveReview ~ test:', test);
-
-    // if (!id) throw new Error('Cannot find id param from LeaveReview component ');
-    // // TODO: handle token
-    // console.log(data);
-    // try {
-    //   const res = await createReview(id, data.rating, data.textBody, auth.accessToken);
-    //   console.log('file: LeaveReview.tsx:42 ~ constsubmit:SubmitHandler<IReviewData>= ~ res:', res); // ? do something with this ?
-
-    // } catch (error) {
-    //   console.warn(error);
-    // }
+    if (!id) throw new Error('Cannot find id param from LeaveReview component ');
+    // TODO: handle token
+    console.log(data);
+    try {
+      const res = await createReview(id, data.rating, data.textBody, auth.accessToken);
+      console.log('file: LeaveReview.tsx:42 ~ constsubmit:SubmitHandler<IReviewData>= ~ res:', res); // ? do something with this ?
+    } catch (error) {
+      console.warn(error);
+    }
 
     reset();
   };

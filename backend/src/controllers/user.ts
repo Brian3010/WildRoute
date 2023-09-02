@@ -104,5 +104,31 @@ export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = 
   // set new refreshToken to the database
   await setRedisToken(newRefreshToken, req.user._id);
 
-  res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+  // update the existing cookie
+  res.cookie('jwt', newRefreshToken, {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+  // res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+  res.status(200).json({ accessToken: newAccessToken });
 };
+
+// export const updateCookie: RequestHandler<{ cookieName: string }, unknown, { newRefreshToken: string }, unknown> = (
+//   req,
+//   res
+// ) => {
+//   const { cookieName } = req.params;
+//   const { newRefreshToken } = req.body;
+//   if (cookieName !== 'jwt') throw new AppError('Invalid cookie name', 404);
+//   if (!newRefreshToken) throw new AppError('Invalid token',404)
+
+//   res.cookie(cookieName, newRefreshToken, {
+//     httpOnly: true,
+//     sameSite: 'none',
+//     secure: true,
+//     maxAge: 30 * 24 * 60 * 60 * 1000,
+//   });
+//   res.status(200).json({ message: 'Cookie updated successfully' });
+// };

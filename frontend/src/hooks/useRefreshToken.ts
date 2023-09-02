@@ -8,8 +8,10 @@ const useRefeshToken = () => {
 
   const refreshToken = async () => {
     const data = await getRefreshToken(auth.user._id, auth.user.username);
-    console.log('file: useRefreshToken.ts:13 ~ refresh ~ res:', data);
-    return data
+    // console.log('file: useRefreshToken.ts:13 ~ refresh ~ res:', data);
+    
+    // setAuth(prev => ({...prev, accessToken:data.accessToken}))
+    return data;
   };
 
   return refreshToken;

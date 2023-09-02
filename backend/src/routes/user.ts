@@ -27,4 +27,6 @@ router.route('/refresh-token').post(
   catchAsync(userController.refreshToken)
 );
 
+// router.route('/cookies/:cookieName').put(userController.updateCookie);
+
 export default router;

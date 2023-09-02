@@ -64,7 +64,13 @@ const refreshToken = async (req, res, next) => {
     const newAccessToken = (0, tokenHandling_1.generateAccessToken)(req.user);
     const newRefreshToken = (0, tokenHandling_1.generateRefreshToken)(req.user);
     await (0, redis_1.setRedisToken)(newRefreshToken, req.user._id);
-    res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+    res.cookie('jwt', newRefreshToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+    res.status(200).json({ accessToken: newAccessToken });
 };
 exports.refreshToken = refreshToken;
 //# sourceMappingURL=user.js.map
