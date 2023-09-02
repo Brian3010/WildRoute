@@ -30,7 +30,9 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
 
   // store refresh to redis database
   await setRedisToken(refreshToken, user._id.toString());
-
+  // TODO: would do this for register
+  //res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+  // res.status(200).json({ accessToken, user: userTosend });
   res.status(200).json({ accessToken: token, refreshToken, message: 'redirect to other routes' });
 };
 
@@ -64,6 +66,7 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
   const result = await deleteRedisToken(req.user._id, refreshToken);
 
   if (result === 0) {
+    // TODO: clear cookie;
     // 0: successfully delete the refreshToken in dbs
     res.status(200).json({ message: 'Successfully logout' });
   } else {

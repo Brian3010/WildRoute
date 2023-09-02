@@ -66,7 +66,7 @@ const isLoggedIn = (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            throw new AppError_1.default(info.message || 'user not found', 401);
+            throw new AppError_1.default(info.message || 'user not found', 403);
         }
         if (info) {
             throw new AppError_1.default(info.message, 401);

@@ -4,8 +4,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import '../../assets/LeaveReview.css';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
-import useRefreshToken from '../../hooks/useRefreshToken';
-import createReview from '../../services/createReview';
+import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
+import { ICreateReview } from '../../services/createReview';
 
 interface IReviewData {
   textBody: string;
@@ -13,8 +13,14 @@ interface IReviewData {
 }
 
 const LeaveReview = () => {
-  const { register, handleSubmit, control, reset } = useForm<IReviewData>({
-    mode: 'onSubmit',
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<IReviewData>({
+    mode: 'onChange',
     defaultValues: {
       textBody: '',
       rating: 0,
@@ -25,8 +31,7 @@ const LeaveReview = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-
-  const refreshToken = useRefreshToken();
+  const axiosInterceptor = useAxiosInterceptor();
 
   const submit: SubmitHandler<IReviewData> = async data => {
     // set flash message
@@ -40,8 +45,17 @@ const LeaveReview = () => {
     if (!id) throw new Error('Cannot find id param from LeaveReview component ');
     // TODO: handle token
     console.log(data);
+
     try {
-      const res = await createReview(id, data.rating, data.textBody, auth.accessToken);
+      const res = await axiosInterceptor.post<ICreateReview>(
+        `/activities/${id}/review`,
+        {
+          review: {
+            body: data.textBody,
+            rating: data.rating,
+          },
+        }
+      );
       console.log('file: LeaveReview.tsx:42 ~ constsubmit:SubmitHandler<IReviewData>= ~ res:', res); // ? do something with this ?
     } catch (error) {
       console.warn(error);
@@ -55,11 +69,15 @@ const LeaveReview = () => {
       <Controller
         name="rating"
         control={control}
-        rules={{ required: true }}
+        rules={{
+          required: true,
+          // validate: value => value === 0 || value < 1 || value > 5 || 'Invalid Rating',
+        }}
         render={({ field: { onChange, value } }) => (
           <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }} />
         )}
       />
+      {errors && <div>{errors.rating?.message}</div>}
       <TextareaAutosize minRows={5} minLength={5} maxLength={50} className="text-area" {...register('textBody')} />
       <Button type="submit" variant="contained">
         Submit

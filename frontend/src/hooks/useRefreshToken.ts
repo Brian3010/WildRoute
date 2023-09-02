@@ -10,7 +10,7 @@ const useRefeshToken = () => {
     const data = await getRefreshToken(auth.user._id, auth.user.username);
     // console.log('file: useRefreshToken.ts:13 ~ refresh ~ res:', data);
     
-    // setAuth(prev => ({...prev, accessToken:data.accessToken}))
+    setAuth(prev => ({...prev, accessToken:data.accessToken}))
     return data;
   };
 

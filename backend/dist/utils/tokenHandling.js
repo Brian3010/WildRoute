@@ -10,7 +10,7 @@ const generateAccessToken = user => {
         userId: user._id,
         username: user.username,
     }, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: process.env.JWTEXPIRE_ACCESS,
+        expiresIn: '3s',
         subject: user._id && user._id.toString(),
     });
     return token;

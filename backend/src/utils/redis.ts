@@ -68,7 +68,7 @@ export const getRedisToken: (id: string) => Promise<string | undefined> = id => 
   return new Promise(async (resolve, reject) => {
     try {
       const data = await redisClient.hGet(key, field);
-      console.log('file: redis.ts:69 ~ returnnewPromise ~ data:', data);
+      console.log('file: redis.ts:69 ~ returnnewPromise ~ dataa:', data);
       if (data === null)
         throw new Error(
           'user id not exist in database (redirect to login - to create create a new one with legitimate id)'

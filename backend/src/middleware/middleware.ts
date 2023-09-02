@@ -79,7 +79,7 @@ export const isLoggedIn: RequestHandler = (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      throw new AppError(info.message || 'user not found', 401);
+      throw new AppError(info.message || 'user not found', 403);
     }
     if (info) {
       throw new AppError(info.message, 401);

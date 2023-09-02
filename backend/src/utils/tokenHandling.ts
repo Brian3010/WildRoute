@@ -19,7 +19,8 @@ export const generateAccessToken: GenerateFnType = user => {
     // secret
     process.env.JWT_ACCESS_SECRET as JWT.Secret,
     {
-      expiresIn: process.env.JWTEXPIRE_ACCESS,
+      // expiresIn: process.env.JWTEXPIRE_ACCESS,
+      expiresIn: '3s',
       subject: user._id && user._id.toString(),
     }
   );
