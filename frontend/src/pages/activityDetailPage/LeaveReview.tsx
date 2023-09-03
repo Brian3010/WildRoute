@@ -74,29 +74,27 @@ const LeaveReview = () => {
           },
         }}
         render={({ field: { onChange, value } }) => (
-          <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }}></Rating>
-
-          // <Tooltip
-          //   // disableFocusListener
-          //   // // disableHoverListener
-          //   // disableInteractive
-          //   arrow={true}
-          //   placement="right-end"
-          //   title={errors.rating ? errors.rating.message : undefined}
-          //   open={errors.rating ? true : false}
-          //   PopperProps={{
-          //     disablePortal: true,
-          //   }}
-          //   // {errors.rating ? `title=${errors.rating.message}`}
-          // >
-          //   <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }} />
-          // </Tooltip>
+          // <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }}></Rating>
+          <Tooltip
+            disableFocusListener
+            disableHoverListener
+            disableInteractive
+            arrow={true}
+            placement="right-end"
+            title={errors.rating ? errors.rating?.message : ''}
+            open={errors.rating ? true : false}
+            // PopperProps={{
+            //   disablePortal: true,
+            // }}
+          >
+            <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }} />
+          </Tooltip>
         )}
       />
 
-      <Popper open={errors.rating ? true : false}>
+      {/* <Popper open={errors.rating ? true : false}>
         <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>{errors.rating?.message} </Box>
-      </Popper>
+      </Popper> */}
 
       {/* {errors.rating && <Box sx={{ ml: 2 }} color={"red"} fontSize={'smaller'}> {errors.rating?.message} </Box>} */}
 
