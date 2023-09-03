@@ -1,13 +1,6 @@
 // import { AxiosInstance } from 'axios';
 
-export interface ICreateReview {
-  reviewCreated: {
-    body: string;
-    rating: 5;
-    _id: string;
-    owner: string;
-  };
-}
+
 
 // export default async function createReview(axiosInterceptor: AxiosInstance, id: string, rating: number,body: string, accessToken: string) {
 

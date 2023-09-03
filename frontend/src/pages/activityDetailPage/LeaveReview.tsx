@@ -1,11 +1,12 @@
-import { Button, Rating, TextareaAutosize } from '@mui/material';
+import { Box, Button, Popper, Rating, TextareaAutosize, Tooltip } from '@mui/material';
+import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import ReturnCreatedReview from '../../@types/ReturnCreatedReview';
 import '../../assets/LeaveReview.css';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
-import { ICreateReview } from '../../services/createReview';
 
 interface IReviewData {
   textBody: string;
@@ -20,7 +21,7 @@ const LeaveReview = () => {
     reset,
     formState: { errors },
   } = useForm<IReviewData>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {
       textBody: '',
       rating: 0,
@@ -47,13 +48,13 @@ const LeaveReview = () => {
     console.log(data);
 
     try {
-      const res = await axiosInterceptor.post<ICreateReview>(`/activities/${id}/review`, {
+      const res = await axiosInterceptor.post<ReturnCreatedReview>(`/activities/${id}/review`, {
         review: {
           body: data.textBody,
           rating: data.rating,
         },
       });
-      if (!res) throw new Error('response undefined');
+      if (res === undefined) throw new Error('Response Undefined');
     } catch (error) {
       console.error(error);
     }
@@ -68,13 +69,37 @@ const LeaveReview = () => {
         control={control}
         rules={{
           required: true,
-          // validate: value => value === 0 || value < 1 || value > 5 || 'Invalid Rating',
+          validate: {
+            positive: value => value > 0 || 'should be greater than 0',
+          },
         }}
         render={({ field: { onChange, value } }) => (
-          <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }} />
+          <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }}></Rating>
+
+          // <Tooltip
+          //   // disableFocusListener
+          //   // // disableHoverListener
+          //   // disableInteractive
+          //   arrow={true}
+          //   placement="right-end"
+          //   title={errors.rating ? errors.rating.message : undefined}
+          //   open={errors.rating ? true : false}
+          //   PopperProps={{
+          //     disablePortal: true,
+          //   }}
+          //   // {errors.rating ? `title=${errors.rating.message}`}
+          // >
+          //   <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }} />
+          // </Tooltip>
         )}
       />
-      {errors && <div>{errors.rating?.message}</div>}
+
+      <Popper open={errors.rating ? true : false}>
+        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>{errors.rating?.message} </Box>
+      </Popper>
+
+      {/* {errors.rating && <Box sx={{ ml: 2 }} color={"red"} fontSize={'smaller'}> {errors.rating?.message} </Box>} */}
+
       <TextareaAutosize minRows={5} minLength={5} maxLength={50} className="text-area" {...register('textBody')} />
       <Button type="submit" variant="contained">
         Submit
