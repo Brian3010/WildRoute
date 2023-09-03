@@ -47,18 +47,15 @@ const LeaveReview = () => {
     console.log(data);
 
     try {
-      const res = await axiosInterceptor.post<ICreateReview>(
-        `/activities/${id}/review`,
-        {
-          review: {
-            body: data.textBody,
-            rating: data.rating,
-          },
-        }
-      );
-      console.log('file: LeaveReview.tsx:42 ~ constsubmit:SubmitHandler<IReviewData>= ~ res:', res); // ? do something with this ?
+      const res = await axiosInterceptor.post<ICreateReview>(`/activities/${id}/review`, {
+        review: {
+          body: data.textBody,
+          rating: data.rating,
+        },
+      });
+      if (!res) throw new Error('response undefined');
     } catch (error) {
-      console.warn(error);
+      console.error(error);
     }
 
     reset();
