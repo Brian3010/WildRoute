@@ -36,7 +36,7 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
 
     let sum = 0;
     for (let i = 0; i < copiedReviews.length; i++) {
-      console.log(copiedReviews[i].rating);
+      // console.log(copiedReviews[i].rating);
       sum += copiedReviews[i].rating;
     }
     const totalRating = sum + Number(review.rating);

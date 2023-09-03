@@ -74,7 +74,6 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
   }
 };
 
-// todo: refreshToken route implementation
 // interface refreshTokenBody {
 //   refreshToken: string;
 // }

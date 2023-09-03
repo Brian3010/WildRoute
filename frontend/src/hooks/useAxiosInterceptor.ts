@@ -20,10 +20,10 @@ const useAxiosInterceptor = () => {
       (error: AxiosError) => Promise.reject(error)
     );
 
-    // response interceptor 
+    // response interceptor
     const responseInterceptor = axiosInterceptor.interceptors.response.use(
       response => response,
-      async (error: AxiosError<{ error: string }>) => {
+      async error => {
         const originalRequest = error.config;
 
         if (
@@ -33,9 +33,14 @@ const useAxiosInterceptor = () => {
           !originalRequest.sent
         ) {
           originalRequest.sent = true; // prevent infinite loop
-          console.log('interceptor running');
+          // console.log('interceptor running');
           const newAccessToken = await refreshToken(); // get new access token
+          console.log('file: useAxiosInterceptor.ts:38 ~ newAccessToken:', newAccessToken);
           originalRequest.headers['Authorization'] = `bearer ${newAccessToken}`;
+          console.log(
+            "file: useAxiosInterceptor.ts:40 ~ originalRequest.headers['Authorization']:",
+            originalRequest.headers
+          );
           return axiosInterceptor(originalRequest); // making the request again
         }
       }

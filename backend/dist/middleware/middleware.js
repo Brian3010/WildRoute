@@ -61,6 +61,7 @@ const authLoginInfo = (req, res, next) => {
 };
 exports.authLoginInfo = authLoginInfo;
 const isLoggedIn = (req, res, next) => {
+    console.log('isLoggedIn middleware');
     passport_1.default.authenticate('jwt', { session: false }, (err, user, info) => {
         if (err) {
             return next(err);

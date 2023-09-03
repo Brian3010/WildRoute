@@ -1,4 +1,3 @@
-
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -22,7 +21,6 @@ const createReview = async (req, res) => {
         const copiedReviews = acty.reviews.slice(0, -1);
         let sum = 0;
         for (let i = 0; i < copiedReviews.length; i++) {
-            console.log(copiedReviews[i].rating);
             sum += copiedReviews[i].rating;
         }
         const totalRating = sum + Number(review.rating);

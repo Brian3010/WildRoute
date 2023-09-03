@@ -74,11 +74,13 @@ export const authLoginInfo: RequestHandler = (req, res, next) => {
 
 // check valid accessToken
 export const isLoggedIn: RequestHandler = (req, res, next) => {
+  console.log('isLoggedIn middleware');
   passport.authenticate('jwt', { session: false }, (err: any, user: any, info: any) => {
     if (err) {
       return next(err);
     }
     if (!user) {
+      // console.log('infor: ', info);
       throw new AppError(info.message || 'user not found', 403);
     }
     if (info) {
