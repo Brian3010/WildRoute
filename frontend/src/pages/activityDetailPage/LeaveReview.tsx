@@ -1,5 +1,5 @@
-import { Box, Button, Popper, Rating, TextareaAutosize, Tooltip } from '@mui/material';
-import { useState } from 'react';
+import { Box, Button, Rating, TextareaAutosize } from '@mui/material';
+import { useRef } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ReturnCreatedReview from '../../@types/ReturnCreatedReview';
@@ -19,7 +19,8 @@ const LeaveReview = () => {
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    // formState: { errors },
+    watch,
   } = useForm<IReviewData>({
     mode: 'onSubmit',
     defaultValues: {
@@ -33,6 +34,7 @@ const LeaveReview = () => {
   const location = useLocation();
   const { id } = useParams();
   const axiosInterceptor = useAxiosInterceptor();
+  const isError = useRef<boolean>();
 
   const submit: SubmitHandler<IReviewData> = async data => {
     // set flash message
@@ -64,46 +66,19 @@ const LeaveReview = () => {
 
   return (
     <form onSubmit={handleSubmit(submit)}>
-      <Box sx={{ display: 'flex', gap: 1 }}>
+      <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end', marginBottom: 2 }}>
         <Controller
           name="rating"
           control={control}
           rules={{
             required: true,
-            validate: {
-              positive: value => value > 0 || 'should be greater than 0',
-            },
           }}
-          render={({ field: { onChange, value } }) => (
-            <Box position={'relative'}>
-              <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }}></Rating>
-              {errors.rating && <div id="rating-error-tooltip">{errors.rating.message}</div>}
-            </Box>
-            // <Tooltip
-            //   // disableFocusListener
-            //   disableHoverListener
-            //   // disableInteractive
-            //   arrow={true}
-            //   placement="right-end"
-            //   title={errors.rating?.message}
-            //   open={errors.rating ? true : false}
-            //   // PopperProps={{
-            //   //   disablePortal: true,
-            //   // }}
-            // >
-            //   <Rating onChange={onChange} value={Number(value)} sx={{ marginBottom: 2 }} />
-            // </Tooltip>
-          )}
+          render={({ field: { onChange, value } }) => <Rating onChange={onChange} value={Number(value)}></Rating>}
         />
       </Box>
-      {/* <Popper open={errors.rating ? true : false}>
-        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>{errors.rating?.message} </Box>
-      </Popper> */}
-
-      {/* {errors.rating && <Box sx={{ ml: 2 }} color={"red"} fontSize={'smaller'}> {errors.rating?.message} </Box>} */}
 
       <TextareaAutosize minRows={5} minLength={5} maxLength={50} className="text-area" {...register('textBody')} />
-      <Button type="submit" variant="contained">
+      <Button type="submit" variant="contained" disabled={(isError.current = watch('rating') === 0)}>
         Submit
       </Button>
     </form>

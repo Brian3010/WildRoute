@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/detailImageDisplay.css';
@@ -47,9 +47,17 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
         </Typography>
         {/* // display review input text */}
 
-        <LeaveReview /> 
-        
-        {actyDetail.reviews.length > 0 ? <ActyReviews reviews={actyDetail.reviews} /> : <h4>No reviews yet</h4>}
+        <LeaveReview />
+
+        {actyDetail.reviews.length > 0 ? (
+          <Box sx={{ marginTop: 4 }}>
+            <ActyReviews reviews={actyDetail.reviews} />
+          </Box>
+        ) : (
+          <Box>
+            <h4>No reviews yet</h4>
+          </Box>
+        )}
       </Grid>
     </Grid>
     // https://mui.com/material-ui/react-grid/#interactive

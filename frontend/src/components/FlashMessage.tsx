@@ -3,11 +3,15 @@ import { Alert, Collapse, IconButton } from '@mui/material';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export default function FlashMessage(props: { flashMsg: {type:"error"| 'success', message:string} }) {
+export default function FlashMessage(props: { flashMsg: { type: 'error' | 'success'; message: string } }) {
   const { flashMsg } = props;
   const location = useLocation();
   console.log('file: FlashMessage.tsx:10 ~ FlashMessage ~ location:', location);
   const [open, setOpen] = useState(true);
+
+  setTimeout(() => {
+    setOpen(false);
+  }, 3000);
 
   return (
     <Collapse in={open}>
