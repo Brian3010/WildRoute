@@ -1,4 +1,6 @@
+import { Preview } from '@mui/icons-material';
 import { Box, Grid, Typography } from '@mui/material';
+import { useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../../assets/detailImageDisplay.css';
@@ -18,6 +20,16 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
   // console.log('file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:', auth);
 
   const actyDetail = props.actyData;
+
+  // const reviewsToPrint: TActyDetail['reviews'] = actyDetail.reviews;
+  const [reviewsToPrint, setReviewsToPrint] = useState<TActyDetail['reviews']>(actyDetail.reviews);
+  
+  const onReviewAdded = (newReview: TActyDetail['reviews'][number]) => {
+    // console.log(reviewsToPrint);
+    // reviewsToPrint.push(newReview);
+    setReviewsToPrint(prevReview => [...prevReview, newReview] );
+  };
+
   return (
     <Grid container rowSpacing={2} columnSpacing={3}>
       <Grid item xs={12} md={6}>
@@ -47,11 +59,11 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
         </Typography>
         {/* // display review input text */}
 
-        <LeaveReview />
+        <LeaveReview onReviewAdded={onReviewAdded} />
 
         {actyDetail.reviews.length > 0 ? (
           <Box sx={{ marginTop: 4 }}>
-            <ActyReviews reviews={actyDetail.reviews} />
+            <ActyReviews reviews={reviewsToPrint} />
           </Box>
         ) : (
           <Box>

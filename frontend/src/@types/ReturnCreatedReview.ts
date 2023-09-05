@@ -3,6 +3,6 @@ export default interface ReturnCreatedReview {
     body: string;
     rating: 5;
     _id: string;
-    owner: string;
+    owner: { _id: string; username: string };
   };
 }

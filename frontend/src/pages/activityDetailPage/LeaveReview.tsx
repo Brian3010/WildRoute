@@ -7,13 +7,14 @@ import '../../assets/LeaveReview.css';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
+import { TActyDetail } from '../../services/getActyById';
 
 interface IReviewData {
   textBody: string;
   rating: number;
 }
 
-const LeaveReview = () => {
+const LeaveReview = ({ onReviewAdded }: { onReviewAdded: (newReview: TActyDetail['reviews'][number]) => void }) => {
   const {
     register,
     handleSubmit,
@@ -46,7 +47,6 @@ const LeaveReview = () => {
     }
 
     if (!id) throw new Error('Cannot find id param from LeaveReview component ');
-    // TODO: handle token
     console.log(data);
 
     try {
@@ -56,9 +56,14 @@ const LeaveReview = () => {
           rating: data.rating,
         },
       });
+
       if (res === undefined) throw new Error('Response Undefined');
+      // console.log('res.data: ', res.data);
+      onReviewAdded(res.data.reviewCreated);
     } catch (error) {
       console.error(error);
+
+      //TODO: handle Unauthorized
     }
 
     reset();

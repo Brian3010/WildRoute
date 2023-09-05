@@ -36,7 +36,7 @@ function Activity() {
       }
     })();
   }, [id, showBoundary]);
-  //? passing funcrtion to update the actyDetail
+
   if (actyDetail) {
     return (
       <>
