@@ -10,6 +10,7 @@ interface ActyInfoItemProps {
 }
 
 export default function ActyInfoItem(props: ActyInfoItemProps) {
+  // console.log('ActyInfoItem rendered');
   const actyDetail = props.data;
   const reviewTotal = props.reviewTotal;
 

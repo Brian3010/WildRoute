@@ -1,4 +1,5 @@
 import { Box, Button, Rating, TextareaAutosize } from '@mui/material';
+import { isAxiosError } from 'axios';
 import { useRef } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -61,9 +62,11 @@ const LeaveReview = ({ onReviewAdded }: { onReviewAdded: (newReview: TActyDetail
       // console.log('res.data: ', res.data);
       onReviewAdded(res.data.reviewCreated);
     } catch (error) {
+      //TODO: handle Unauthorized
       console.error(error);
 
-      //TODO: handle Unauthorized
+      // handle refreshToken expired and Unauthorized
+      navigate('/activities/user/login', { state: { from: location, replace: true } });
     }
 
     reset();

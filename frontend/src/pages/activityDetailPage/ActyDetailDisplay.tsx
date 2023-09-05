@@ -1,4 +1,3 @@
-import { Preview } from '@mui/icons-material';
 import { Box, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
@@ -18,16 +17,11 @@ interface ImageDisplayProps {
 export default function ActyDetailDisplay(props: ImageDisplayProps) {
   // const { auth } = useAuth() as IAuthContext;
   // console.log('file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:', auth);
-
   const actyDetail = props.actyData;
-
-  // const reviewsToPrint: TActyDetail['reviews'] = actyDetail.reviews;
   const [reviewsToPrint, setReviewsToPrint] = useState<TActyDetail['reviews']>(actyDetail.reviews);
-  
+
   const onReviewAdded = (newReview: TActyDetail['reviews'][number]) => {
-    // console.log(reviewsToPrint);
-    // reviewsToPrint.push(newReview);
-    setReviewsToPrint(prevReview => [...prevReview, newReview] );
+    setReviewsToPrint(prevReview => [...prevReview, newReview]);
   };
 
   return (

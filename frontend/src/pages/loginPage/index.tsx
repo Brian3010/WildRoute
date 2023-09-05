@@ -85,7 +85,7 @@ export default function LoginPage() {
 
       if (res) setAuth(res);
 
-      return navigate(from, { replace: true, state: { flashMessage: { type: 'success', message: 'Welcome back' } } });
+      navigate(from, { replace: true, state: { flashMessage: { type: 'success', message: 'Welcome back' } } });
     } catch (error) {
       // showBoundary(error);
       navigate('/activities/user/login', {
