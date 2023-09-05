@@ -11,7 +11,7 @@ const createReview = async (req, res) => {
     console.log(`${req.originalUrl} POST request`);
     const actyId = req.params.id;
     const review = req.body.review;
-    const acty = await activities_1.default.findById(actyId).populate('reviews');
+    const acty = await activities_1.default.findById(actyId).populate({ path: 'reviews', populate: { path: 'owner' } });
     if (!acty)
         throw new AppError_1.default('activity not found', 404);
     const reviewDoc = new review_1.default(review);
@@ -29,7 +29,13 @@ const createReview = async (req, res) => {
     }
     await acty.save();
     await reviewDoc.save();
-    res.status(200).json({ reviewCreated: reviewDoc });
+    const reviewToReturn = {
+        _id: reviewDoc._id,
+        body: reviewDoc.body,
+        rating: reviewDoc.rating,
+        owner: { _id: reviewDoc.owner, username: req.user.username },
+    };
+    res.status(200).json({ reviewCreated: reviewToReturn });
 };
 exports.createReview = createReview;
 const deleteReview = async (req, res) => {

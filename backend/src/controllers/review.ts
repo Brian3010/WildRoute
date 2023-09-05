@@ -18,9 +18,10 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
   console.log(`${req.originalUrl} POST request`);
   const actyId = req.params.id;
   const review = req.body.review;
-
+  // .populate({ path: 'reviews', populate: { path: 'owner' } });
   // find the activity
-  const acty = await ActivityList.findById(actyId).populate('reviews');
+  // const acty = await ActivityList.findById(actyId).populate('reviews');
+  const acty = await ActivityList.findById(actyId).populate({ path: 'reviews', populate: { path: 'owner' } });
   if (!acty) throw new AppError('activity not found', 404);
 
   //create new review document
@@ -49,7 +50,14 @@ export const createReview: RequestHandler<reviewParams, unknown, reviewBody, unk
   await acty.save();
   await reviewDoc.save();
 
-  res.status(200).json({ reviewCreated: reviewDoc });
+  const reviewToReturn = {
+    _id: reviewDoc._id,
+    body: reviewDoc.body,
+    rating: reviewDoc.rating,
+    owner: { _id: reviewDoc.owner, username: req.user.username },
+  };
+
+  res.status(200).json({ reviewCreated: reviewToReturn });
 };
 
 interface deleteReviewParams {
