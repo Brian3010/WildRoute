@@ -20,7 +20,7 @@ const drawerWidth = '240px';
 function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { auth } = useAuth() as IAuthContext;
-  console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
+  // console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
   const isLogin = auth.user._id.length > 0;
 

@@ -1,5 +1,4 @@
 import { Box, Button, Rating, TextareaAutosize } from '@mui/material';
-import { isAxiosError } from 'axios';
 import { useRef } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';

@@ -22,7 +22,7 @@ function App() {
   // const { flashMsg } = useFlashMessage();
   // console.log('file: App.tsx:24 ~ App ~ flashContext:', flashMsg);
 
-  const flashMsg: { type:'error' | 'success', message:string} = location.state?.flashMessage;
+  // const flashMsg: { type: 'error' | 'success'; message: string } = location.state?.flashMessage;
 
   function logError(error: Error | AxiosError, info: { componentStack: string }) {
     console.warn('Caught an error:', error, info);
@@ -37,7 +37,8 @@ function App() {
       <NavBar />
       {/* {flashMsg.current && <FlashMessage flashMsg={flashMsg.current} key={Math.random()} />} */}
       {/* {flashMsg.length > 0 && <FlashMessage flashMsg={flashMsg} />} */}
-      {flashMsg && <FlashMessage flashMsg={flashMsg} />}
+      {/* {flashMsg && <FlashMessage flashMsg={flashMsg} />} */}
+      <FlashMessage />
       <main style={{ marginTop: '2em' }}>
         <Container maxWidth="xl">
           <Routes>
@@ -85,7 +86,5 @@ function App() {
     </div>
   );
 }
-
-// TODO: implement navigation refer to this https://youtu.be/Ul3y1LXxzdU?t=1010
 
 export default App;

@@ -1,5 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -13,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { TypeMapper } from '../../@types/TypeMapper';
 import '../../assets/LoginPage.css';
@@ -44,6 +45,7 @@ export default function LoginPage() {
   // console.log('file: index.tsx:33 ~ LoginPage ~ setAuth:', setAuth);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
 
   const {
     register,
@@ -88,10 +90,11 @@ export default function LoginPage() {
       navigate(from, { replace: true, state: { flashMessage: { type: 'success', message: 'Welcome back' } } });
     } catch (error) {
       // showBoundary(error);
-      navigate('/activities/user/login', {
-        state: { flashMessage: { type: 'error', message: 'Incorrect username and password' }, from },
-        replace: true,
-      });
+      setErrorMsg('Incorrect username and password');
+      // navigate('/activities/user/login', {
+      //   state: { flashMessage: { type: 'error', message: 'Incorrect username and password' }, from},
+      //   replace: true,
+      // });
     }
 
     reset();
@@ -109,6 +112,8 @@ export default function LoginPage() {
           <Typography variant="h4" className="h4-custom" fontSize={'16px'} margin={'0 0 27px'}>
             Fill in the fields below to sign into your account.
           </Typography>
+
+          {errorMsg && <Alert severity="error" sx={{borderRadius:'0.5rem',margin:'0px auto 1rem'}}>{errorMsg}</Alert>}
 
           <form action="" onSubmit={handleSubmit(submit)}>
             <TextField
