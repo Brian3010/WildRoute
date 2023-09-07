@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, CircularProgress, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import getActies, { TActies } from '../../services/getActies';
@@ -105,7 +105,7 @@ function ActivityList() {
     })();
   }, [showBoundary]);
 
-  if (loading) return <div>loading...</div>;
+  if (loading) return <CircularProgress className="loader" color="inherit" />;
 
   // get current activities
   const indexOfLastActy = currentPage * actiesPerPage; // 1 * 3 = [3] // 2 * 3 = [6]

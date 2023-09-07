@@ -1,11 +1,23 @@
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  Container,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import '../assets/NavBar.css';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
+import FlashMessage from './FlashMessage';
 
 const darkTheme = createTheme({
   palette: {
@@ -22,7 +34,7 @@ function NavBar() {
   const { auth } = useAuth() as IAuthContext;
   // console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
-  const isLogin = auth.user._id.length > 0;
+  const isLoggedIn = auth.user._id.length > 0;
 
   const handleDrawerToggle = () => {
     setMobileOpen(prevState => !prevState);
@@ -39,7 +51,7 @@ function NavBar() {
           <Link to={'/activities'} className="custom-link">
             Activities
           </Link>
-          {isLogin ? (
+          {isLoggedIn ? (
             <>
               <Link to="/activities/new" className="custom-link">
                 New Activity
@@ -67,19 +79,23 @@ function NavBar() {
               <Typography
                 variant="h5"
                 noWrap
-                component="a"
-                href="/"
                 sx={{
-                  mr: 2,
                   display: { xs: 'none', md: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.1rem',
-                  color: 'inherit',
-                  textDecoration: 'none',
                 }}
               >
-                WildRoute
+                <Link
+                  to="/"
+                  style={{
+                    marginRight: 2,
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    letterSpacing: '.1rem',
+                    color: 'inherit',
+                    textDecoration: 'none',
+                  }}
+                >
+                  WildRoute
+                </Link>
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: { md: 'flex', gap: '1.5em', justifyContent: 'flex-end', xs: 'none' } }}>
@@ -87,7 +103,7 @@ function NavBar() {
                   Activities
                 </Link>
 
-                {isLogin ? (
+                {isLoggedIn ? (
                   <>
                     <Link to="/activities/new" className="custom-link">
                       New Activity
@@ -167,6 +183,12 @@ function NavBar() {
           </div>
         </AppBar>
       </ThemeProvider>
+      <FlashMessage key={location.pathname} />
+      <main style={{ marginTop: '2em' }}>
+        <Container maxWidth="xl">
+          <Outlet />
+        </Container>
+      </main>
     </>
   );
 }

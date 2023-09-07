@@ -87,12 +87,15 @@ export default function LoginPage() {
       const res = await loginUserIn(data.username, data.password);
       console.log(res);
 
-      if (res) setAuth(res);
+      if (res) {
+        localStorage.setItem('user', JSON.stringify(res.user));
+        // localStorage.setItem('userId', res.user._id);
+        setAuth(res);
+      }
 
       setFlashMessage({ type: 'success', message: 'Welcome back' });
       navigate(from, { replace: true, state: { openFlashMsg: true } });
     } catch (error) {
-      // showBoundary(error);
       setErrorMsg('Incorrect username and password');
 
       // navigate('/activities/user/login', {

@@ -1,12 +1,13 @@
-import { Container } from '@mui/material';
+// import { Container } from '@mui/material';
 import { AxiosError } from 'axios';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
 import ErrorFallBack from './components/ErrorFallBack';
-import FlashMessage from './components/FlashMessage';
+// import FlashMessage from './components/FlashMessage';
 import IsOwner from './components/IsOwner';
 import NavBar from './components/NavBar';
+import PersistLogin from './components/PersistLogin';
 import RequireAuth from './components/requireAuth';
 import PageNotFound from './pages/PageNotFound';
 import Activity from './pages/activityDetailPage';
@@ -34,41 +35,42 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar /> 
+      {/* <NavBar /> */}
+
       {/* {flashMsg.current && <FlashMessage flashMsg={flashMsg.current} key={Math.random()} />} */}
       {/* {flashMsg.length > 0 && <FlashMessage flashMsg={flashMsg} />} */}
       {/* {flashMsg && <FlashMessage flashMsg={flashMsg} />} */}
-      <FlashMessage key={location.pathname}/>
-      <main style={{ marginTop: '2em' }}>
-        <Container maxWidth="xl">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/activities">
-              {/* public routes */}
-              <Route
-                index
-                element={
-                  <ErrorBoundary
-                    FallbackComponent={ErrorFallBack}
-                    onError={logError}
-                    key={location.pathname}
-                    children={<ActivityList />}
-                  />
-                }
-              />
+      {/* <FlashMessage /> */}
 
-              <Route
-                path=":id"
-                element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<Activity />} />}
-              />
-              <Route
-                path="user/login"
-                element={
-                  <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />
-                }
-              />
+      <Routes>
+      <Route element={<PersistLogin />}>
+        <Route element={<NavBar />}>
+          <Route index element={<HomePage />} />
 
-              {/* private routes */}
+          <Route path="/activities">
+            {/* public routes */}
+            <Route
+              index
+              element={
+                <ErrorBoundary
+                  FallbackComponent={ErrorFallBack}
+                  onError={logError}
+                  key={location.pathname}
+                  children={<ActivityList />}
+                />
+              }
+            />
+
+            <Route
+              path=":id"
+              element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<Activity />} />}
+            />
+            <Route
+              path="user/login"
+              element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />}
+            />
+
+            {/* private routes */}
               <Route element={<RequireAuth />}>
                 <Route path="new" element={<NewActivity />} />
                 <Route path="user/logout" element={<div>logout </div>} />
@@ -78,11 +80,12 @@ function App() {
                 <Route path=":id/edit" element={<EditActivity />} />
               </Route>
             </Route>
+          
 
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </Container>
-      </main>
+          <Route path="*" element={<PageNotFound />} />
+          </Route>
+          </Route>
+      </Routes>
     </div>
   );
 }

@@ -10,7 +10,9 @@ export default function FlashMessage() {
 
   const [open, setOpen] = useState(true);
   const { flashMessage } = useFlashMessage(); // from context
+  console.log("file: FlashMessage.tsx:13 ~ FlashMessage ~ flashMessage:", flashMessage)
   const openFlashMsg = location.state?.openFlashMsg; // from state returned navigate(...)
+  console.log("file: FlashMessage.tsx:15 ~ FlashMessage ~ openFlashMsg:", openFlashMsg)
 
   const openFlash = flashMessage.message.length > 0 && openFlashMsg; // true && true
 

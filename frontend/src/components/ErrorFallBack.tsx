@@ -42,7 +42,7 @@ export default function ErrorFallBack(props: FallbackProps) {
       if (errorMessage.includes('Invalid Activity ID') || errorMessage.includes('Activity does not exist')) {
         setFlashMessage({ type: 'error', message: errorMessage });
 
-        return <Navigate to={'/activities'} state={{ flashMessage: { type: 'error', openFlashMsg: true } }} />;
+        return <Navigate to={'/activities'} state={{ openFlashMsg: true }} />;
       }
     }
   }
