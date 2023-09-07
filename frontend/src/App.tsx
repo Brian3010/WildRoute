@@ -34,11 +34,11 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar />
+      <NavBar /> 
       {/* {flashMsg.current && <FlashMessage flashMsg={flashMsg.current} key={Math.random()} />} */}
       {/* {flashMsg.length > 0 && <FlashMessage flashMsg={flashMsg} />} */}
       {/* {flashMsg && <FlashMessage flashMsg={flashMsg} />} */}
-      <FlashMessage />
+      <FlashMessage key={location.pathname}/>
       <main style={{ marginTop: '2em' }}>
         <Container maxWidth="xl">
           <Routes>

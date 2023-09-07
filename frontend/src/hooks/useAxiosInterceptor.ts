@@ -32,6 +32,7 @@ const useAxiosInterceptor = () => {
           error.response.data.error === 'jwt expired' &&
           !originalRequest.sent
         ) {
+          console.log('axiosInterceptor running',error);
           originalRequest.sent = true; // prevent infinite loop
           const newAccessToken = await refreshToken(); // get new access token
           originalRequest.headers['Authorization'] = `bearer ${newAccessToken}`;

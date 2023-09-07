@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { FallbackProps } from 'react-error-boundary';
-import { Navigate} from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import useFlashMessage from '../hooks/useFlashMessage';
 
 export default function ErrorFallBack(props: FallbackProps) {
   const { error, resetErrorBoundary } = props;
+  const { setFlashMessage } = useFlashMessage();
+
   // console.log(error);
 
   !axios.isAxiosError && console.log('Other Error', error.name);
@@ -37,26 +40,10 @@ export default function ErrorFallBack(props: FallbackProps) {
 
     if (error.response?.status === 404) {
       if (errorMessage.includes('Invalid Activity ID') || errorMessage.includes('Activity does not exist')) {
-        // showMessage(errorMessage);
-        return <Navigate to={'/activities'} state={{flashMessage:{type:'error', message: errorMessage}}} />;
+        setFlashMessage({ type: 'error', message: errorMessage });
+
+        return <Navigate to={'/activities'} state={{ flashMessage: { type: 'error', openFlashMsg: true } }} />;
       }
-
-      // if (error.response?.data.error === 'Incorrect username and password') {
-      //   // console.log(error.response);
-      //   // * reset the error boundary state, clearing the error and attempting to render the component tree again.
-      //   // * error persists when navigating, so need to reset/
-      //   // resetErrorBoundary();
-      //   // return <Navigate to={'/activities/user/login'} />;
-
-      //   // setTimeout(() => {
-      //   //   resetErrorBoundary();
-      //   //   <Navigate to={'/activities/user/login'} />;
-      //   // }, 0);
-      //   // return null;
-
-      //   showMessage(errorMessage);
-      //   return <Navigate to={'/activities/user/login'} />;
-      // }
     }
   }
 

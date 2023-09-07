@@ -7,6 +7,7 @@ import '../../assets/LeaveReview.css';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
+import useFlashMessage from '../../hooks/useFlashMessage';
 import { TActyDetail } from '../../services/getActyById';
 
 interface IReviewData {
@@ -35,15 +36,21 @@ const LeaveReview = ({ onReviewAdded }: { onReviewAdded: (newReview: TActyDetail
   const location = useLocation();
   const { id } = useParams();
   const axiosInterceptor = useAxiosInterceptor();
+  const { setFlashMessage } = useFlashMessage();
   const isError = useRef<boolean>();
 
   const submit: SubmitHandler<IReviewData> = async data => {
-    // set flash message
+    // set flash message if not authenticated
     if (auth.user._id.length <= 0) {
-      // showMessage('You must be signed in first!');
+      setFlashMessage({ type: 'error', message: 'You must be signed in first' });
+
       return navigate('/activities/user/login', {
-        state: { from: location, flashMessage: { type: 'error', message: 'You must be signed in first!' } },
+        state: { from: location, openFlashMsg: true },
       });
+
+      // return navigate('/activities/user/login', {
+      //   state: { from: location, flashMessage: { type: 'error', message: 'You must be signed in first!' } },
+      // });
     }
 
     if (!id) throw new Error('Cannot find id param from LeaveReview component ');
@@ -61,9 +68,7 @@ const LeaveReview = ({ onReviewAdded }: { onReviewAdded: (newReview: TActyDetail
       // console.log('res.data: ', res.data);
       onReviewAdded(res.data.reviewCreated);
     } catch (error) {
-      //TODO: handle Unauthorized
       console.error(error);
-
       // handle refreshToken expired and Unauthorized
       navigate('/activities/user/login', { state: { from: location, replace: true } });
     }

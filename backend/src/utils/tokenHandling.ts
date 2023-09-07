@@ -20,6 +20,7 @@ export const generateAccessToken: GenerateFnType = user => {
     process.env.JWT_ACCESS_SECRET as JWT.Secret,
     {
       expiresIn: process.env.JWTEXPIRE_ACCESS,
+      // expiresIn: '3s',
       subject: user._id && user._id.toString(),
     }
   );
@@ -37,6 +38,7 @@ export const generateRefreshToken: GenerateFnType = user => {
     // secret
     process.env.JWT_REFRESH_SECRET as JWT.Secret,
     {
+      // expiresIn: '6s',
       expiresIn: process.env.JWTEXPIRE_REFRESH,
       subject: user._id && user._id.toString(),
     }

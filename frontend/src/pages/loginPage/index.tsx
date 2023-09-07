@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { TypeMapper } from '../../@types/TypeMapper';
 import '../../assets/LoginPage.css';
@@ -23,6 +23,7 @@ import '../../assets/LoginPage.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
+import useFlashMessage from '../../hooks/useFlashMessage';
 import loginUserIn from '../../services/logUserIn';
 
 interface LoginData {
@@ -41,6 +42,7 @@ export default function LoginPage() {
 
   // const { showBoundary } = useErrorBoundary();
   const { setAuth } = useAuth() as IAuthContext;
+  const { setFlashMessage } = useFlashMessage();
 
   // console.log('file: index.tsx:33 ~ LoginPage ~ setAuth:', setAuth);
 
@@ -87,10 +89,12 @@ export default function LoginPage() {
 
       if (res) setAuth(res);
 
-      navigate(from, { replace: true, state: { flashMessage: { type: 'success', message: 'Welcome back' } } });
+      setFlashMessage({ type: 'success', message: 'Welcome back' });
+      navigate(from, { replace: true, state: { openFlashMsg: true } });
     } catch (error) {
       // showBoundary(error);
       setErrorMsg('Incorrect username and password');
+
       // navigate('/activities/user/login', {
       //   state: { flashMessage: { type: 'error', message: 'Incorrect username and password' }, from},
       //   replace: true,
@@ -113,7 +117,11 @@ export default function LoginPage() {
             Fill in the fields below to sign into your account.
           </Typography>
 
-          {errorMsg && <Alert severity="error" sx={{borderRadius:'0.5rem',margin:'0px auto 1rem'}}>{errorMsg}</Alert>}
+          {errorMsg && (
+            <Alert severity="error" sx={{ borderRadius: '0.5rem', margin: '0px auto 1rem' }}>
+              {errorMsg}
+            </Alert>
+          )}
 
           <form action="" onSubmit={handleSubmit(submit)}>
             <TextField
