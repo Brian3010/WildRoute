@@ -33,7 +33,7 @@ const loginUser = async (req, res, next) => {
     res.status(200).json({ accessToken, user: userTosend });
 };
 exports.loginUser = loginUser;
-const logoutUser = async (req, res, next) => {
+const logoutUser = async (req, res) => {
     console.log(`${req.originalUrl} POST method`);
     const refreshToken = req.cookies.jwt || undefined;
     if (!refreshToken)

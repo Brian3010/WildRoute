@@ -52,7 +52,7 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
           Reviews
         </Typography>
         {/* // display review input text */}
-
+            
         <LeaveReview onReviewAdded={onReviewAdded} />
 
         {actyDetail.reviews.length > 0 ? (

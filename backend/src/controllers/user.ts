@@ -59,7 +59,7 @@ type logoutBody = {
   token: string;
 };
 
-export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> = async (req, res, next) => {
+export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> = async (req, res) => {
   console.log(`${req.originalUrl} POST method`);
   const refreshToken = req.cookies.jwt || undefined;
   if (!refreshToken) throw new AppError('cookie not provided', 400);
@@ -67,7 +67,7 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
 
   // 0: successfully delete the refreshToken in dbs
   if (result === 0) {
-    // clear cookie;
+    // clear cookie
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
     res.status(200).json({ message: 'Successfully logout' });
   } else {
@@ -82,7 +82,7 @@ export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = 
   console.log(`${req.originalUrl} GET method`);
   // const { refreshToken } = req.body;
   const refreshToken = req.cookies.jwt || undefined;
-  // if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
+
   if (!refreshToken) throw new AppError('cookie not provided', 400);
   // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
 

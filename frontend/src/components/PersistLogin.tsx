@@ -1,13 +1,13 @@
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
 import useRefreshToken from '../hooks/useRefreshToken';
 
 const PersistLogin = () => {
   console.log('PersistLogin render');
-  //   const navigate = useNavigate();
+    const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const { auth } = useAuth() as IAuthContext;
   // console.log('file: PersistLogin.tsx:12 ~ PersistLogin ~ auth:', auth);
@@ -24,8 +24,8 @@ const PersistLogin = () => {
         await refresh();
       } catch (error) {
         console.error('Caught an error: ', error);
-
-        // return navigate('/activities/user/login');
+        return <Navigate to={'/activities/user/login'} />;
+        // return navigate('/activities/user/login',{replace: true});
       } finally {
         setIsLoading(false);
       }
@@ -36,7 +36,7 @@ const PersistLogin = () => {
     // return function () {
     //   isMounted = false;
     // };
-  }, [auth?.accessToken.length, refresh]);
+  }, [auth.accessToken.length, navigate, refresh]);
 
   return <>{isLoading ? <CircularProgress className="loader" color="inherit" /> : <Outlet />}</>;
 };

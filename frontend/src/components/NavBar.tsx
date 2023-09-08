@@ -34,7 +34,7 @@ function NavBar() {
   const { auth } = useAuth() as IAuthContext;
   // console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
-  const isLoggedIn = auth.user._id.length > 0;
+  const isLoggedIn = auth.accessToken.length > 0;
 
   const handleLogout = () => {
     // console.log(event);
