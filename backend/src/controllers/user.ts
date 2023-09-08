@@ -61,13 +61,14 @@ type logoutBody = {
 
 export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> = async (req, res, next) => {
   console.log(`${req.originalUrl} POST method`);
-  const refreshToken = req.body.token;
-  if (!refreshToken) throw new AppError('Cannot fetch data from body', 404);
+  const refreshToken = req.cookies.jwt || undefined;
+  if (!refreshToken) throw new AppError('cookie not provided', 400);
   const result = await deleteRedisToken(req.user._id, refreshToken);
 
+  // 0: successfully delete the refreshToken in dbs
   if (result === 0) {
-    // TODO: clear cookie;
-    // 0: successfully delete the refreshToken in dbs
+    // clear cookie;
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
     res.status(200).json({ message: 'Successfully logout' });
   } else {
     throw new AppError(<string>result, 500);
@@ -82,7 +83,7 @@ export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = 
   // const { refreshToken } = req.body;
   const refreshToken = req.cookies.jwt || undefined;
   // if (!refreshToken || !userId) throw new AppError('token or id must be provided', 400);
-  if (!refreshToken) throw new AppError('token or id must be provided', 400);
+  if (!refreshToken) throw new AppError('cookie not provided', 400);
   // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
 
   // verify the refreshToken

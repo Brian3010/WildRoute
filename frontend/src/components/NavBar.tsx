@@ -36,6 +36,11 @@ function NavBar() {
 
   const isLoggedIn = auth.user._id.length > 0;
 
+  const handleLogout = () => {
+    // console.log(event);
+    console.log('handleLogout ');
+  };
+
   const handleDrawerToggle = () => {
     setMobileOpen(prevState => !prevState);
   };
@@ -56,9 +61,9 @@ function NavBar() {
               <Link to="/activities/new" className="custom-link">
                 New Activity
               </Link>
-              <Link to="/activities/user/logout" className="custom-link">
+              <Typography style={{ cursor: 'pointer' }} className="custom-link" onClick={handleLogout}>
                 Logout
-              </Link>
+              </Typography>
             </>
           ) : (
             <Link to="/activities/user/login" className="custom-link">
@@ -108,9 +113,9 @@ function NavBar() {
                     <Link to="/activities/new" className="custom-link">
                       New Activity
                     </Link>
-                    <Link to="/activities/user/logout" className="custom-link">
+                    <Typography style={{ cursor: 'pointer' }} className="custom-link" onClick={handleLogout}>
                       Logout
-                    </Link>
+                    </Typography>
                   </>
                 ) : (
                   <Link to="/activities/user/login" className="custom-link">

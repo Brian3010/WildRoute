@@ -73,7 +73,7 @@ function App() {
             {/* private routes */}
               <Route element={<RequireAuth />}>
                 <Route path="new" element={<NewActivity />} />
-                <Route path="user/logout" element={<div>logout </div>} />
+                {/* <Route path="user/logout" element={<div>logout </div>} /> */}
               </Route>
 
               <Route element={<IsOwner />}>

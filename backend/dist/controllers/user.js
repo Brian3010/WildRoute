@@ -35,11 +35,12 @@ const loginUser = async (req, res, next) => {
 exports.loginUser = loginUser;
 const logoutUser = async (req, res, next) => {
     console.log(`${req.originalUrl} POST method`);
-    const refreshToken = req.body.token;
+    const refreshToken = req.cookies.jwt || undefined;
     if (!refreshToken)
-        throw new AppError_1.default('Cannot fetch data from body', 404);
+        throw new AppError_1.default('cookie not provided', 400);
     const result = await (0, redis_1.deleteRedisToken)(req.user._id, refreshToken);
     if (result === 0) {
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
         res.status(200).json({ message: 'Successfully logout' });
     }
     else {
@@ -51,7 +52,7 @@ const refreshToken = async (req, res, next) => {
     console.log(`${req.originalUrl} GET method`);
     const refreshToken = req.cookies.jwt || undefined;
     if (!refreshToken)
-        throw new AppError_1.default('token or id must be provided', 400);
+        throw new AppError_1.default('cookie not provided', 400);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     const token = await (0, redis_1.getRedisToken)(req.user._id);
     if (token === undefined)

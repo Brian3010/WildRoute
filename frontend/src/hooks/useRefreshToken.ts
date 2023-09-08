@@ -1,7 +1,6 @@
 import { IAuthContext } from '../context/AuthProvider';
 import getRefreshToken from '../services/getRefreshToken';
 import useAuth from './useAuth';
-// import from '../hooks/useAuth';
 
 const useRefeshToken = () => {
   const { auth, setAuth } = useAuth() as IAuthContext;
@@ -9,7 +8,7 @@ const useRefeshToken = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   let userInfo: { _id: string; username: string; email: string } = JSON.parse(userStorage!);
-  console.log('file: useRefreshToken.ts:11 ~ useRefeshToken ~  userInfo:', userInfo);
+  // console.log('file: useRefreshToken.ts:11 ~ useRefeshToken ~  userInfo:', userInfo);
 
   // send the _id, username even when storage is null
   if (!userInfo) {
@@ -36,9 +35,3 @@ const useRefeshToken = () => {
 };
 
 export default useRefeshToken;
-
-// const [auth, setAuth] = useState<ILoginInfo>({
-//   accessToken: '',
-//   // refreshToken: '',
-//   user: { _id: '', email: '', username: '' },
-// });
