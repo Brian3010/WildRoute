@@ -18,6 +18,7 @@ import '../assets/NavBar.css';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
 import FlashMessage from './FlashMessage';
+import useLogout from '../hooks/useLogout';
 
 const darkTheme = createTheme({
   palette: {
@@ -29,16 +30,21 @@ const darkTheme = createTheme({
 });
 
 const drawerWidth = '240px';
+
+// * <NavBar/>
 function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { auth } = useAuth() as IAuthContext;
+  const logout = useLogout();
   // console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
   const isLoggedIn = auth.accessToken.length > 0;
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // console.log(event);
     console.log('handleLogout ');
+    const res = await logout();
+    console.log("file: NavBar.tsx:47 ~ handleLogout ~ res:", res)
   };
 
   const handleDrawerToggle = () => {

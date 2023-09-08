@@ -62,7 +62,7 @@ type logoutBody = {
 export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> = async (req, res) => {
   console.log(`${req.originalUrl} POST method`);
   const refreshToken = req.cookies.jwt || undefined;
-  if (!refreshToken) throw new AppError('cookie not provided', 400);
+  if (!refreshToken) throw new AppError('cookie not provided', 204);
   const result = await deleteRedisToken(req.user._id, refreshToken);
 
   // 0: successfully delete the refreshToken in dbs

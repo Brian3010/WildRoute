@@ -37,7 +37,7 @@ const logoutUser = async (req, res) => {
     console.log(`${req.originalUrl} POST method`);
     const refreshToken = req.cookies.jwt || undefined;
     if (!refreshToken)
-        throw new AppError_1.default('cookie not provided', 400);
+        throw new AppError_1.default('cookie not provided', 204);
     const result = await (0, redis_1.deleteRedisToken)(req.user._id, refreshToken);
     if (result === 0) {
         res.clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true });
