@@ -19,7 +19,7 @@ export default function ActyInfoItem(props: ActyInfoItemProps) {
     const iconTags = tags.map(t => {
       // create a dictionary to map the tags to the icons
       const iconDict: { name: typeof t; icon: string }[] = [
-        { name: 'Adventure', icon: iconSrcs.adventureIcon }, // todo:add icon image
+        { name: 'Adventure', icon: iconSrcs.adventureIcon }, 
         { name: 'Camping', icon: iconSrcs.campingIcon },
         { name: 'Climbing', icon: iconSrcs.climbingIcon },
         { name: 'Nature', icon: iconSrcs.natureIcon },

@@ -10,6 +10,7 @@ function useLogout() {
     try {
       const res = await logUserOut(auth.accessToken);
       console.log(res);
+      localStorage.clear();
       setAuth({ accessToken: '', user: { _id: '', email: '', username: '' } });
     } catch (error) {
       console.error('Caugth an error: ', error);

@@ -37,7 +37,7 @@ export default function LoginPage() {
   console.log('LoginPage render');
   const location = useLocation();
   const navigate = useNavigate();
-  const from = location.state?.from.pathname || '/';
+  const from = location.state?.from.pathname || '/activities';
   // console.log('file: index.tsx:39 ~ LoginPage ~ from:', from);
 
   // const { showBoundary } = useErrorBoundary();

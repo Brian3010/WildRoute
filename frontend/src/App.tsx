@@ -66,14 +66,14 @@ function App() {
 
               {/* private routes */}
               {/* <Route element={<PersistLogin />}> */}
-                <Route element={<RequireAuth />}>
-                  <Route path="new" element={<NewActivity />} />
-                  {/* <Route path="user/logout" element={<div>logout </div>} /> */}
-                </Route>
+              <Route element={<RequireAuth />}>
+                <Route path="new" element={<NewActivity />} />
+                {/* <Route path="user/logout" element={<div>logout </div>} /> */}
 
                 <Route element={<IsOwner />}>
                   <Route path=":id/edit" element={<EditActivity />} />
                 </Route>
+              </Route>
               {/* </Route> */}
             </Route>
             <Route path="*" element={<PageNotFound />} />

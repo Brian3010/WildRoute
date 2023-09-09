@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
+import useFlashMessage from '../hooks/useFlashMessage';
 import getActyById from '../services/getActyById';
 
 export default function IsOwner() {
-  // console.log('IsOwner render');
+  console.log('IsOwner render');
   const { auth } = useAuth() as IAuthContext;
+  const { setFlashMessage } = useFlashMessage();
   const [owner, setOwner] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
@@ -32,7 +34,7 @@ export default function IsOwner() {
         }
       })();
     }
-  }, [id, navigate]);
+  }, [id, navigate, setFlashMessage]);
 
   if (!isLoading) {
     const isOwner = auth && auth.user._id === owner;
@@ -40,13 +42,8 @@ export default function IsOwner() {
     // console.log('file: IsOwner.tsx:32 ~ IsOwner ~ auth.user._id:', auth.user._id);
     // console.log('file: IsOwner.tsx:29 ~ IsOwner ~ isOwner:', isOwner);
 
-    return isOwner ? (
-      <Outlet />
-    ) : (
-      <Navigate
-        to="/activities"
-        state={{ flashMessage: { type: 'error', message: 'You do not have permission to do that' } }}
-      />
-    );
+    !isOwner && setFlashMessage({ type: 'error', message: 'You do not have permission to do that' });
+
+    return isOwner ? <Outlet /> : <Navigate to="/activities" state={{ openFlashMsg: true }} />;
   }
 }

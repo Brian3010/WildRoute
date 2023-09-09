@@ -42,17 +42,20 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
         </Carousel>
       </Grid>
       <Grid item xs={12} md={6}>
-        <ActyInfoItem data={actyDetail} reviewTotal={actyDetail.reviews.length} />
+        <ActyInfoItem data={actyDetail} reviewTotal={reviewsToPrint.length} />
       </Grid>
       <Grid item xs={12} md={6}>
         <MapDisplay />
       </Grid>
       <Grid item xs={12} md={6}>
         <Typography variant="h5" margin={'20px 0 10px 0'}>
-          Reviews
+          Reviews{' '}
+          <span style={{ fontSize: 'small', alignSelf: 'end', paddingLeft: 5, color: 'rgba(0, 0, 0, 0.6)' }}>
+            {reviewsToPrint.length > 0 ? `${reviewsToPrint.length} reviews` : `${reviewsToPrint.length} review`}
+          </span>
         </Typography>
         {/* // display review input text */}
-            
+
         <LeaveReview onReviewAdded={onReviewAdded} />
 
         {actyDetail.reviews.length > 0 ? (
