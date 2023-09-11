@@ -15,7 +15,11 @@ interface IReviewData {
   rating: number;
 }
 
-const LeaveReview = ({ onReviewAdded }: { onReviewAdded: (newReview: TActyDetail['reviews'][number]) => void }) => {
+interface LeaveReviewProps {
+  onReviewAdded: (newReview: TActyDetail['reviews'][number]) => void;
+}
+
+const LeaveReview = ({ onReviewAdded }: LeaveReviewProps) => {
   const {
     register,
     handleSubmit,

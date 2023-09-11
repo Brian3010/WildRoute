@@ -13,6 +13,7 @@ function Activity() {
   // console.log('Activity ID: ', id);
 
   const [actyDetail, setActyDetail] = useState<TActyDetail | undefined>(undefined);
+  const [isRatingChanged, setIsRatingChanged] = useState<boolean>(false);
 
   // * if want to check if id is in database, use id param
 
@@ -24,7 +25,11 @@ function Activity() {
 
       try {
         const actyDetail = await getActyById(id);
-        setActyDetail(actyDetail);
+        // actyDetail && setActyDetail(actyDetail);
+
+        if (actyDetail || isRatingChanged) {
+          setActyDetail(actyDetail);
+        }
       } catch (error) {
         if (axios.isAxiosError(error)) {
           // console.log('file: index.tsx:29 ~ error:', error.response);
@@ -35,13 +40,21 @@ function Activity() {
         }
       }
     })();
-  }, [id, showBoundary]);
+
+    return function () {
+      setIsRatingChanged(false);
+    };
+  }, [id, isRatingChanged, showBoundary]);
+
+  const onRatingChanged = (isRatingChanded: boolean) => {
+    setIsRatingChanged(isRatingChanded);
+  };
 
   if (actyDetail) {
     return (
       <>
         <Container maxWidth="lg">
-          <ActyDetailDisplay actyData={actyDetail} />
+          <ActyDetailDisplay actyData={actyDetail} onRatingChanged={onRatingChanged} />
         </Container>
         <Link to={`/activities/${id}/edit`}>Edit Activity</Link>
       </>

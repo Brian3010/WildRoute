@@ -68,6 +68,20 @@ ActivityListSchema.post('findOneAndDelete', async function (actyToDel) {
         });
     }
 });
+ActivityListSchema.post('findOneAndUpdate', async function (acty) {
+    if (acty) {
+        const currentActy = await ActivityList.findById(acty._id).populate('reviews');
+        if (currentActy) {
+            const numOfReviews = currentActy.reviews?.length;
+            const sumOfRating = currentActy.reviews?.reduce((acc, curr) => {
+                return acc + curr.rating;
+            }, 0);
+            const updatedRating = Math.round(sumOfRating / numOfReviews);
+            currentActy.rating = updatedRating || 0;
+            currentActy.save();
+        }
+    }
+});
 const ActivityList = mongoose_1.default.model('ActivityList', ActivityListSchema);
 exports.default = ActivityList;
 //# sourceMappingURL=activities.js.map

@@ -9,19 +9,27 @@ import ActyReviews from './ActyReviews';
 import ImageItem from './ImageItem';
 import LeaveReview from './LeaveReview';
 import MapDisplay from './MapDisplay';
-interface ImageDisplayProps {
+interface ActyDetailDisplayProps {
   actyData: TActyDetail;
+  onRatingChanged: (isRatingChanded: boolean) => void;
 }
-// TODO: style iamge and detail side by side
+// TODO: style image and detail side by side
 
-export default function ActyDetailDisplay(props: ImageDisplayProps) {
+export default function ActyDetailDisplay(props: ActyDetailDisplayProps) {
   // const { auth } = useAuth() as IAuthContext;
   // console.log('file: ActyDetailDisplay.tsx:19 ~ ActyDetailDisplay ~ auth:', auth);
   const actyDetail = props.actyData;
+  const isRating = props.onRatingChanged;
   const [reviewsToPrint, setReviewsToPrint] = useState<TActyDetail['reviews']>(actyDetail.reviews);
 
   const onReviewAdded = (newReview: TActyDetail['reviews'][number]) => {
     setReviewsToPrint(prevReview => [...prevReview, newReview]);
+    isRating(true);
+  };
+
+  const onReviewDeleted = (deletedReview: TActyDetail['reviews'][number]) => {
+    setReviewsToPrint(prevReview => prevReview.filter(r => r !== deletedReview));
+    isRating(true);
   };
 
   return (
@@ -58,9 +66,9 @@ export default function ActyDetailDisplay(props: ImageDisplayProps) {
 
         <LeaveReview onReviewAdded={onReviewAdded} />
 
-        {actyDetail.reviews.length > 0 ? (
+        {reviewsToPrint.length > 0 ? (
           <Box sx={{ marginTop: 4 }}>
-            <ActyReviews reviews={reviewsToPrint} />
+            <ActyReviews reviews={reviewsToPrint} onReviewDeleted={onReviewDeleted} />
           </Box>
         ) : (
           <Box>

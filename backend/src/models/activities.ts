@@ -1,11 +1,9 @@
-import { required } from 'joi';
 import mongoose, { SchemaOptions, Types } from 'mongoose';
-import { type } from 'os';
-import { activitySchema } from '../middleware/joiSchema';
 import Review from './review';
 const { Schema } = mongoose;
 
 interface IActivityList {
+  _id?: string;
   activity_title: string;
   rating?: number;
   location: string;
@@ -90,6 +88,32 @@ ActivityListSchema.post('findOneAndDelete', async function (actyToDel: IActivity
       },
     });
   }
+});
+
+// update the rating, when a review deleted
+// this function triggered by calling findByIdAndUpdate()
+ActivityListSchema.post('findOneAndUpdate', async function (acty: IActivityList) {
+  // console.log({ acty });
+
+  if (acty) {
+    const currentActy = await ActivityList.findById(acty._id).populate('reviews');
+    if (currentActy) {
+      const numOfReviews = currentActy.reviews?.length;
+      const sumOfRating = currentActy.reviews?.reduce((acc, curr) => {
+        // console.log(curr.rating);
+        return acc + curr.rating;
+      }, 0);
+
+      const updatedRating = Math.round(sumOfRating! / numOfReviews!);
+      // console.log({ currentActy, numOfReviews, sumOfRating,updatedRating });
+      currentActy.rating = updatedRating || 0; // preventing null value assigned
+      currentActy.save();
+    }
+
+    // console.log({ currentActy });
+  }
+
+  // console.log('rating updated:, ',actyToUpdate);
 });
 
 //{id, activity_name, location, desciption(fact), price, image, author}.
