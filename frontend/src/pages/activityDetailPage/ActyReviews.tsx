@@ -1,7 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { Box, Button, Chip, IconButton, Pagination, Paper, Rating, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, Chip, IconButton, Pagination, Paper, Rating, Typography } from '@mui/material';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
@@ -12,7 +12,7 @@ interface ActyReviewProps {
   onReviewDeleted: (deletedReview: TActyDetail['reviews'][number]) => void;
 }
 
-export default function ActyReviews({ reviews,onReviewDeleted }: ActyReviewProps) {
+export default function ActyReviews({ reviews, onReviewDeleted }: ActyReviewProps) {
   const { id: actyId } = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const axiosInterceptor = useAxiosInterceptor();
@@ -45,7 +45,7 @@ export default function ActyReviews({ reviews,onReviewDeleted }: ActyReviewProps
     console.log('handleRemoveClick clicked');
     if (reviewOwnerId !== auth.user._id) return; // not review onwer
     const loginUser = auth.user._id;
-    console.log({ actyId, reviewId, reviewOwnerId, loginUser,deletedReview });
+    console.log({ actyId, reviewId, reviewOwnerId, loginUser, deletedReview });
 
     try {
       const res = await axiosInterceptor.delete(`/activities/${actyId}/review/${reviewId}`, {
@@ -70,7 +70,7 @@ export default function ActyReviews({ reviews,onReviewDeleted }: ActyReviewProps
                 // sx={{fontSize:'0.8rem'} }
                 sx={{ display: { xs: 'none', sm: 'inherit' }, fontSize: '0.75rem' }}
                 label="Remove"
-                onClick={() => handleRemoveClick(r._id, r.owner._id,r)}
+                onClick={() => handleRemoveClick(r._id, r.owner._id, r)}
                 icon={<DeleteIcon sx={{ fontSize: '1rem' }} />}
                 variant="outlined"
                 color="error"
@@ -81,7 +81,7 @@ export default function ActyReviews({ reviews,onReviewDeleted }: ActyReviewProps
                 size="small"
                 sx={{ display: { xs: 'inherit', sm: 'none' } }}
                 color="error"
-                onClick={() => handleRemoveClick(r._id, r.owner._id,r)}
+                onClick={() => handleRemoveClick(r._id, r.owner._id, r)}
                 disabled={r.owner._id === auth.user._id ? false : true}
               >
                 <DeleteRoundedIcon sx={{ fontSize: 'inherit' }} />

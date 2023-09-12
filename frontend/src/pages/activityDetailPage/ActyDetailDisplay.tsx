@@ -50,7 +50,7 @@ export default function ActyDetailDisplay(props: ActyDetailDisplayProps) {
         </Carousel>
       </Grid>
       <Grid item xs={12} md={6}>
-        <ActyInfoItem data={actyDetail} reviewTotal={reviewsToPrint.length} />
+        <ActyInfoItem actyDetail={actyDetail} reviewTotal={reviewsToPrint.length} />
       </Grid>
       <Grid item xs={12} md={6}>
         <MapDisplay />

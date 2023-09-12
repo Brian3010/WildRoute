@@ -2,7 +2,7 @@ import { Container } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import getActyById, { TActyDetail } from '../../services/getActyById';
 import ActyDetailDisplay from './ActyDetailDisplay';
 
@@ -56,7 +56,7 @@ function Activity() {
         <Container maxWidth="lg">
           <ActyDetailDisplay actyData={actyDetail} onRatingChanged={onRatingChanged} />
         </Container>
-        <Link to={`/activities/${id}/edit`}>Edit Activity</Link>
+        
       </>
     );
   }
