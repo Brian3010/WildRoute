@@ -1,6 +1,6 @@
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
-import logUserOut from '../services/logUserOut';
+// import logUserOut from '../services/logUserOut';
 import useAxiosInterceptor from './useAxiosInterceptor';
 
 function useLogout() {

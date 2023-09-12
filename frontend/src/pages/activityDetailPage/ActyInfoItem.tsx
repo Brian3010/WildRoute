@@ -1,7 +1,7 @@
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {
   Box,
   Card,
@@ -18,6 +18,8 @@ import { useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import '../../assets/ActivityInfoItem.css';
 import useAuth from '../../hooks/useAuth';
+import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
+import useFlashMessage from '../../hooks/useFlashMessage';
 import iconSrcs from '../../images';
 import { TActyDetail } from '../../services/getActyById';
 import DipslayTagIcons from './DisplayTagIcons';
@@ -33,6 +35,9 @@ export default function ActyInfoItem({ actyDetail, reviewTotal }: ActyInfoItemPr
   const navigate = useNavigate();
   const { auth } = useAuth();
   // const isLoggedIn = auth.accessToken.length > 0;
+  const axiosInterceptor = useAxiosInterceptor();
+  const { setFlashMessage } = useFlashMessage();
+
   const isOwnner = auth.user._id === actyDetail.author._id;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -69,8 +74,13 @@ export default function ActyInfoItem({ actyDetail, reviewTotal }: ActyInfoItemPr
     setAnchorEl(event.currentTarget);
   };
 
-  const handleEdit = () => {
+  const handleClose = () => {
     setAnchorEl(null);
+    setSnackBarOpen(false);
+  };
+
+  const handleEdit = () => {
+    // setAnchorEl(null);
 
     console.log('directing to edit page');
 
@@ -78,17 +88,28 @@ export default function ActyInfoItem({ actyDetail, reviewTotal }: ActyInfoItemPr
     return navigate(`/activities/${actyId}/edit`, { replace: true });
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-    setSnackBarOpen(false);
-  };
-
   const handleCopyLink = async () => {
-    setAnchorEl(null);
+    // setAnchorEl(null);
 
     try {
       await navigator.clipboard.writeText(window.location.href);
       setSnackBarOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    console.log('handle Delete Clicked');
+
+    try {
+      const res = await axiosInterceptor.delete(`/activities/${actyId}`, {
+        withCredentials: true,
+        headers: { Authorization: `bearer ${auth.accessToken}` },
+      });
+      // console.log(res);
+      setFlashMessage({ message: `Successfully deleted ${res.data.activity_title} `, type: 'success' });
+      return navigate('/activities', { state: { openFlashMsg: true } });
     } catch (error) {
       console.error(error);
     }
@@ -141,7 +162,7 @@ export default function ActyInfoItem({ actyDetail, reviewTotal }: ActyInfoItemPr
 
                   <MenuItem
                     sx={{ gap: 1.5, color: '#d32f2f' }}
-                    onClick={handleClose}
+                    onClick={handleDelete}
                     disabled={isOwnner ? false : true}
                   >
                     <DeleteIcon fontSize="small" />
@@ -150,7 +171,7 @@ export default function ActyInfoItem({ actyDetail, reviewTotal }: ActyInfoItemPr
                 </span>
               </Tooltip>
               <MenuItem sx={{ gap: 1.5 }} onClick={handleCopyLink}>
-                <ContentCopyIcon fontSize='small'/>
+                <ContentCopyIcon fontSize="small" />
                 Copy link
               </MenuItem>
             </Menu>
