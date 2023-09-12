@@ -60,7 +60,7 @@ export default function ActyInfoItem(props: ActyInfoItemProps) {
           <hr className="line-break" />
 
           <Typography sx={{ display: 'flex', marginBottom: 1 }}>
-            <Rating size="small" name="read-only" value={actyDetail.rating} readOnly />
+            <Rating size="small" name="read-only" value={actyDetail.rating || 0} readOnly />
             <span style={{ fontSize: 'smaller', alignSelf: 'end', paddingLeft: 5, color: 'rgba(0, 0, 0, 0.6)' }}>
               {reviewTotal > 1 ? `${reviewTotal} reviews` : `${reviewTotal} review`}
             </span>

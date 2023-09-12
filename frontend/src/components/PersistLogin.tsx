@@ -7,7 +7,7 @@ import useRefreshToken from '../hooks/useRefreshToken';
 
 const PersistLogin = () => {
   console.log('PersistLogin render');
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const { auth } = useAuth() as IAuthContext;
   // console.log('file: PersistLogin.tsx:12 ~ PersistLogin ~ auth:', auth);
@@ -37,6 +37,8 @@ const PersistLogin = () => {
     //   isMounted = false;
     // };
   }, [auth.accessToken.length, navigate, refresh]);
+
+  // console.log({isLoading});
 
   return <>{isLoading ? <CircularProgress className="loader" color="inherit" /> : <Outlet />}</>;
 };
