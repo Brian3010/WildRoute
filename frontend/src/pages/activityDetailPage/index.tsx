@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { CircularProgress, Container } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
@@ -14,6 +14,7 @@ function Activity() {
 
   const [actyDetail, setActyDetail] = useState<TActyDetail | undefined>(undefined);
   const [isRatingChanged, setIsRatingChanged] = useState<boolean>(false);
+  const [isLoading, setIsloading] = useState(false);
 
   // * if want to check if id is in database, use id param
 
@@ -22,7 +23,7 @@ function Activity() {
 
     (async () => {
       if (!id) return showBoundary('id not found in useParams');
-
+      setIsloading(true);
       try {
         const actyDetail = await getActyById(id);
         // actyDetail && setActyDetail(actyDetail);
@@ -38,6 +39,8 @@ function Activity() {
         } else {
           showBoundary(error);
         }
+      } finally {
+        setIsloading(false);
       }
     })();
 
@@ -50,13 +53,16 @@ function Activity() {
     setIsRatingChanged(isRatingChanded);
   };
 
+  if (isLoading) {
+    return <CircularProgress className="loader" color="inherit" />;
+  }
+
   if (actyDetail) {
     return (
       <>
         <Container maxWidth="lg">
           <ActyDetailDisplay actyData={actyDetail} onRatingChanged={onRatingChanged} />
         </Container>
-        
       </>
     );
   }
