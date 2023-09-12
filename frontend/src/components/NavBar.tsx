@@ -17,8 +17,8 @@ import { Link, Outlet } from 'react-router-dom';
 import '../assets/NavBar.css';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
-import FlashMessage from './FlashMessage';
 import useLogout from '../hooks/useLogout';
+import FlashMessage from './FlashMessage';
 
 const darkTheme = createTheme({
   palette: {
@@ -38,13 +38,16 @@ function NavBar() {
   const logout = useLogout();
   // console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
-  const isLoggedIn = auth.accessToken.length > 0;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const localUser = JSON.parse(localStorage.getItem('user')!);
+
+  const isLoggedIn = auth.accessToken.length > 0 || Boolean(localUser);
 
   const handleLogout = async () => {
     // console.log(event);
     console.log('handleLogout ');
     const res = await logout();
-    console.log("file: NavBar.tsx:47 ~ handleLogout ~ res:", res)
+    console.log('file: NavBar.tsx:47 ~ handleLogout ~ res:', res);
   };
 
   const handleDrawerToggle = () => {

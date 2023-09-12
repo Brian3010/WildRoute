@@ -35,37 +35,35 @@ function App() {
       {/* <FlashMessage /> */}
 
       <Routes>
-        <Route element={<PersistLogin />}>
-          <Route element={<NavBar />}>
-            <Route path="/" element={<HomePage />} />
+        {/* <Route element={<PersistLogin />}> */}
+        <Route element={<NavBar />}>
+          <Route path="/" element={<HomePage />} />
 
-            <Route path="/activities">
-              {/* public routes */}
-              <Route
-                index
-                element={
-                  <ErrorBoundary
-                    FallbackComponent={ErrorFallBack}
-                    onError={logError}
-                    key={location.pathname}
-                    children={<ActivityList />}
-                  />
-                }
-              />
+          <Route path="/activities">
+            {/* public routes */}
+            <Route
+              index
+              element={
+                <ErrorBoundary
+                  FallbackComponent={ErrorFallBack}
+                  onError={logError}
+                  key={location.pathname}
+                  children={<ActivityList />}
+                />
+              }
+            />
 
-              <Route
-                path=":id"
-                element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<Activity />} />}
-              />
-              <Route
-                path="user/login"
-                element={
-                  <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />
-                }
-              />
+            <Route
+              path=":id"
+              element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<Activity />} />}
+            />
+            <Route
+              path="user/login"
+              element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />}
+            />
 
-              {/* private routes */}
-              {/* <Route element={<PersistLogin />}> */}
+            {/* private routes */}
+            <Route element={<PersistLogin />}>
               <Route element={<RequireAuth />}>
                 <Route path="new" element={<NewActivity />} />
                 {/* <Route path="user/logout" element={<div>logout </div>} /> */}
@@ -74,11 +72,11 @@ function App() {
                   <Route path=":id/edit" element={<EditActivity />} />
                 </Route>
               </Route>
-              {/* </Route> */}
             </Route>
-            <Route path="*" element={<PageNotFound />} />
           </Route>
+          <Route path="*" element={<PageNotFound />} />
         </Route>
+        {/* </Route> */}
       </Routes>
     </div>
   );
