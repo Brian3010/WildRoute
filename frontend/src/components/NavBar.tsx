@@ -13,11 +13,7 @@ import {
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
-<<<<<<<<< Temporary merge branch 1
-import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom';
-=========
 import { Link, Outlet, useNavigate } from 'react-router-dom';
->>>>>>>>> Temporary merge branch 2
 import '../assets/NavBar.css';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
