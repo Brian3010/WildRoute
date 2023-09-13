@@ -20,6 +20,7 @@ export default function FlashMessage() {
   // setTimeout(() => {
   //   setOpen(false);
   // }, 4000);
+  
 
   return (
     openFlash && (

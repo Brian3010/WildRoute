@@ -70,12 +70,7 @@ function App() {
                 {/* <Route path="user/logout" element={<div>logout </div>} /> */}
 
                 <Route element={<IsOwner />}>
-                  <Route
-                    path=":id/edit"
-                    element={
-                      <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<EditActivity />} />
-                    }
-                  />
+                  <Route path=":id/edit" element={<EditActivity />} />
                 </Route>
               </Route>
             </Route>
