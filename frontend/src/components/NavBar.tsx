@@ -13,10 +13,11 @@ import {
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
-import { Link, Navigate, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import '../assets/NavBar.css';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
+import useFlashMessage from '../hooks/useFlashMessage';
 import useLogout from '../hooks/useLogout';
 import FlashMessage from './FlashMessage';
 
@@ -36,6 +37,8 @@ function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { auth } = useAuth() as IAuthContext;
   const logout = useLogout();
+  const navigate = useNavigate();
+  const { setFlashMessage } = useFlashMessage();
   // console.log('file: NavBar.tsx:23 ~ NavBar ~ auth:', auth);
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -46,8 +49,16 @@ function NavBar() {
   const handleLogout = async () => {
     // console.log(event);
     console.log('handleLogout ');
-    const res = await logout();
-    console.log('file: NavBar.tsx:47 ~ handleLogout ~ res:', res);
+    try {
+      const res = await logout();
+      // res && navigate('/activities');
+      if (res) {
+        setFlashMessage({ type: 'success', message: 'Bye Bye!' });
+        return navigate('activities', { state: { openFlashMsg: true }, replace: true });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleDrawerToggle = () => {

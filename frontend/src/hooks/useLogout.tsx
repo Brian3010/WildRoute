@@ -17,6 +17,7 @@ function useLogout() {
       console.log(res);
       localStorage.clear();
       setAuth({ accessToken: '', user: { _id: '', email: '', username: '' } });
+      return res;
     } catch (error) {
       console.error('Caugth an error: ', error);
     }

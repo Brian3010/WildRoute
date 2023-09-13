@@ -1,12 +1,12 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
-import useFlashMessage from '../hooks/useFlashMessage';
+// import useFlashMessage from '../hooks/useFlashMessage';
 
 const RequireAuth = () => {
   const { auth } = useAuth() as IAuthContext;
   const location = useLocation();
-  const { setFlashMessage } = useFlashMessage();
+  // const { setFlashMessage } = useFlashMessage();
   // console.log('file: requireAuth.tsx:8 ~ RequireAuth ~ location:', location);
 
   const isLoggedIn = auth.user._id.length > 0;
