@@ -16,7 +16,7 @@ const PersistLogin = () => {
 
   useEffect(() => {
     // console.log('PersistLogin useEffect');
-    // let isMounted = true; // prevent loop
+    let isMounted = true; // prevent loop
 
     const verifyRefreshToken = async () => {
       // console.log('verifyRefreshToken run ');
@@ -30,12 +30,12 @@ const PersistLogin = () => {
         setIsLoading(false);
       }
     };
-    // !(auth.accessToken.length > 0) && isMounted ? verifyRefreshToken() : setIsLoading(false);
-    !(auth.accessToken.length > 0) ? verifyRefreshToken() : setIsLoading(false);
+    !(auth.accessToken.length > 0) && isMounted ? verifyRefreshToken() : setIsLoading(false);
+    // !(auth.accessToken.length > 0) ? verifyRefreshToken() : setIsLoading(false);
     // console.log('file: PersistLogin.tsx:30 ~ useEffect ~ auth?.accessToken.length:', auth?.accessToken.length);
-    // return function () {
-    //   isMounted = false;
-    // };
+    return function () {
+      isMounted = false;
+    };
   }, [auth.accessToken.length, navigate, refresh]);
 
   // console.log({isLoading});
