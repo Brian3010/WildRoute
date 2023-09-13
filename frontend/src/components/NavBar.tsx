@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Navigate, Outlet } from 'react-router-dom';
 import '../assets/NavBar.css';
 import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
