@@ -9,8 +9,8 @@ import getActyById from '../services/getActyById';
 export default function IsOwner() {
   console.log('IsOwner render');
   const { auth } = useAuth() as IAuthContext;
+  const [isOwner, setIsOwner] = useState<boolean>(false);
   const { setFlashMessage } = useFlashMessage();
-  const [owner, setOwner] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
   // console.log('file: IsOwner.tsx:13 ~ IsOwner ~ id:', id);
@@ -25,24 +25,24 @@ export default function IsOwner() {
           const data = await getActyById(id);
           // console.log('file: IsOwner.tsx:22 ~ data :', data);
           // owner.current = data.author._id;
-          setOwner(data.author._id);
-          setIsLoading(false);
+          setIsOwner(data.author._id === auth.user._id);
         } catch (error) {
           console.error(error);
 
           return navigate('/activities');
+        } finally {
+          setIsLoading(false);
         }
       })();
     }
-  }, [id, navigate, setFlashMessage]);
+    if (!isLoading && !isOwner) setFlashMessage({ type: 'error', message: 'You do not have permission to do that' });
+  }, [auth.user._id, id, isLoading, isOwner, navigate, setFlashMessage]);
 
   if (!isLoading) {
-    const isOwner = auth && auth.user._id === owner;
-    // console.log('file: IsOwner.tsx:32 ~ IsOwner ~ owner:', owner);
+    // const isOwner = auth && auth.user._id === owner;
+    // console.log('file: IsOwner.tsx:32 ~ IsOwner ~ owner:', isOwner);
     // console.log('file: IsOwner.tsx:32 ~ IsOwner ~ auth.user._id:', auth.user._id);
     // console.log('file: IsOwner.tsx:29 ~ IsOwner ~ isOwner:', isOwner);
-
-    !isOwner && setFlashMessage({ type: 'error', message: 'You do not have permission to do that' });
 
     return isOwner ? <Outlet /> : <Navigate to="/activities" state={{ openFlashMsg: true }} />;
   }

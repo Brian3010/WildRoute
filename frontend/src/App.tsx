@@ -21,7 +21,7 @@ function App() {
   const location = useLocation();
 
   function logError(error: Error | AxiosError, info: { componentStack: string }) {
-    console.warn('Caught an error:', error, info);
+    console.error('Caught an error by ErrorBoundary:', error, info);
     // if (axios.isAxiosError(error) && error.response?.status != 500) {
     //   // flashMsg.current = error.response?.data.error;
     //   // console.log('file: App.tsx:30 ~ logError ~ flashMsg.current:', flashMsg.current);
@@ -61,6 +61,7 @@ function App() {
               path="user/login"
               element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />}
             />
+            {/* -------------- */}
 
             {/* private routes */}
             <Route element={<PersistLogin />}>
@@ -69,11 +70,18 @@ function App() {
                 {/* <Route path="user/logout" element={<div>logout </div>} /> */}
 
                 <Route element={<IsOwner />}>
-                  <Route path=":id/edit" element={<EditActivity />} />
+                  <Route
+                    path=":id/edit"
+                    element={
+                      <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<EditActivity />} />
+                    }
+                  />
                 </Route>
               </Route>
             </Route>
           </Route>
+          {/* -------------- */}
+
           <Route path="*" element={<PageNotFound />} />
         </Route>
         {/* </Route> */}

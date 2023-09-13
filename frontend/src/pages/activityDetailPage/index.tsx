@@ -8,15 +8,12 @@ import ActyDetailDisplay from './ActyDetailDisplay';
 
 function Activity() {
   const { showBoundary } = useErrorBoundary();
-
   const { id } = useParams();
   // console.log('Activity ID: ', id);
 
   const [actyDetail, setActyDetail] = useState<TActyDetail | undefined>(undefined);
   const [isRatingChanged, setIsRatingChanged] = useState<boolean>(false);
   const [isLoading, setIsloading] = useState(false);
-
-  // * if want to check if id is in database, use id param
 
   useEffect(() => {
     // console.log('useEffect runs');
