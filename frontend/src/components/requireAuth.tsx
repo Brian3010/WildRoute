@@ -10,7 +10,7 @@ const RequireAuth = () => {
   // console.log('file: requireAuth.tsx:8 ~ RequireAuth ~ location:', location);
 
   const isLoggedIn = auth.user._id.length > 0;
-  if (!isLoggedIn) setFlashMessage({ type: 'error', message: 'You must be signed in first!' });
+  // if (!isLoggedIn) setFlashMessage({ type: 'error', message: 'You must be signed in first!' });
 
   return isLoggedIn ? (
     <Outlet />
