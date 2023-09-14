@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Navigate, Outlet, useNavigate, useParams } from 'react-router-dom';
-import { IAuthContext } from '../context/AuthProvider';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
+// import { IAuthContext } from '../context/AuthProvider';
 import useAuth from '../hooks/useAuth';
 import useFlashMessage from '../hooks/useFlashMessage';
 import getActyById from '../services/getActyById';
