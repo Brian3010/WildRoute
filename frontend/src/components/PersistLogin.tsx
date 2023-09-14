@@ -19,8 +19,9 @@ const PersistLogin = () => {
     let isMounted = true; // prevent loop
 
     const verifyRefreshToken = async () => {
-      // console.log('verifyRefreshToken run ');
+      console.log('verifyRefreshToken run ');
       try {
+        //* this will send the refreshToken in cookie and set the new auth before accessing the children component
         await refresh();
       } catch (error) {
         console.error('Caught an error: ', error);

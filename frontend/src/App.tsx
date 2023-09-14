@@ -52,19 +52,21 @@ function App() {
                 />
               }
             />
-
-            <Route
-              path=":id"
-              element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<Activity />} />}
-            />
-            <Route
-              path="user/login"
-              element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />}
-            />
-            {/* -------------- */}
-
-            {/* private routes */}
             <Route element={<PersistLogin />}>
+              <Route
+                path=":id"
+                element={<ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<Activity />} />}
+              />
+              <Route
+                path="user/login"
+                element={
+                  <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />
+                }
+              />
+              {/* -------------- */}
+
+              {/* private routes */}
+
               <Route element={<RequireAuth />}>
                 <Route path="new" element={<NewActivity />} />
                 {/* <Route path="user/logout" element={<div>logout </div>} /> */}

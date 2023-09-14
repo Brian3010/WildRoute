@@ -34,6 +34,8 @@ export default function IsOwner() {
               return navigate('/activities', { state: { openFlashMsg: true } });
             }
           }
+          setFlashMessage({ type: 'error', message: 'Activity does not exist' });
+          return navigate('/activities', { state: { openFlashMsg: true } });
         }
       }
     };
