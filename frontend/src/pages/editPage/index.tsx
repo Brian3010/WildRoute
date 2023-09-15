@@ -1,4 +1,4 @@
-import { CircularProgress, Container, Paper, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Paper, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import getActyById, { TActyDetail } from '../../services/getActyById';
@@ -19,7 +19,7 @@ export default function EditActivity() {
     // TODO: fetch API
     const fetchActyDetail = async () => {
       const data = await getActyById(actyId);
-      console.log(data);
+      // console.log(data);
       setEditData(data);
       setIsLoading(false);
     };
@@ -31,20 +31,20 @@ export default function EditActivity() {
     // }
   }, [actyId]);
 
+  if (isLoading) return <CircularProgress className="loader" color="inherit" />;
+
   return (
-    <>
-      {isLoading ? (
-        <CircularProgress className="loader" color="inherit" />
-      ) : (
-        <Container maxWidth="sm">
-          <h1>render edit form here activity id is {actyId}</h1>
-          <Paper variant="outlined">
-            <Typography variant="h4" fontSize={'1.875rem'} textAlign={'center'}>
-              Edit 'acty_title'
-            </Typography>
-          </Paper>
-        </Container>
-      )}
-    </>
+    EditData && (
+      <Container maxWidth="sm">
+        <h1>render edit form here activity id is {actyId}</h1>
+        <Paper variant="outlined" sx={{ padding: 3 }}>
+          <Typography variant="h4" textAlign={'center'}>
+            Update Activity
+          </Typography>
+
+          <Box component={'form'}></Box>
+        </Paper>
+      </Container>
+    )
   );
 }
