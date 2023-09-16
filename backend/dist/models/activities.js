@@ -42,6 +42,9 @@ const ActivityListSchema = new Schema({
                     type: String,
                     required: true,
                 },
+                fileName: {
+                    type: String,
+                },
             },
         ],
         required: true,

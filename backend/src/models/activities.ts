@@ -54,7 +54,9 @@ const ActivityListSchema = new Schema(
             type: String,
             required: true,
           },
-          // fileName: String,
+          fileName: {
+            type: String,
+          },
         },
       ],
       required: true,

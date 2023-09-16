@@ -19,7 +19,7 @@ const PersistLogin = () => {
     let isMounted = true; // prevent loop
 
     const verifyRefreshToken = async () => {
-      console.log('verifyRefreshToken run ');
+      // console.log('verifyRefreshToken run ');
       try {
         //* this will send the refreshToken in cookie and set the new auth before accessing the children component
         await refresh();
@@ -32,23 +32,14 @@ const PersistLogin = () => {
       }
     };
     !(auth.accessToken.length > 0) && isMounted ? verifyRefreshToken() : setIsLoading(false);
-    // !(auth.accessToken.length > 0) ? verifyRefreshToken() : setIsLoading(false);
+    // /!(auth.accessToken.length > 0) ? verifyRefreshToken() : setIsLoading(false);
     // console.log('file: PersistLogin.tsx:30 ~ useEffect ~ auth?.accessToken.length:', auth?.accessToken.length);
     return function () {
       isMounted = false;
     };
   }, [auth.accessToken.length, navigate, refresh]);
 
-  // console.log({isLoading});
-
   return <>{isLoading ? <CircularProgress className="loader" color="inherit" /> : <Outlet />}</>;
 };
 
 export default PersistLogin;
-
-// if Auth is empty after refreshing
-// check if auth empty the run the following:
-// verify the refresh token sit in the cookies - verifyRefreshToken function
-// useRefreshToken hook to get a new accessToken- the hook replace the global authContext for us
-// only run the verifyRefreshToken when auth is empty
-// proceed to the route if done verifying.
