@@ -148,7 +148,7 @@ export default function EditActivity() {
               <FormLabel component="legend">Tags</FormLabel>
               <FormGroup>
                 {tags.map((t, i) => (
-                  <FormControlLabel key={i} control={<Checkbox name={t.} />} label={t} />
+                  <FormControlLabel key={i} control={<Checkbox name={t} />} label={t} />
                 ))}
               </FormGroup>
               {/* <FormHelperText>You can display an error</FormHelperText> */}
