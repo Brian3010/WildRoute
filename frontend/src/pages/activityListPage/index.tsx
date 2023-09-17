@@ -122,7 +122,7 @@ function ActivityList() {
 
         <Grid container spacing={2}>
           {currentActies.map((el, i) => (
-            <Grid key={i} item xs={12} sm={6} md={4} lg={3}>
+            <Grid sx={{height:'405px'}} key={i} item xs={12} sm={6} md={4} lg={3}>
               <ActivityItem data={el} />
             </Grid>
           ))}
