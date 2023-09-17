@@ -1,9 +1,17 @@
 import { CloudUpload, UploadFile } from '@mui/icons-material';
 import {
   Button,
+  Checkbox,
   CircularProgress,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormHelperText,
+  FormLabel,
   Grid,
+  ImageList,
+  ImageListItem,
   Input,
   InputAdornment,
   Paper,
@@ -25,6 +33,13 @@ export default function EditActivity() {
   const { id: actyId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [EditData, setEditData] = useState<TActyEdit>(); // created to manage renders for this component
+  const [tags, setTags] = useState<Record<TActyDetail['tags'][number], boolean>>({
+    Adventure: false,
+    Camping: false,
+    Climbing: true,
+    Nature: false,
+    'Water Sport': false,
+  });
   if (!actyId) throw new Error('activity id not defined');
 
   useEffect(() => {
@@ -32,6 +47,7 @@ export default function EditActivity() {
       const data = await getActyById(actyId);
       // console.log(data);
       setEditData(data);
+
       setIsLoading(false);
     };
 
@@ -94,13 +110,49 @@ export default function EditActivity() {
               fullWidth
             />
           </Grid>
+
+          {/* Upload Image */}
           <Grid item xs={12} display={{ sm: 'flex' }} gap={2}>
             <Button component={'label'} startIcon={<CloudUpload />} color="info" variant="contained">
               Upload Image
               <input type="file" hidden />
             </Button>
-            <Typography marginTop={{ xs:2, sm:'inherit'}} alignSelf={'center'}>Choose files</Typography>
+            <Typography marginTop={{ xs: 2, sm: 'inherit' }} alignSelf={'center'}>
+              Choose files
+            </Typography>
             {/* <TextField label="Image" type="file" InputProps={{ style: {}, startAdornment: <CloudUpload /> }} /> */}
+          </Grid>
+
+          {/* Preview Image*/}
+          {EditData.image.length > 0 ? (
+            <Grid item xs={12}>
+              <Paper variant="outlined" sx={{ padding: 2 }}>
+                <ImageList sx={{ maxHeight: 180 }}>
+                  {EditData.image.map(i => (
+                    <ImageListItem key={i._id}>
+                      <img
+                        src={`${i.url}`}
+                        alt="activityImg"
+                        loading="lazy"
+                        style={{ maxHeight: '140px', objectFit: 'cover' }}
+                      />
+                    </ImageListItem>
+                  ))}
+                </ImageList>
+              </Paper>
+            </Grid>
+          ) : null}
+
+          <Grid item xs={12}>
+            <FormControl required component="fieldset" sx={{ m: 3 }} variant="standard">
+              <FormLabel component="legend">Tags</FormLabel>
+              <FormGroup>
+                {tags.map((t, i) => (
+                  <FormControlLabel key={i} control={<Checkbox name={t.} />} label={t} />
+                ))}
+              </FormGroup>
+              {/* <FormHelperText>You can display an error</FormHelperText> */}
+            </FormControl>
           </Grid>
         </Grid>
       </Paper>
