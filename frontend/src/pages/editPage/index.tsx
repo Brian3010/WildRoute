@@ -1,4 +1,4 @@
-import { CloudUpload, UploadFile } from '@mui/icons-material';
+import { CloudUpload } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -29,32 +29,20 @@ import getActyById, { TActyDetail } from '../../services/getActyById';
 
 type TActyEdit = Pick<TActyDetail, 'activity_title' | 'location' | 'avg_price' | 'description' | 'image' | 'tags'>;
 
+// this function return an object like this
+// { Adventure:false,
+//   Camping:false,
+//   Climbing:true,
+//   Water Sport: true,
+//   Nature: false}
 const checkedTags = (dbsTags: TActyDetail['tags']) => {
-  const displayTags: Record<TActyDetail['tags'][number], boolean> = {
-    Adventure: false,
-    Camping: false,
-    Climbing: false,
-    Nature: false,
-    'Water Sport': false,
-  };
+  const displayTags: Record<string, boolean> = {};
+  const tagNames: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
 
-  // const keys = Object.keys(displayTags).map(e => {
-    
-  //   return e;
-  // });
-  // console.log(keys);
-  
-  dbsTags.forEach(t => {
-    // eslint-disable-next-line no-prototype-builtins
-    if (displayTags.hasOwnProperty(t)) {
-      displayTags[t] = !displayTags[t];
-    }
-  })
-
-
-
-
-  
+  tagNames.forEach(t => {
+    displayTags[t] = dbsTags.includes(t);
+  });
+  // console.log({ displayTags });
 
   return displayTags;
 };
@@ -63,7 +51,7 @@ export default function EditActivity() {
   const { id: actyId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [EditData, setEditData] = useState<TActyEdit>(); // created to manage renders for this component
-  const tags = useRef<Record<TActyDetail['tags'][number], boolean>>();
+  const [tags, setTags] = useState<Record<TActyDetail['tags'][number], boolean>>();
   if (!actyId) throw new Error('activity id not defined');
 
   useEffect(() => {
@@ -71,7 +59,8 @@ export default function EditActivity() {
       const data = await getActyById(actyId);
       // console.log(data.tags);
       setEditData(data);
-      checkedTags(data.tags);
+      setTags(checkedTags(data.tags));
+      // console.log(tags.current);
       setIsLoading(false);
     };
 
@@ -82,9 +71,14 @@ export default function EditActivity() {
     // }
   }, [actyId]);
 
+  const handleTags = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    console.log({ ...tags, [event.currentTarget.name]: checked });
+    // ! cannot update state onchange for tags
+  };
+
   if (isLoading) return <CircularProgress className="loader" color="inherit" />;
 
-  return EditData ? (
+  return EditData && tags ? (
     <Container maxWidth="sm">
       {/* <h1>render edit form here activity id is {actyId}</h1> */}
       <Paper variant="outlined" sx={{ padding: 3 }}>
@@ -171,9 +165,15 @@ export default function EditActivity() {
             <FormControl required component="fieldset" sx={{ m: 3 }} variant="standard">
               <FormLabel component="legend">Tags</FormLabel>
               <FormGroup>
-                {/* {tags.map((t, i) => (
-                  <FormControlLabel key={i} control={<Checkbox name={t} />} label={t} />
-                ))} */}
+                {Object.entries(tags).map(([tag, checked], index) => {
+                  return (
+                    <FormControlLabel
+                      key={index}
+                      control={<Checkbox name={tag} checked={checked} onChange={handleTags} />}
+                      label={tag}
+                    />
+                  );
+                })}
               </FormGroup>
               {/* <FormHelperText>You can display an error</FormHelperText> */}
             </FormControl>
