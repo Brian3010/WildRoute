@@ -18,7 +18,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../assets/EditPage.css';
 import getActyById, { TActyDetail } from '../../services/getActyById';
@@ -29,25 +29,49 @@ import getActyById, { TActyDetail } from '../../services/getActyById';
 
 type TActyEdit = Pick<TActyDetail, 'activity_title' | 'location' | 'avg_price' | 'description' | 'image' | 'tags'>;
 
+const checkedTags = (dbsTags: TActyDetail['tags']) => {
+  const displayTags: Record<TActyDetail['tags'][number], boolean> = {
+    Adventure: false,
+    Camping: false,
+    Climbing: false,
+    Nature: false,
+    'Water Sport': false,
+  };
+
+  // const keys = Object.keys(displayTags).map(e => {
+    
+  //   return e;
+  // });
+  // console.log(keys);
+  
+  dbsTags.forEach(t => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (displayTags.hasOwnProperty(t)) {
+      displayTags[t] = !displayTags[t];
+    }
+  })
+
+
+
+
+  
+
+  return displayTags;
+};
+
 export default function EditActivity() {
   const { id: actyId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [EditData, setEditData] = useState<TActyEdit>(); // created to manage renders for this component
-  const [tags, setTags] = useState<Record<TActyDetail['tags'][number], boolean>>({
-    Adventure: false,
-    Camping: false,
-    Climbing: true,
-    Nature: false,
-    'Water Sport': false,
-  });
+  const tags = useRef<Record<TActyDetail['tags'][number], boolean>>();
   if (!actyId) throw new Error('activity id not defined');
 
   useEffect(() => {
     const fetchActyDetail = async () => {
       const data = await getActyById(actyId);
-      // console.log(data);
+      // console.log(data.tags);
       setEditData(data);
-
+      checkedTags(data.tags);
       setIsLoading(false);
     };
 
@@ -147,9 +171,9 @@ export default function EditActivity() {
             <FormControl required component="fieldset" sx={{ m: 3 }} variant="standard">
               <FormLabel component="legend">Tags</FormLabel>
               <FormGroup>
-                {tags.map((t, i) => (
+                {/* {tags.map((t, i) => (
                   <FormControlLabel key={i} control={<Checkbox name={t} />} label={t} />
-                ))}
+                ))} */}
               </FormGroup>
               {/* <FormHelperText>You can display an error</FormHelperText> */}
             </FormControl>
