@@ -1,31 +1,16 @@
-import { CloudUpload } from '@mui/icons-material';
-import {
-  Button,
-  Checkbox,
-  CircularProgress,
-  Container,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  ImageList,
-  ImageListItem,
-  Input,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { Button, CircularProgress, Container, Grid, Paper, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../assets/EditPage.css';
 import getActyById, { TActyDetail } from '../../services/getActyById';
+import FormInputs from './FormInputs';
 
 // ? add edit/remove button to image inputs file
 
-type TActyEdit = Pick<TActyDetail, 'activity_title' | 'location' | 'avg_price' | 'description' | 'image' | 'tags'>;
+export type TActyEdit = Pick<
+  TActyDetail,
+  'activity_title' | 'location' | 'avg_price' | 'description' | 'image' | 'tags'
+>;
 
 // this function return an object like this
 // { Adventure:false,
@@ -83,7 +68,7 @@ export default function EditActivity() {
 
   const handleTags = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     const tagName = event.currentTarget.name;
-    // console.log({ tagName, checked, tags });
+    console.log({ tagName, checked, tags });
     setTags(prevTags => {
       return {
         ...prevTags,
@@ -104,97 +89,16 @@ export default function EditActivity() {
 
         {/* edit form */}
         <Grid component={'form'} container spacing={3}>
-          <Grid item xs={12} sm={8}>
-            <TextField
-              label="Title"
-              id="updatedTitle"
-              variant="standard"
-              defaultValue={editData.activity_title}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <TextField
-              type="number"
-              id="updatedAvgPrice"
-              variant="standard"
-              label="Average Price"
-              defaultValue={String(editData.avg_price)}
-              InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="updatedLocation"
-              variant="standard"
-              label="Location"
-              defaultValue={editData.location}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="updatedDesc"
-              variant="filled"
-              label="Description"
-              defaultValue={editData.description}
-              multiline
-              rows={5}
-              fullWidth
-            />
-          </Grid>
+          <FormInputs editData={editData} onTagsChange={handleTags} tagStateVal={tags} />
 
-          {/* Upload Image */}
-          <Grid item xs={12} display={{ sm: 'flex' }} gap={2}>
-            <Button component={'label'} startIcon={<CloudUpload />} color="info" variant="contained">
-              Upload Image
-              <input type="file" hidden />
+          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+            <Button variant="outlined" color="error">
+              Cancel
             </Button>
-            <Typography marginTop={{ xs: 2, sm: 'inherit' }} alignSelf={'center'}>
-              Choose files
-            </Typography>
-            {/* <TextField label="Image" type="file" InputProps={{ style: {}, startAdornment: <CloudUpload /> }} /> */}
-          </Grid>
-
-          {/* Preview Image*/}
-          {editData.image.length > 0 ? (
-            <Grid item xs={12}>
-              <Paper variant="outlined" sx={{ padding: 2 }}>
-                <ImageList sx={{ maxHeight: 180 }}>
-                  {editData.image.map(i => (
-                    <ImageListItem key={i._id}>
-                      <img
-                        src={`${i.url}`}
-                        alt="activityImg"
-                        loading="lazy"
-                        style={{ maxHeight: '140px', objectFit: 'cover' }}
-                      />
-                    </ImageListItem>
-                  ))}
-                </ImageList>
-              </Paper>
-            </Grid>
-          ) : null}
-
-          <Grid item xs={12}>
-            <FormControl required component="fieldset" sx={{ m: 3 }} variant="standard">
-              <FormLabel component="legend">Tags</FormLabel>
-              <FormGroup>
-                {Object.entries(tags).map(([tag, checked], index) => {
-                  return (
-                    <FormControlLabel
-                      key={index}
-                      control={<Checkbox name={tag} checked={checked} onChange={handleTags} />}
-                      label={tag}
-                    />
-                  );
-                })}
-              </FormGroup>
-              {/* <FormHelperText>You can display an error</FormHelperText> */}
-            </FormControl>
+            <Button variant="contained">Update</Button>
           </Grid>
         </Grid>
+        {/* ===edit form=== */}
       </Paper>
     </Container>
   ) : null;
