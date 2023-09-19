@@ -23,8 +23,6 @@ import { useParams } from 'react-router-dom';
 import '../../assets/EditPage.css';
 import getActyById, { TActyDetail } from '../../services/getActyById';
 
-// get details of the activity
-// propagate data reveived to the form
 // ? add edit/remove button to image inputs file
 
 type TActyEdit = Pick<TActyDetail, 'activity_title' | 'location' | 'avg_price' | 'description' | 'image' | 'tags'>;
@@ -36,7 +34,13 @@ type TActyEdit = Pick<TActyDetail, 'activity_title' | 'location' | 'avg_price' |
 //   Water Sport: true,
 //   Nature: false}
 const checkedTags = (dbsTags: TActyDetail['tags']) => {
-  const displayTags: Record<string, boolean> = {};
+  const displayTags: Record<TActyDetail['tags'][number], boolean> = {
+    Adventure: false,
+    Nature: false,
+    Camping: false,
+    'Water Sport': false,
+    Climbing: false,
+  };
   const tagNames: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
 
   tagNames.forEach(t => {
@@ -50,8 +54,14 @@ const checkedTags = (dbsTags: TActyDetail['tags']) => {
 export default function EditActivity() {
   const { id: actyId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [EditData, setEditData] = useState<TActyEdit>(); // created to manage renders for this component
-  const [tags, setTags] = useState<Record<TActyDetail['tags'][number], boolean>>();
+  const [editData, setEditData] = useState<TActyEdit>(); // created to manage renders for this component
+  const [tags, setTags] = useState<Record<TActyDetail['tags'][number], boolean>>({
+    Adventure: false,
+    Nature: false,
+    Camping: false,
+    'Water Sport': false,
+    Climbing: false,
+  });
   if (!actyId) throw new Error('activity id not defined');
 
   useEffect(() => {
@@ -72,13 +82,19 @@ export default function EditActivity() {
   }, [actyId]);
 
   const handleTags = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    console.log({ ...tags, [event.currentTarget.name]: checked });
-    // ! cannot update state onchange for tags
+    const tagName = event.currentTarget.name;
+    // console.log({ tagName, checked, tags });
+    setTags(prevTags => {
+      return {
+        ...prevTags,
+        [tagName]: checked,
+      };
+    });
   };
 
   if (isLoading) return <CircularProgress className="loader" color="inherit" />;
 
-  return EditData && tags ? (
+  return editData && tags ? (
     <Container maxWidth="sm">
       {/* <h1>render edit form here activity id is {actyId}</h1> */}
       <Paper variant="outlined" sx={{ padding: 3 }}>
@@ -93,7 +109,7 @@ export default function EditActivity() {
               label="Title"
               id="updatedTitle"
               variant="standard"
-              defaultValue={EditData.activity_title}
+              defaultValue={editData.activity_title}
               fullWidth
             />
           </Grid>
@@ -103,7 +119,7 @@ export default function EditActivity() {
               id="updatedAvgPrice"
               variant="standard"
               label="Average Price"
-              defaultValue={String(EditData.avg_price)}
+              defaultValue={String(editData.avg_price)}
               InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
               fullWidth
             />
@@ -113,7 +129,7 @@ export default function EditActivity() {
               id="updatedLocation"
               variant="standard"
               label="Location"
-              defaultValue={EditData.location}
+              defaultValue={editData.location}
               fullWidth
             />
           </Grid>
@@ -122,7 +138,7 @@ export default function EditActivity() {
               id="updatedDesc"
               variant="filled"
               label="Description"
-              defaultValue={EditData.description}
+              defaultValue={editData.description}
               multiline
               rows={5}
               fullWidth
@@ -142,11 +158,11 @@ export default function EditActivity() {
           </Grid>
 
           {/* Preview Image*/}
-          {EditData.image.length > 0 ? (
+          {editData.image.length > 0 ? (
             <Grid item xs={12}>
               <Paper variant="outlined" sx={{ padding: 2 }}>
                 <ImageList sx={{ maxHeight: 180 }}>
-                  {EditData.image.map(i => (
+                  {editData.image.map(i => (
                     <ImageListItem key={i._id}>
                       <img
                         src={`${i.url}`}
