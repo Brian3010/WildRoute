@@ -1,9 +1,9 @@
-import { Button, CircularProgress, Container, Grid, Paper, Typography } from '@mui/material';
+import { CircularProgress, Container, Paper, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../assets/EditPage.css';
 import getActyById, { TActyDetail } from '../../services/getActyById';
-import FormInputs from './FormInputs';
+import EditForm from './EditForm';
 
 // ? add edit/remove button to image inputs file
 
@@ -68,7 +68,7 @@ export default function EditActivity() {
 
   const handleTags = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     const tagName = event.currentTarget.name;
-    console.log({ tagName, checked, tags });
+    // console.log({ tagName, checked, tags });
     setTags(prevTags => {
       return {
         ...prevTags,
@@ -88,41 +88,10 @@ export default function EditActivity() {
         </Typography>
 
         {/* edit form */}
-        <Grid component={'form'} container spacing={3}>
-          <FormInputs editData={editData} onTagsChange={handleTags} tagStateVal={tags} />
+        <EditForm editData={editData} onTagsChange={handleTags} tagStateVal={tags} />
 
-          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-            <Button variant="outlined" color="error">
-              Cancel
-            </Button>
-            <Button variant="contained">Update</Button>
-          </Grid>
-        </Grid>
         {/* ===edit form=== */}
       </Paper>
     </Container>
   ) : null;
 }
-
-// export const activitySchema = customJoi.object({
-//   activity: customJoi
-//     .object({
-//       activity_title: customJoi.string().min(5).required().escapeHTML(),
-//       location: customJoi.string().min(5).required().escapeHTML(),
-//       description: customJoi.string().min(5).max(50).required().escapeHTML(),
-//       avg_price: customJoi.number().max(10000).required(),
-//       tags: customJoi
-//         .array()
-//         .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
-//       image: customJoi.array().items(
-//         customJoi
-//           .object({
-//             url: customJoi.string().required(),
-//             // url: customJoi.string().required().escapeHTML(),
-//             //fileName: customJoi.string()
-//           })
-//           .required()
-//       ),
-//     })
-//     .required(),
-// });
