@@ -22,9 +22,8 @@ import { TypeMapper } from '../../@types/TypeMapper';
 import { TActyDetail } from '../../services/getActyById';
 
 interface EditFormProps {
-  onTagsChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   editData: TActyEdit;
-  tagStateVal: Record<TActyDetail['tags'][number], boolean>;
+  // tagStateVal: Record<TActyDetail['tags'][number], boolean>;
 }
 
 // id = 'updatedTitle';
@@ -48,7 +47,7 @@ type EditFormInputsV2 = {
   updatedAvgPrice: string;
   updatedLocation: string;
   updatedDesc: string;
-  updatedImage: FileList;
+  updatedImage?: FileList;
   updatedTags: [];
 };
 
@@ -75,27 +74,26 @@ type TRegisterEditInputs = TypeMapper<EditFormInputsV2, RegisterOptions>;
 //     })
 //     .required(),
 // });
-// const validateInput: TRegisterEditInputs = {
-//   updatedTitle: {
-//     required: true,
-//     minLength: { value: 5, message: 'Title should have at minimum length of 5' },
+const validateInput: TRegisterEditInputs = {
+  updatedTitle: {
+    required: { value: true, message: 'Title is empty' },
+    minLength: { value: 5, message: 'Title should have at minimum length of 5' },
+  },
+  updatedLocation: {
+    required: true,
+    minLength: { value: 5, message: 'Location should have at minimum length of 5' },
+  },
+  updatedDesc: {
+    required: true,
+    minLength: { value: 5, message: 'Input must be 5 characters or longer' },
+    maxLength: { value: 300, message: 'Input must be 50 characters or shorter.' },
+  },
+  updatedAvgPrice: { required: true, valueAsNumber: true, max: { value: 10000, message: 'too expensive' } },
+  updatedTags: { required: true },
+  // updatedImage:{}
+};
 
-//   },
-//   updatedLocation:{
-//     required: true,
-//     minLength: { value: 5, message: 'Location should have at minimum length of 5' },
-
-//   },
-//   updatedDesc: {
-//     required: true,
-//     minLength: { value: 5, message: 'Input must be 5 characters or longer' },
-//     maxLength:{value:50, message:'Input must be 50 characters or shorter.'}
-//   },
-//   updatedAvgPrice: { required: true, valueAsNumber: true, max: { value: 10000, message: 'too expensive' } },
-
-// }
-
-function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
+function EditForm({ editData }: EditFormProps) {
   const {
     register,
     handleSubmit,
@@ -108,17 +106,13 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
   const actyTags: TActyDetail['tags'] = editData.tags;
   // console.log({tagsV2,actyTags});
 
-  const handleTags = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    // console.log({ event, checked });
-    onTagsChange(event, checked);
-  };
-
   const update: SubmitHandler<EditFormInputsV2> = data => {
     console.log({ data });
 
-    console.log(data.updatedImage[0]);
+    // console.log(data.updatedImage[0]);
     // reset();
   };
+  console.log({ ...errors });
 
   return (
     <>
@@ -130,7 +124,7 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
             variant="standard"
             defaultValue={editData.activity_title}
             fullWidth
-            {...register('updatedTitle')}
+            {...register('updatedTitle', validateInput.updatedTitle)}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -142,7 +136,7 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
             defaultValue={String(editData.avg_price)}
             InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
             fullWidth
-            {...register('updatedAvgPrice')}
+            {...register('updatedAvgPrice', validateInput.updatedAvgPrice)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -152,7 +146,7 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
             label="Location"
             defaultValue={editData.location}
             fullWidth
-            {...register('updatedLocation')}
+            {...register('updatedLocation', validateInput.updatedLocation)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -164,7 +158,7 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
             multiline
             rows={5}
             fullWidth
-            {...register('updatedDesc')}
+            {...register('updatedDesc', validateInput.updatedDesc)}
           />
         </Grid>
 
@@ -172,7 +166,7 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
         <Grid item xs={12} display={{ sm: 'flex' }} gap={2}>
           <Button component={'label'} startIcon={<CloudUpload />} color="info" variant="contained">
             Upload Image
-            <input id="updatedImage" type="file" hidden {...register('updatedImage')} />
+            <input id="updatedImage" type="file" hidden {...register('updatedImage', validateInput.updatedImage)} />
           </Button>
           <Typography marginTop={{ xs: 2, sm: 'inherit' }} alignSelf={'center'}>
             Choose files
@@ -209,7 +203,13 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
                   <FormControlLabel
                     key={index}
                     label={t}
-                    control={<Checkbox defaultChecked={actyTags.includes(t)} value={t} {...register('updatedTags')} />}
+                    control={
+                      <Checkbox
+                        defaultChecked={actyTags.includes(t)}
+                        value={t}
+                        {...register('updatedTags', validateInput.updatedTags)}
+                      />
+                    }
                   />
                 );
               })}
