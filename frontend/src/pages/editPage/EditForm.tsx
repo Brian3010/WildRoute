@@ -1,4 +1,4 @@
-import { CloudUpload } from '@mui/icons-material';
+import { CatchingPokemon, CloudUpload } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -34,25 +34,25 @@ interface EditFormProps {
 // id = 'updatedImage';
 // id={`updated${tag}`}
 
-type EditFormInputs = {
-  [key in `updated${TActyDetail['tags'][number]}`]: string;
-} & {
-  updatedTitle: string;
-  updatedAvgPrice: string;
-  updatedLocation: string;
-  updatedDesc: string;
-  updatedImage: unknown;
-};
+// type EditFormInputsV1 = {
+//   [key in `updated${TActyDetail['tags'][number]}`]: string;
+// } & {
+//   updatedTitle: string;
+//   updatedAvgPrice: string;
+//   updatedLocation: string;
+//   updatedDesc: string;
+//   updatedImage: unknown;
+// };
 type EditFormInputsV2 = {
   updatedTitle: string;
   updatedAvgPrice: string;
   updatedLocation: string;
   updatedDesc: string;
-  updatedImage: unknown;
-  updatedTags: Record<TActyDetail['tags'][number], boolean>;
+  updatedImage: FileList;
+  updatedTags: [];
 };
 
-type TRegisterEditInputs = TypeMapper<EditFormInputs, RegisterOptions>;
+type TRegisterEditInputs = TypeMapper<EditFormInputsV2, RegisterOptions>;
 // export const activitySchema = customJoi.object({
 //   activity: customJoi
 //     .object({
@@ -104,6 +104,10 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
     reset,
   } = useForm<EditFormInputsV2>();
 
+  const tagsV2: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
+  const actyTags: TActyDetail['tags'] = editData.tags;
+  // console.log({tagsV2,actyTags});
+
   const handleTags = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     // console.log({ event, checked });
     onTagsChange(event, checked);
@@ -111,6 +115,8 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
 
   const update: SubmitHandler<EditFormInputsV2> = data => {
     console.log({ data });
+
+    console.log(data.updatedImage[0]);
     // reset();
   };
 
@@ -198,35 +204,13 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
           <FormControl required component="fieldset" variant="standard">
             <FormLabel component="legend">Tags</FormLabel>
             <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
-              {Object.entries(tagStateVal).map(([tag, checked], index) => {
+              {tagsV2.map((t, index) => {
                 return (
                   <FormControlLabel
                     key={index}
-                    control={
-                      <Checkbox
-                        checked={checked}
-                        value={tag}
-                        {...register('updatedTags')}
-                        onChange={handleTags}
-                        name={tag}
-                      />
-                    }
-                    label={tag}
+                    label={t}
+                    control={<Checkbox defaultChecked={actyTags.includes(t)} value={t} {...register('updatedTags')} />}
                   />
-                  // <FormControlLabel
-                  //   key={index}
-                  //   control={
-                  //     <Controller
-                  //       name={`updatedTags`}
-                  //       control={control}
-                  //       render={({ field: props }) => {
-                  //         console.log(props);
-                  //         return <Checkbox {...props} checked={checked}  onChange={handleTags} />;
-                  //       }}
-                  //     />
-                  //   }
-                  //   label={tag}
-                  // />
                 );
               })}
             </FormGroup>
@@ -248,3 +232,37 @@ function EditForm({ onTagsChange, editData, tagStateVal }: EditFormProps) {
 }
 
 export default EditForm;
+
+/** render tags
+{Object.entries(tagStateVal).map(([tag, checked], index) => {
+  return (
+    <FormControlLabel
+      key={index}
+      control={
+        <Checkbox
+          checked={checked}
+          value={tag}
+          {...register('updatedTags')}
+          onChange={handleTags}
+          name={tag}
+        />
+      }
+      label={tag}
+    />
+    // <FormControlLabel
+    //   key={index}
+    //   control={
+    //     <Controller
+    //       name={`updatedTags`}
+    //       control={control}
+    //       render={({ field: props }) => {
+    //         console.log(props);
+    //         return <Checkbox {...props} checked={checked}  onChange={handleTags} />;
+    //       }}
+    //     />
+    //   }
+    //   label={tag}
+    // />
+  );
+})}
+**/
