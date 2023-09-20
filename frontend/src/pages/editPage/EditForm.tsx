@@ -1,4 +1,4 @@
-import { CatchingPokemon, CloudUpload } from '@mui/icons-material';
+import { CloudUpload } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -15,33 +15,15 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React from 'react';
-import { Controller, RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
+import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { TActyEdit } from '.';
 import { TypeMapper } from '../../@types/TypeMapper';
 import { TActyDetail } from '../../services/getActyById';
 
 interface EditFormProps {
   editData: TActyEdit;
-  // tagStateVal: Record<TActyDetail['tags'][number], boolean>;
 }
 
-// id = 'updatedTitle';
-// id = 'updatedAvgPrice';
-// id = 'updatedLocation';
-// id = 'updatedDesc';
-// id = 'updatedImage';
-// id={`updated${tag}`}
-
-// type EditFormInputsV1 = {
-//   [key in `updated${TActyDetail['tags'][number]}`]: string;
-// } & {
-//   updatedTitle: string;
-//   updatedAvgPrice: string;
-//   updatedLocation: string;
-//   updatedDesc: string;
-//   updatedImage: unknown;
-// };
 type EditFormInputsV2 = {
   updatedTitle: string;
   updatedAvgPrice: string;
@@ -82,7 +64,7 @@ const validateInput: TRegisterEditInputs = {
   updatedLocation: {
     required: { value: true, message: 'Location must not be empty' },
     minLength: { value: 5, message: 'Location should have at minimum length of 5' },
-    maxLength:{value:80, message:'Location must be 80 characters or shorter'}
+    maxLength: { value: 80, message: 'Location must be 80 characters or shorter' },
   },
   updatedDesc: {
     required: { value: true, message: 'Description must not be empty' },
@@ -99,20 +81,29 @@ const validateInput: TRegisterEditInputs = {
 };
 
 function EditForm({ editData }: EditFormProps) {
+  //!
+  const imgFileList = editData.image;
+  // console.log(imgFileList);
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
-    reset,
+    // reset,
   } = useForm<EditFormInputsV2>();
 
-  const tagsV2: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
+  const tagsToDisplay: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
   const actyTags: TActyDetail['tags'] = editData.tags;
-  // console.log({tagsV2,actyTags});
+  // console.log({tagsToDisplay,actyTags});
 
   const update: SubmitHandler<EditFormInputsV2> = data => {
     console.log({ data });
+    if (!data.updatedImage) return console.error('Filename undefined');
+
+    console.log(data.updatedImage);
+
+    //! use FormData proly for append 'file' to form in order to submit it using axios
+    // const formData = new FormData();
+    // formData.append("file",data.updatedImage.item(0))
 
     // console.log(data.updatedImage[0]);
     // reset();
@@ -178,7 +169,13 @@ function EditForm({ editData }: EditFormProps) {
         <Grid item xs={12} display={{ sm: 'flex' }} gap={2}>
           <Button component={'label'} startIcon={<CloudUpload />} color="info" variant="contained">
             Upload Image
-            <input id="updatedImage" type="file" hidden {...register('updatedImage', validateInput.updatedImage)} />
+            <input
+              id="updatedImage"
+              type="file"
+              hidden
+              {...register('updatedImage', validateInput.updatedImage)}
+              multiple
+            />
           </Button>
           <Typography marginTop={{ xs: 2, sm: 'inherit' }} alignSelf={'center'}>
             Choose files
@@ -210,7 +207,7 @@ function EditForm({ editData }: EditFormProps) {
           <FormControl error={Boolean(errors.updatedTags)} component="fieldset" variant="standard">
             <FormLabel component="legend">Tags</FormLabel>
             <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
-              {tagsV2.map((t, index) => {
+              {tagsToDisplay.map((t, index) => {
                 return (
                   <FormControlLabel
                     key={index}
