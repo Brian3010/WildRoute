@@ -76,20 +76,25 @@ type TRegisterEditInputs = TypeMapper<EditFormInputsV2, RegisterOptions>;
 // });
 const validateInput: TRegisterEditInputs = {
   updatedTitle: {
-    required: { value: true, message: 'Title is empty' },
+    required: { value: true, message: 'Title must not be empty' },
     minLength: { value: 5, message: 'Title should have at minimum length of 5' },
   },
   updatedLocation: {
-    required: true,
+    required: { value: true, message: 'Location must not be empty' },
     minLength: { value: 5, message: 'Location should have at minimum length of 5' },
+    maxLength:{value:80, message:'Location must be 80 characters or shorter'}
   },
   updatedDesc: {
-    required: true,
-    minLength: { value: 5, message: 'Input must be 5 characters or longer' },
-    maxLength: { value: 300, message: 'Input must be 50 characters or shorter.' },
+    required: { value: true, message: 'Description must not be empty' },
+    minLength: { value: 5, message: 'Description must be 5 characters or longer' },
+    maxLength: { value: 250, message: 'Description must be 250 characters or shorter' },
   },
-  updatedAvgPrice: { required: true, valueAsNumber: true, max: { value: 10000, message: 'too expensive' } },
-  updatedTags: { required: true },
+  updatedAvgPrice: {
+    required: { value: true, message: 'Price must not be empty' },
+    valueAsNumber: true,
+    max: { value: 10000, message: 'Too expensive' },
+  },
+  updatedTags: { required: { value: true, message: 'At least one tag must be selected' } },
   // updatedImage:{}
 };
 
@@ -112,23 +117,25 @@ function EditForm({ editData }: EditFormProps) {
     // console.log(data.updatedImage[0]);
     // reset();
   };
-  console.log({ ...errors });
 
   return (
     <>
       <Grid component={'form'} onSubmit={handleSubmit(update)} container spacing={3}>
         <Grid item xs={12} sm={8}>
           <TextField
+            error={Boolean(errors.updatedTitle)}
             label="Title"
             id="updatedTitle"
             variant="standard"
             defaultValue={editData.activity_title}
             fullWidth
             {...register('updatedTitle', validateInput.updatedTitle)}
+            helperText={errors.updatedTitle?.message}
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
+            error={Boolean(errors.updatedAvgPrice)}
             type="number"
             id="updatedAvgPrice"
             variant="standard"
@@ -137,20 +144,24 @@ function EditForm({ editData }: EditFormProps) {
             InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment> }}
             fullWidth
             {...register('updatedAvgPrice', validateInput.updatedAvgPrice)}
+            helperText={errors.updatedAvgPrice?.message}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
+            error={Boolean(errors.updatedLocation)}
             id="updatedLocation"
             variant="standard"
             label="Location"
             defaultValue={editData.location}
             fullWidth
             {...register('updatedLocation', validateInput.updatedLocation)}
+            helperText={errors.updatedLocation?.message}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
+            error={Boolean(errors.updatedDesc)}
             id="updatedDesc"
             variant="filled"
             label="Description"
@@ -159,6 +170,7 @@ function EditForm({ editData }: EditFormProps) {
             rows={5}
             fullWidth
             {...register('updatedDesc', validateInput.updatedDesc)}
+            helperText={errors.updatedDesc?.message}
           />
         </Grid>
 
@@ -195,7 +207,7 @@ function EditForm({ editData }: EditFormProps) {
         ) : null}
 
         <Grid item xs={12}>
-          <FormControl required component="fieldset" variant="standard">
+          <FormControl error={Boolean(errors.updatedTags)} component="fieldset" variant="standard">
             <FormLabel component="legend">Tags</FormLabel>
             <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
               {tagsV2.map((t, index) => {
@@ -214,7 +226,7 @@ function EditForm({ editData }: EditFormProps) {
                 );
               })}
             </FormGroup>
-            {/* <FormHelperText>You can display an error</FormHelperText> */}
+            {Boolean(errors.updatedTags) && <FormHelperText>{errors.updatedTags?.message}</FormHelperText>}
           </FormControl>
         </Grid>
 
