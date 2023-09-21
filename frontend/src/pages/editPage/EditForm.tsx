@@ -69,7 +69,7 @@ const validateInput: TRegisterEditInputs = {
   updatedDesc: {
     required: { value: true, message: 'Description must not be empty' },
     minLength: { value: 5, message: 'Description must be 5 characters or longer' },
-    maxLength: { value: 250, message: 'Description must be 250 characters or shorter' },
+    maxLength: { value: 300, message: 'Description must be 300 characters or shorter' },
   },
   updatedAvgPrice: {
     required: { value: true, message: 'Price must not be empty' },
@@ -97,13 +97,16 @@ function EditForm({ editData }: EditFormProps) {
 
   const update: SubmitHandler<EditFormInputsV2> = data => {
     console.log({ data });
-    if (!data.updatedImage) return console.error('Filename undefined');
+    if (!data.updatedImage) return console.error('image file not defined');
+    if (data.updatedImage && data.updatedImage.length < 0) return console.error('file not uploaded');
 
     console.log(data.updatedImage);
 
     //! use FormData proly for append 'file' to form in order to submit it using axios
-    // const formData = new FormData();
-    // formData.append("file",data.updatedImage.item(0))
+    const formData = new FormData();
+    formData.append('file', data.updatedImage[0]);
+    // formData.append('fileName', data.updatedImage[0].name);
+    console.log(formData.get('file'));
 
     // console.log(data.updatedImage[0]);
     // reset();
