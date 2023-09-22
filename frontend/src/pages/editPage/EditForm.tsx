@@ -15,6 +15,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { TActyEdit } from '.';
 import { TypeMapper } from '../../@types/TypeMapper';
@@ -81,9 +82,11 @@ const validateInput: TRegisterEditInputs = {
 };
 
 function EditForm({ editData }: EditFormProps) {
-  //!
-  const imgFileList = editData.image;
+  // const imgFileList = editData.image;
   // console.log(imgFileList);
+  //!
+  const [imgFileList, setImgFileList] = useState(editData.image);
+
   const {
     register,
     handleSubmit,
@@ -104,7 +107,10 @@ function EditForm({ editData }: EditFormProps) {
 
     //! use FormData proly for append 'file' to form in order to submit it using axios
     const formData = new FormData();
+
     formData.append('file', data.updatedImage[0]);
+    // ! try to upload file in postman,
+    // ! reconfig the backend code to handle file upload
     // formData.append('fileName', data.updatedImage[0].name);
     console.log(formData.get('file'));
 
@@ -187,7 +193,7 @@ function EditForm({ editData }: EditFormProps) {
         </Grid>
 
         {/* Preview Image*/}
-        {editData.image.length > 0 ? (
+        {imgFileList.length > 0 ? (
           <Grid item xs={12}>
             <Paper variant="outlined" sx={{ padding: 2 }}>
               <ImageList sx={{ maxHeight: 180 }}>
