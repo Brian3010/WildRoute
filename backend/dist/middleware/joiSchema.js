@@ -35,7 +35,7 @@ exports.activitySchema = customJoi.object({
         .object({
         activity_title: customJoi.string().min(5).required().escapeHTML(),
         location: customJoi.string().min(5).required().escapeHTML(),
-        description: customJoi.string().min(5).max(50).required().escapeHTML(),
+        description: customJoi.string().min(5).max(300).required().escapeHTML(),
         avg_price: customJoi.number().max(10000).required(),
         tags: customJoi
             .array()
