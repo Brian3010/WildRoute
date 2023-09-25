@@ -44,15 +44,15 @@ export const activitySchema = customJoi.object({
       tags: customJoi
         .array()
         .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
-      image: customJoi.array().items(
-        customJoi
-          .object({
-            url: customJoi.string().required(),
-            // url: customJoi.string().required().escapeHTML(),
-            //fileName: customJoi.string()
-          })
-          .required()
-      ),
+      // image: customJoi.array().items(
+      //   customJoi
+      //     .object({
+      //       url: customJoi.string().required(),
+      //       // url: customJoi.string().required().escapeHTML(),
+      //       //fileName: customJoi.string()
+      //     })
+      //     .required()
+      // ),
     })
     .required(),
 });

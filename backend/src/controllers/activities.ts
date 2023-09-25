@@ -65,11 +65,22 @@ interface actyparams {
 export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, unknown> = async (req, res, next) => {
   console.log('/activities/:id/edit PUT REQUEST');
   const actyId = req.params.id;
+  const imgFiles = req.imageFiles;
+  if (!imgFiles) throw new AppError('request does not include the image files', 404);
   if (!isValidMongooseId(actyId)) throw new AppError('Invalid Activity Id', 400);
-  const acty = req.body.activity;
-  if (!acty) throw new AppError('Cannot fetch data from body', 400);
 
-  const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...acty }, { returnDocument: 'after' });
+  const actyBody = req.body.activity;
+  if (!actyBody) throw new AppError('Cannot fetch data from body', 400);
+  const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...actyBody }, { returnDocument: 'after' });
+  if (!resActy) throw new AppError('Cannot fetch the activity', 400);
+
+  // convert the req.imageFiles to fulfil the image object in activity model
+  const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
+  resActy.image.push(...convertedImgFiles);
+
+  // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });
+
+  resActy.save();
 
   res.status(201).json(resActy);
 };

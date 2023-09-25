@@ -18,5 +18,6 @@ declare module 'express-serve-static-core' {
         },
         never
       >;
+    imageFiles?: Array<{ url: string; fileName: string }>;
   }
 }

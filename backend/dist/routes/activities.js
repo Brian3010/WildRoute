@@ -27,9 +27,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const multer_1 = __importDefault(require("multer"));
 const actyController = __importStar(require("../controllers/activities"));
 const middleware_1 = require("../middleware/middleware");
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
+const storage = multer_1.default.memoryStorage();
+const upload = (0, multer_1.default)({ storage });
 const router = express_1.default.Router();
 router
     .route('/')
@@ -38,7 +41,7 @@ router
 router
     .route('/:id')
     .get((0, catchAsync_1.default)(actyController.displayActivity))
-    .put(middleware_1.isLoggedIn, (0, catchAsync_1.default)(middleware_1.isAuthor), middleware_1.validateActivity, (0, catchAsync_1.default)(actyController.updateActy))
+    .put(middleware_1.isLoggedIn, (0, catchAsync_1.default)(middleware_1.isAuthor), upload.array('imageFiles', 4), middleware_1.parsingMultiForm, middleware_1.validateActivity, (0, catchAsync_1.default)(middleware_1.uploadCloudinaryFile), (0, catchAsync_1.default)(actyController.updateActy))
     .delete(middleware_1.isLoggedIn, (0, catchAsync_1.default)(middleware_1.isAuthor), (0, catchAsync_1.default)(actyController.deleteActy));
 exports.default = router;
 //# sourceMappingURL=activities.js.map

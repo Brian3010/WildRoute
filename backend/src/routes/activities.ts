@@ -1,7 +1,17 @@
 import express, { Router } from 'express';
+import multer from 'multer';
 import * as actyController from '../controllers/activities';
-import { isAuthor, isLoggedIn, validateActivity } from '../middleware/middleware';
+import {
+  isAuthor,
+  isLoggedIn,
+  parsingMultiForm,
+  uploadCloudinaryFile,
+  validateActivity,
+} from '../middleware/middleware';
 import catchAsync from '../utils/catchAsync';
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const router: Router = express.Router();
 router
@@ -12,7 +22,15 @@ router
 router
   .route('/:id')
   .get(catchAsync(actyController.displayActivity))
-  .put(isLoggedIn, catchAsync(isAuthor), validateActivity, catchAsync(actyController.updateActy))
+  .put(
+    isLoggedIn,
+    catchAsync(isAuthor),
+    upload.array('imageFiles', 4),
+    parsingMultiForm,
+    validateActivity,
+    catchAsync(uploadCloudinaryFile),
+    catchAsync(actyController.updateActy)
+  )
   .delete(isLoggedIn, catchAsync(isAuthor), catchAsync(actyController.deleteActy));
 
 // router.route('/new').get(actyController.renderActivityForm);

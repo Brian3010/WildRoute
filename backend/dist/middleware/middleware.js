@@ -3,12 +3,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isReviewAuthor = exports.isAuthor = exports.isLoggedIn = exports.authLoginInfo = exports.isValidBody = exports.validateReview = exports.validateActivity = void 0;
+exports.isReviewAuthor = exports.isAuthor = exports.isLoggedIn = exports.authLoginInfo = exports.isValidBody = exports.validateReview = exports.validateActivity = exports.uploadCloudinaryFile = exports.parsingMultiForm = void 0;
 const passport_1 = __importDefault(require("passport"));
+const cloudinary_1 = require("../cloudinary");
 const activities_1 = __importDefault(require("../models/activities"));
 const review_1 = __importDefault(require("../models/review"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 const joiSchema_1 = require("./joiSchema");
+const parsingMultiForm = (req, res, next) => {
+    try {
+        const parsedActyBody = JSON.parse(req.body.jsonData);
+        req.body = parsedActyBody;
+    }
+    catch (error) {
+        throw new AppError_1.default('Cannot parse the body data, "actyData" must be in valid format', 422);
+    }
+    next();
+};
+exports.parsingMultiForm = parsingMultiForm;
+const uploadCloudinaryFile = async (req, res, next) => {
+    if (!req.file && !req.files)
+        throw new AppError_1.default('image file key must be attached in the form', 400);
+    const dataURIArr = Object.entries(req.files).map(f => {
+        let b64 = Buffer.from(f[1].buffer).toString('base64');
+        return `data:${f[1].mimetype};base64,${b64}`;
+    });
+    const cldRes = (await (0, cloudinary_1.handleCloudinaryMultiUpload)(dataURIArr));
+    req.imageFiles = cldRes.map(cR => {
+        return { fileName: cR.public_id, url: cR.secure_url };
+    });
+    next();
+};
+exports.uploadCloudinaryFile = uploadCloudinaryFile;
 const validateActivity = (req, res, next) => {
     const acty = req.body;
     if (!acty)

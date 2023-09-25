@@ -1,17 +1,61 @@
-import { RequestHandler } from 'express';
+import * as cloudinary from 'cloudinary';
+import { Locals, RequestHandler } from 'express';
 import JWT from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import { NewActivityBody } from '../@types/type-controller';
+import { handleCloudinaryMultiUpload } from '../cloudinary';
+
 import ActivityList from '../models/activities';
 import Review from '../models/review';
 import AppError from '../utils/AppError';
 import { getRedisToken } from '../utils/redis';
 import { activitySchema, reviewSchema } from './joiSchema';
 
+// parsing JSON data, submited by multipart/form-data method
+// parsing JSON data and attach activity object to request body
+//, so it can be used in the following middlewares
+export const parsingMultiForm: RequestHandler<unknown, unknown, { jsonData: string }, unknown> = (req, res, next) => {
+  try {
+    const parsedActyBody = JSON.parse(req.body.jsonData);
+    // attach activity data to body
+    req.body = parsedActyBody; // body:{} = activity:{...}
+  } catch (error) {
+    throw new AppError('Cannot parse the body data, "actyData" must be in valid format', 422);
+  }
+
+  next();
+};
+
+// handle uploading file to Cloudinary
+export const uploadCloudinaryFile: RequestHandler<unknown, unknown, unknown, unknown> = async (req, res, next) => {
+  // convert req.file buffer in the parsed file to base64, and transform the file to a data URI
+  // then, upload it using handleCloudinaryUpload
+
+  if (!req.file && !req.files) throw new AppError('image file key must be attached in the form', 400);
+
+  // create array of base64 => [base64]
+  const dataURIArr = Object.entries(req.files!).map(f => {
+    let b64 = Buffer.from(f[1].buffer).toString('base64');
+    return `data:${f[1].mimetype};base64,${b64}`;
+  });
+
+  const cldRes = (await handleCloudinaryMultiUpload(dataURIArr)) as cloudinary.UploadApiResponse[];
+  // res.send({cldRes });
+
+  // attach created cloudinary file into request
+  req.imageFiles = cldRes.map(cR => {
+    return { fileName: cR.public_id, url: cR.secure_url };
+  });
+
+  next();
+};
+
 // validate request.body
 export const validateActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = (req, res, next) => {
   const acty = req.body;
+  // console.log({ bodyInValidateAcitivity: req.body.activity });
+
   if (!acty) throw new AppError('Cannot fetch data from body', 404);
 
   const { error } = activitySchema.validate(acty, { abortEarly: false });

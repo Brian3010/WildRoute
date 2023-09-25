@@ -1,4 +1,5 @@
 export interface NewActivityBody {
+  // jsonData: string;
   activity: {
     activity_title: string;
     location: string;
@@ -6,7 +7,7 @@ export interface NewActivityBody {
     avg_price: number;
     image: Array<{
       url: string;
-      // filename: string;
+      fileName?: string;
     }>;
     author?: string; // mongoose.objectId type
     reviews?: Array<any>;

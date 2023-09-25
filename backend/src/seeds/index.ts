@@ -80,12 +80,14 @@ const seedDb = async (): Promise<void> => {
       image: [
         {
           url: imgUrl,
+          fileName: `fileName${i}`,
         },
         {
           url: imgUrl,
+          fileName: `fileName${i}`,
         },
       ],
-      author: '64c0bfe1503dd1eda3269198', // 64bf616a3694715302680542
+      author: '64c0bfe1503dd1eda3269198', // 64bf616a3694715302680542 -> userId in the lap
     });
 
     await ActList.save();

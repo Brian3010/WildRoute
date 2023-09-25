@@ -15,6 +15,7 @@ import userRoute from './routes/user';
 import AppError from './utils/AppError';
 import { connectToRedis } from './utils/redis';
 import cookieParser from 'cookie-parser';
+// import multer from 'multer';
 
 const PORT = 3000;
 
@@ -32,6 +33,13 @@ async function main() {
 }
 
 const app: Express = express();
+
+// configure Multer
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
+// app.use(upload.any);
+
+
 // use this so dont need to set Content-Type': 'application/json' on client
 app.use(express.json());
 // Use the cookie-parser middleware

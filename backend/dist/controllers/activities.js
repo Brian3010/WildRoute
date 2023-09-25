@@ -45,12 +45,20 @@ exports.createActivity = createActivity;
 const updateActy = async (req, res, next) => {
     console.log('/activities/:id/edit PUT REQUEST');
     const actyId = req.params.id;
+    const imgFiles = req.imageFiles;
+    if (!imgFiles)
+        throw new AppError_1.default('request does not include the image files', 404);
     if (!(0, isValidId_1.isValidMongooseId)(actyId))
         throw new AppError_1.default('Invalid Activity Id', 400);
-    const acty = req.body.activity;
-    if (!acty)
+    const actyBody = req.body.activity;
+    if (!actyBody)
         throw new AppError_1.default('Cannot fetch data from body', 400);
-    const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...acty }, { returnDocument: 'after' });
+    const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...actyBody }, { returnDocument: 'after' });
+    if (!resActy)
+        throw new AppError_1.default('Cannot fetch the activity', 400);
+    const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
+    resActy.image.push(...convertedImgFiles);
+    resActy.save();
     res.status(201).json(resActy);
 };
 exports.updateActy = updateActy;

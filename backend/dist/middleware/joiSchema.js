@@ -40,11 +40,6 @@ exports.activitySchema = customJoi.object({
         tags: customJoi
             .array()
             .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
-        image: customJoi.array().items(customJoi
-            .object({
-            url: customJoi.string().required(),
-        })
-            .required()),
     })
         .required(),
 });

@@ -69,9 +69,11 @@ const seedDb = async () => {
             image: [
                 {
                     url: imgUrl,
+                    fileName: `fileName${i}`,
                 },
                 {
                     url: imgUrl,
+                    fileName: `fileName${i}`,
                 },
             ],
             author: '64c0bfe1503dd1eda3269198',
