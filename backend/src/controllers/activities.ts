@@ -78,10 +78,16 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
   resActy.image.push(...convertedImgFiles);
 
-  // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });
+  // TODO: deleled image in dbs if deletedImages exist, deleted in Mongodb and Cloudinary
+  // * deletedImage = [{dbsId:"...", cldId:"..."},...]
+
+  if (actyBody.deletedImages) {
+    console.log({ ImgToDelete: actyBody.deletedImages });
+  }
 
   resActy.save();
 
+  // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });
   res.status(201).json(resActy);
 };
 

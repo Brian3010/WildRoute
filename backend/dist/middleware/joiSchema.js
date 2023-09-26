@@ -31,8 +31,7 @@ const customExtension = joi => {
 };
 const customJoi = joi_1.default.extend(customExtension);
 exports.activitySchema = customJoi.object({
-    activity: customJoi
-        .object({
+    activity: customJoi.object({
         activity_title: customJoi.string().min(5).required().escapeHTML(),
         location: customJoi.string().min(5).required().escapeHTML(),
         description: customJoi.string().min(5).max(300).required().escapeHTML(),
@@ -40,8 +39,13 @@ exports.activitySchema = customJoi.object({
         tags: customJoi
             .array()
             .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
-    })
-        .required(),
+        DeletedImages: customJoi.array().items(customJoi
+            .object({
+            dbsId: customJoi.string().required(),
+            cldId: customJoi.string().required(),
+        })
+            .required()),
+    }),
 });
 exports.reviewSchema = joi_1.default.object({
     review: joi_1.default.object({

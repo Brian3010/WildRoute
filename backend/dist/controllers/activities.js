@@ -58,6 +58,9 @@ const updateActy = async (req, res, next) => {
         throw new AppError_1.default('Cannot fetch the activity', 400);
     const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
     resActy.image.push(...convertedImgFiles);
+    if (actyBody.deletedImages) {
+        console.log({ ImgToDelete: actyBody.deletedImages });
+    }
     resActy.save();
     res.status(201).json(resActy);
 };

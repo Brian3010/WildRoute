@@ -35,26 +35,24 @@ const customExtension: ExtensionFunc = joi => {
 const customJoi = Joi.extend(customExtension);
 
 export const activitySchema = customJoi.object({
-  activity: customJoi
-    .object({
-      activity_title: customJoi.string().min(5).required().escapeHTML(),
-      location: customJoi.string().min(5).required().escapeHTML(),
-      description: customJoi.string().min(5).max(300).required().escapeHTML(),
-      avg_price: customJoi.number().max(10000).required(),
-      tags: customJoi
-        .array()
-        .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
-      // image: customJoi.array().items(
-      //   customJoi
-      //     .object({
-      //       url: customJoi.string().required(),
-      //       // url: customJoi.string().required().escapeHTML(),
-      //       //fileName: customJoi.string()
-      //     })
-      //     .required()
-      // ),
-    })
-    .required(),
+  activity: customJoi.object({
+    activity_title: customJoi.string().min(5).required().escapeHTML(),
+    location: customJoi.string().min(5).required().escapeHTML(),
+    description: customJoi.string().min(5).max(300).required().escapeHTML(),
+    avg_price: customJoi.number().max(10000).required(),
+    tags: customJoi
+      .array()
+      .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
+    DeletedImages: customJoi.array().items(
+      customJoi
+        .object({
+          dbsId: customJoi.string().required(),
+          // url: customJoi.string().required().escapeHTML(),
+          cldId: customJoi.string().required(),
+        })
+        .required()
+    ),
+  }),
 });
 
 export const reviewSchema = Joi.object({

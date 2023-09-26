@@ -19,7 +19,7 @@ export const parsingMultiForm: RequestHandler<unknown, unknown, { jsonData: stri
   try {
     const parsedActyBody = JSON.parse(req.body.jsonData);
     // attach activity data to body
-    req.body = parsedActyBody; // body:{} = activity:{...}
+    req.body = parsedActyBody; // body:{} = activity:{...} -- req.body.activity
   } catch (error) {
     throw new AppError('Cannot parse the body data, "actyData" must be in valid format', 422);
   }

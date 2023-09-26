@@ -5,10 +5,11 @@ export interface NewActivityBody {
     location: string;
     description: string;
     avg_price: number;
-    image: Array<{
+    image?: Array<{
       url: string;
       fileName?: string;
     }>;
+    deletedImages?: Array<{ dbsId: string; cldId: string }>;
     author?: string; // mongoose.objectId type
     reviews?: Array<any>;
   };
