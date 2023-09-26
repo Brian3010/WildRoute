@@ -66,26 +66,43 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   console.log('/activities/:id/edit PUT REQUEST');
   const actyId = req.params.id;
   const imgFiles = req.imageFiles;
+  const actyBody = req.body.activity;
+
   if (!imgFiles) throw new AppError('request does not include the image files', 404);
   if (!isValidMongooseId(actyId)) throw new AppError('Invalid Activity Id', 400);
-
-  const actyBody = req.body.activity;
   if (!actyBody) throw new AppError('Cannot fetch data from body', 400);
-  const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...actyBody }, { returnDocument: 'after' });
+
+  // console.log({ actyId, imgFiles, actyBody });\
+
+  // https://stackoverflow.com/a/39333479 - Object Destructuring and Property Shorthand
+  const updatedActy = (({ activity_title, avg_price, description, location, tags }) => ({
+    activity_title,
+    avg_price,
+    description,
+    location,
+    tags,
+  }))(actyBody);
+
+  const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...updatedActy }, { returnDocument: 'after' });
   if (!resActy) throw new AppError('Cannot fetch the activity', 400);
 
   // convert the req.imageFiles to fulfil the image object in activity model
   const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
   resActy.image.push(...convertedImgFiles);
 
+  // save the update activity
+  await resActy.save();
+
   // TODO: deleled image in dbs if deletedImages exist, deleted in Mongodb and Cloudinary
-  // * deletedImage = [{dbsId:"...", cldId:"..."},...]
+  //* deletedImage = [{dbsId:"...", cldId:"..."},...]
+  //! cannot remove image using updateOne
 
   if (actyBody.deletedImages) {
-    console.log({ ImgToDelete: actyBody.deletedImages });
+    // remove img from the dbs
+    const dbsId = actyBody.deletedImages.map(i => i.dbsId);
+    const updateOneRes = await ActivityList.updateOne({}, { $pull: { image: { _id: '65118cec07b8e0836f7fc9ba' } } });
+    console.log({ updateOneRes });
   }
-
-  resActy.save();
 
   // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });
   res.status(201).json(resActy);

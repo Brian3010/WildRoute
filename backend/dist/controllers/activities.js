@@ -46,22 +46,31 @@ const updateActy = async (req, res, next) => {
     console.log('/activities/:id/edit PUT REQUEST');
     const actyId = req.params.id;
     const imgFiles = req.imageFiles;
+    const actyBody = req.body.activity;
     if (!imgFiles)
         throw new AppError_1.default('request does not include the image files', 404);
     if (!(0, isValidId_1.isValidMongooseId)(actyId))
         throw new AppError_1.default('Invalid Activity Id', 400);
-    const actyBody = req.body.activity;
     if (!actyBody)
         throw new AppError_1.default('Cannot fetch data from body', 400);
-    const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...actyBody }, { returnDocument: 'after' });
+    const updatedActy = (({ activity_title, avg_price, description, location, tags }) => ({
+        activity_title,
+        avg_price,
+        description,
+        location,
+        tags,
+    }))(actyBody);
+    const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...updatedActy }, { returnDocument: 'after' });
     if (!resActy)
         throw new AppError_1.default('Cannot fetch the activity', 400);
     const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
     resActy.image.push(...convertedImgFiles);
+    await resActy.save();
     if (actyBody.deletedImages) {
-        console.log({ ImgToDelete: actyBody.deletedImages });
+        const dbsId = actyBody.deletedImages.map(i => i.dbsId);
+        const updateOneRes = await activities_1.default.updateOne({}, { $pull: { image: { _id: '65118cec07b8e0836f7fc9ba' } } });
+        console.log({ updateOneRes });
     }
-    resActy.save();
     res.status(201).json(resActy);
 };
 exports.updateActy = updateActy;

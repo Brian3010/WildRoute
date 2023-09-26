@@ -10,7 +10,7 @@ interface IActivityList {
   description: string;
   avg_price: number;
   tags: 'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climbing';
-  image: Array<{ url: string; filename?: string }>;
+  image: Array<{ url: string; fileName?: string }>;
   author?: Types.ObjectId;
   reviews?: Array<{ _id: Types.ObjectId; body: string; rating: number; owner: Types.ObjectId }>;
 }

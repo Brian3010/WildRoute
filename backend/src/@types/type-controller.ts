@@ -12,5 +12,6 @@ export interface NewActivityBody {
     deletedImages?: Array<{ dbsId: string; cldId: string }>;
     author?: string; // mongoose.objectId type
     reviews?: Array<any>;
+    tags: Array<'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climbing'>;
   };
 }

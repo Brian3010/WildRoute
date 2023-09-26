@@ -43,7 +43,7 @@ export const activitySchema = customJoi.object({
     tags: customJoi
       .array()
       .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
-    DeletedImages: customJoi.array().items(
+    deletedImages: customJoi.array().items(
       customJoi
         .object({
           dbsId: customJoi.string().required(),
