@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { ObjectId } from 'mongodb';
 import { NewActivityBody } from '../@types/type-controller';
 import ActivityList from '../models/activities';
 import AppError from '../utils/AppError';
@@ -95,13 +96,13 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
 
   // TODO: deleled image in dbs if deletedImages exist, deleted in Mongodb and Cloudinary
   //* deletedImage = [{dbsId:"...", cldId:"..."},...]
-  //! cannot remove image using updateOne
 
   if (actyBody.deletedImages) {
     // remove img from the dbs
     const dbsId = actyBody.deletedImages.map(i => i.dbsId);
-    const updateOneRes = await ActivityList.updateOne({}, { $pull: { image: { _id: '65118cec07b8e0836f7fc9ba' } } });
-    console.log({ updateOneRes });
+    const updateOneRes = await ActivityList.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
+
+    // TODO: remove img from cloudinary
   }
 
   // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });

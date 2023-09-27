@@ -17,9 +17,14 @@ export default function ActivityItem(props: ActyItemProps) {
 
   return (
     <>
-      <Card sx={{ width: '100%', height: '100%',position:'relative' }}>
-        <CardMedia component="img" sx={{ height: 200 }} image={data.image[0].url} title="activity image" />
-        <CardContent >
+      <Card sx={{ width: '100%', height: '100%', position: 'relative' }}>
+        <CardMedia
+          component="img"
+          sx={{ height: 200 }}
+          image={data.image[0] && data.image[0].url}
+          title="activity image"
+        />
+        <CardContent>
           <Typography
             gutterBottom
             variant="subtitle2"
@@ -46,7 +51,7 @@ export default function ActivityItem(props: ActyItemProps) {
             {data.location}
           </Typography>
         </CardContent>
-        <CardActions sx={{position:'absolute',bottom:'2px'}}>
+        <CardActions sx={{ position: 'absolute', bottom: '2px' }}>
           <Button size="small" variant="outlined">
             <Link to={`/activities/${data._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               View More

@@ -68,8 +68,7 @@ const updateActy = async (req, res, next) => {
     await resActy.save();
     if (actyBody.deletedImages) {
         const dbsId = actyBody.deletedImages.map(i => i.dbsId);
-        const updateOneRes = await activities_1.default.updateOne({}, { $pull: { image: { _id: '65118cec07b8e0836f7fc9ba' } } });
-        console.log({ updateOneRes });
+        const updateOneRes = await activities_1.default.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
     }
     res.status(201).json(resActy);
 };
