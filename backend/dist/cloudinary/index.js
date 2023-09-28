@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleCloudinaryMultiUpload = void 0;
+exports.removeCloudinaryImgs = exports.handleCloudinaryMultiUpload = void 0;
 require('dotenv').config;
 const cloudinary = __importStar(require("cloudinary"));
 const Cloudinary = cloudinary.v2;
@@ -49,4 +49,15 @@ async function handleCloudinaryMultiUpload(fileList) {
     });
 }
 exports.handleCloudinaryMultiUpload = handleCloudinaryMultiUpload;
+function removeCloudinaryImgs(cldPublicId) {
+    return new Promise((resolve, reject) => {
+        const destroys = cldPublicId.map(id => {
+            return Cloudinary.uploader.destroy(id);
+        });
+        Promise.all(destroys)
+            .then(res => resolve(res))
+            .catch(error => reject(error));
+    });
+}
+exports.removeCloudinaryImgs = removeCloudinaryImgs;
 //# sourceMappingURL=index.js.map

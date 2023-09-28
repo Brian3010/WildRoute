@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteActy = exports.updateActy = exports.createActivity = exports.displayActivity = exports.index = void 0;
+const cloudinary_1 = require("../cloudinary");
 const activities_1 = __importDefault(require("../models/activities"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 const isValidId_1 = require("../utils/isValidId");
@@ -68,9 +69,12 @@ const updateActy = async (req, res, next) => {
     await resActy.save();
     if (actyBody.deletedImages) {
         const dbsId = actyBody.deletedImages.map(i => i.dbsId);
-        const updateOneRes = await activities_1.default.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
+        const dbsRes = await activities_1.default.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
+        const cldIds = actyBody.deletedImages.map(i => i.cldId);
+        const cldRes = await (0, cloudinary_1.removeCloudinaryImgs)(cldIds);
+        console.log({ cldRes });
     }
-    res.status(201).json(resActy);
+    res.status(201).json({ resActy, dbsMsg: `${dbsR}` });
 };
 exports.updateActy = updateActy;
 const deleteActy = async (req, res, next) => {

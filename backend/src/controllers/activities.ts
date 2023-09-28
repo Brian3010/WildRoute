@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import { ObjectId } from 'mongodb';
 import { NewActivityBody } from '../@types/type-controller';
+import { removeCloudinaryImgs } from '../cloudinary';
 import ActivityList from '../models/activities';
 import AppError from '../utils/AppError';
 import { isValidMongooseId } from '../utils/isValidId';
@@ -100,13 +101,17 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   if (actyBody.deletedImages) {
     // remove img from the dbs
     const dbsId = actyBody.deletedImages.map(i => i.dbsId);
-    const updateOneRes = await ActivityList.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
+    const dbsRes = await ActivityList.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
 
     // TODO: remove img from cloudinary
+    // TODO: send message of dbsRes and cldRes to let front know if the images have been removed successfully
+    const cldIds = actyBody.deletedImages.map(i => i.cldId);
+    const cldRes = await removeCloudinaryImgs(cldIds);
+    console.log({ cldRes });
   }
 
   // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });
-  res.status(201).json(resActy);
+  res.status(201).json({ resActy, dbsMsg: `${dbsR}` });
 };
 
 // delete an activity

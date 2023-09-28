@@ -34,3 +34,15 @@ export async function handleCloudinaryMultiUpload(fileList: string[]) {
       .catch(error => reject(error));
   });
 }
+
+export function removeCloudinaryImgs(cldPublicId: string[]) {
+  return new Promise((resolve, reject) => {
+    const destroys = cldPublicId.map(id => {
+      return Cloudinary.uploader.destroy(id);
+    });
+
+    Promise.all(destroys)
+      .then(res => resolve(res))
+      .catch(error => reject(error));
+  });
+}
