@@ -85,6 +85,28 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
     tags,
   }))(actyBody);
 
+  // deleled image in dbs if deletedImages exist, deleted in Mongodb and Cloudinary
+  const imageResObj: { dbsMsg: string; cldMsg: string } = { dbsMsg: '', cldMsg: '' };
+  if (actyBody.deletedImages) {
+    // remove images from the dbs
+    const dbsId = actyBody.deletedImages.map(i => i.dbsId);
+    const dbsRes = await ActivityList.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
+
+    // remove images from cloudinary
+    const cldIds = actyBody.deletedImages.map(i => i.cldId);
+    const cldRes = await removeCloudinaryImgs(cldIds);
+    // console.log({ cldRes });
+
+    imageResObj['dbsMsg'] =
+      dbsRes.modifiedCount !== 1
+        ? 'Images not found in the databse'
+        : 'successfully deleted the image(s) in the database';
+    if (Array.isArray(cldRes)) {
+      imageResObj['cldMsg'] = `(${cldRes[0].result}) message from Cloudinary`;
+    }
+  }
+
+  // update activity with id
   const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...updatedActy }, { returnDocument: 'after' });
   if (!resActy) throw new AppError('Cannot fetch the activity', 400);
 
@@ -95,23 +117,8 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   // save the update activity
   await resActy.save();
 
-  // TODO: deleled image in dbs if deletedImages exist, deleted in Mongodb and Cloudinary
-  //* deletedImage = [{dbsId:"...", cldId:"..."},...]
-
-  if (actyBody.deletedImages) {
-    // remove img from the dbs
-    const dbsId = actyBody.deletedImages.map(i => i.dbsId);
-    const dbsRes = await ActivityList.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
-
-    // TODO: remove img from cloudinary
-    // TODO: send message of dbsRes and cldRes to let front know if the images have been removed successfully
-    const cldIds = actyBody.deletedImages.map(i => i.cldId);
-    const cldRes = await removeCloudinaryImgs(cldIds);
-    console.log({ cldRes });
-  }
-
   // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });
-  res.status(201).json({ resActy, dbsMsg: `${dbsR}` });
+  res.status(201).json({ resActy, imageResObj });
 };
 
 // delete an activity

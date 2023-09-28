@@ -61,20 +61,27 @@ const updateActy = async (req, res, next) => {
         location,
         tags,
     }))(actyBody);
+    const imageResObj = { dbsMsg: '', cldMsg: '' };
+    if (actyBody.deletedImages) {
+        const dbsId = actyBody.deletedImages.map(i => i.dbsId);
+        const dbsRes = await activities_1.default.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
+        const cldIds = actyBody.deletedImages.map(i => i.cldId);
+        const cldRes = await (0, cloudinary_1.removeCloudinaryImgs)(cldIds);
+        imageResObj['dbsMsg'] =
+            dbsRes.modifiedCount !== 1
+                ? 'Images not found in the databse'
+                : 'successfully deleted the image(s) in the database';
+        if (Array.isArray(cldRes)) {
+            imageResObj['cldMsg'] = `(${cldRes[0].result}) message from Cloudinary`;
+        }
+    }
     const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...updatedActy }, { returnDocument: 'after' });
     if (!resActy)
         throw new AppError_1.default('Cannot fetch the activity', 400);
     const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
     resActy.image.push(...convertedImgFiles);
     await resActy.save();
-    if (actyBody.deletedImages) {
-        const dbsId = actyBody.deletedImages.map(i => i.dbsId);
-        const dbsRes = await activities_1.default.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
-        const cldIds = actyBody.deletedImages.map(i => i.cldId);
-        const cldRes = await (0, cloudinary_1.removeCloudinaryImgs)(cldIds);
-        console.log({ cldRes });
-    }
-    res.status(201).json({ resActy, dbsMsg: `${dbsR}` });
+    res.status(201).json({ resActy, imageResObj });
 };
 exports.updateActy = updateActy;
 const deleteActy = async (req, res, next) => {
