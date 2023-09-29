@@ -1,4 +1,4 @@
-import { CloudUpload } from '@mui/icons-material';
+import { CloudUpload, ContentPasteGo } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -25,16 +25,16 @@ interface EditFormProps {
   editData: TActyEdit;
 }
 
-type EditFormInputsV2 = {
+type EditFormInputs = {
   updatedTitle: string;
-  updatedAvgPrice: string;
+  updatedAvgPrice: number;
   updatedLocation: string;
   updatedDesc: string;
   updatedImage?: FileList;
   updatedTags: [];
 };
 
-type TRegisterEditInputs = TypeMapper<EditFormInputsV2, RegisterOptions>;
+type TRegisterEditInputs = TypeMapper<EditFormInputs, RegisterOptions>;
 // export const activitySchema = customJoi.object({
 //   activity: customJoi
 //     .object({
@@ -81,6 +81,15 @@ const validateInput: TRegisterEditInputs = {
   // updatedImage:{}
 };
 
+type TUpdatedData = {
+  activity: Pick<TActyDetail, 'activity_title' | 'location' | 'description' | 'avg_price' | 'tags'> & {
+    deletedImages?: Array<{ dbsId: string; cldId: string }>;
+  };
+};
+// type TUpdatedData = Pick<TActyDetail, 'activity_title' | 'location' | 'description' | 'avg_price' | 'tags'> & {
+//   deletedImages?: Array<{ dbsId: string; cldId: string }>;
+// };
+
 function EditForm({ editData }: EditFormProps) {
   // const imgFileList = editData.image;
   // console.log(imgFileList);
@@ -92,29 +101,46 @@ function EditForm({ editData }: EditFormProps) {
     handleSubmit,
     formState: { errors },
     // reset,
-  } = useForm<EditFormInputsV2>();
+  } = useForm<EditFormInputs>();
 
   const tagsToDisplay: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
   const actyTags: TActyDetail['tags'] = editData.tags;
   // console.log({tagsToDisplay,actyTags});
 
-  const update: SubmitHandler<EditFormInputsV2> = data => {
+  const update: SubmitHandler<EditFormInputs> = data => {
     console.log({ data });
+    const updatedData: TUpdatedData = {
+      activity: {
+        activity_title: data.updatedTitle,
+        location: data.updatedLocation,
+        description: data.updatedLocation,
+        avg_price: data.updatedAvgPrice,
+        tags: data.updatedTags,
+        // deletedImages: data.updatedImage,
+      },
+    };
+
     if (!data.updatedImage) return console.error('image file not defined');
     if (data.updatedImage && data.updatedImage.length < 0) return console.error('file not uploaded');
 
-    console.log(data.updatedImage);
-
-    //! use FormData proly for append 'file' to form in order to submit it using axios
     const formData = new FormData();
+    // append updated data
+    formData.append('jsonData', JSON.stringify(updatedData));
+    console.log({ jsonData: formData.get('jsonData') });
 
-    formData.append('file', data.updatedImage[0]);
-    // ! try to upload file in postman,
-    // ! reconfig the backend code to handle file upload
-    // formData.append('fileName', data.updatedImage[0].name);
-    console.log(formData.get('file'));
+    // check if files attached
+    if (data.updatedImage.length > 0) {
+      // console.log(data.updatedImage);
+      for (const imgFile of data.updatedImage) {
+        // console.log(imgFile);
+        formData.append('imageFiles', imgFile, imgFile.name);
+      }
+    }
+    // TODO: append jsonData (updated actyData, deletedImags if any) and imageFiles to form-data
+    // TODO: attach formData to axios request to update the activity -> check if the formData correctly present like in PostMan
 
-    // console.log(data.updatedImage[0]);
+    console.log({ imageFiles: formData.getAll('imageFiles') });
+
     // reset();
   };
 
