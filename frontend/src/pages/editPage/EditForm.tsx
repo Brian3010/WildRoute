@@ -1,4 +1,4 @@
-import { CloudUpload, ContentPasteGo } from '@mui/icons-material';
+import { CloudUpload } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -8,14 +8,10 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
-  ImageList,
-  ImageListItem,
   InputAdornment,
-  Paper,
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TActyEdit } from '.';
@@ -23,6 +19,7 @@ import { TypeMapper } from '../../@types/TypeMapper';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import { TActyDetail } from '../../services/getActyById';
+import ImagePreview from './ImagePreview';
 
 interface EditFormProps {
   editData: TActyEdit;
@@ -73,11 +70,6 @@ type TUpdatedData = {
 // };
 
 function EditForm({ editData }: EditFormProps) {
-  // const imgFileList = editData.image;
-  // console.log(imgFileList);
-  //!
-  const [imgFileList, setImgFileList] = useState(editData.image);
-
   const { id: actyId } = useParams();
   const axiosInterceptor = useAxiosInterceptor();
   const { setFlashMessage } = useFlashMessage();
@@ -88,6 +80,7 @@ function EditForm({ editData }: EditFormProps) {
     handleSubmit,
     formState: { errors },
     // reset,
+    watch,
   } = useForm<EditFormInputs>();
 
   const tagsToDisplay: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
@@ -146,6 +139,10 @@ function EditForm({ editData }: EditFormProps) {
 
     // reset();
   };
+
+  //TODO: handle image state in <PreviewImaage> when new file uploaded, probly use watch func from RMF
+  // <PreviewImage/> re-render when new file uploaded.
+  console.log(watch('updatedImage')?.length);
 
   return (
     <>
@@ -223,7 +220,9 @@ function EditForm({ editData }: EditFormProps) {
         </Grid>
 
         {/* Preview Image*/}
-        {imgFileList.length > 0 ? (
+        <ImagePreview imgListFrmDbs={editData.image} />
+
+        {/* {imgFileList.length > 0 ? (
           <Grid item xs={12}>
             <Paper variant="outlined" sx={{ padding: 2 }}>
               <ImageList sx={{ maxHeight: 180 }}>
@@ -240,7 +239,7 @@ function EditForm({ editData }: EditFormProps) {
               </ImageList>
             </Paper>
           </Grid>
-        ) : null}
+        ) : null} */}
 
         <Grid item xs={12}>
           <FormControl error={Boolean(errors.updatedTags)} component="fieldset" variant="standard">

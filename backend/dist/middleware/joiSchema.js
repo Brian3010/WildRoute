@@ -16,7 +16,6 @@ const customExtension = joi => {
         rules: {
             escapeHTML: {
                 validate(value, helpers) {
-                    console.log(value);
                     const cleanHTMLVal = (0, sanitize_html_1.default)(value, {
                         allowedTags: [],
                         allowedAttributes: {},

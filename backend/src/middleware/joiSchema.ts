@@ -14,7 +14,7 @@ const customExtension: ExtensionFunc = joi => {
       // provide rules
       escapeHTML: {
         validate(value, helpers) {
-          console.log(value);
+          // console.log(value);
           const cleanHTMLVal = sanitizeHTML(value, {
             // clean input value
             allowedTags: [],
