@@ -32,7 +32,12 @@ export const uploadCloudinaryFile: RequestHandler<unknown, unknown, unknown, unk
   // convert req.file buffer in the parsed file to base64, and transform the file to a data URI
   // then, upload it using handleCloudinaryUpload
 
-  if (!req.file && !req.files) throw new AppError('image file key must be attached in the form', 400);
+  // if (!req.file && !req.files) throw new AppError('image file key must be attached in the form', 400);
+  if (!req.file && !req.files) {
+    // req.imageFiles = [{url:'',fileName:''}]
+
+    return next();
+  }
 
   // create array of base64 => [base64]
   const dataURIArr = Object.entries(req.files!).map(f => {

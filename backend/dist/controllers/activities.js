@@ -69,7 +69,7 @@ const updateActy = async (req, res, next) => {
         const cldRes = await (0, cloudinary_1.removeCloudinaryImgs)(cldIds);
         imageResObj['dbsMsg'] =
             dbsRes.modifiedCount !== 1
-                ? 'Images not found in the databse'
+                ? 'Images not found in the database'
                 : 'successfully deleted the image(s) in the database';
         if (Array.isArray(cldRes)) {
             imageResObj['cldMsg'] = `(${cldRes[0].result}) message from Cloudinary`;
@@ -78,8 +78,10 @@ const updateActy = async (req, res, next) => {
     const resActy = await activities_1.default.findByIdAndUpdate(actyId, { ...updatedActy }, { returnDocument: 'after' });
     if (!resActy)
         throw new AppError_1.default('Cannot fetch the activity', 400);
-    const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
-    resActy.image.push(...convertedImgFiles);
+    if (imgFiles.length > 0) {
+        const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
+        resActy.image.push(...convertedImgFiles);
+    }
     await resActy.save();
     res.status(201).json({ resActy, imageResObj });
 };

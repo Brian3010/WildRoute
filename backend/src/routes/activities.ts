@@ -25,7 +25,7 @@ router
   .put(
     isLoggedIn,
     catchAsync(isAuthor),
-    upload.array('imageFiles', 4),
+    upload.array('imageFiles',4),
     parsingMultiForm,
     validateActivity,
     catchAsync(uploadCloudinaryFile),

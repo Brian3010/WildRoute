@@ -99,7 +99,7 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
 
     imageResObj['dbsMsg'] =
       dbsRes.modifiedCount !== 1
-        ? 'Images not found in the databse'
+        ? 'Images not found in the database'
         : 'successfully deleted the image(s) in the database';
     if (Array.isArray(cldRes)) {
       imageResObj['cldMsg'] = `(${cldRes[0].result}) message from Cloudinary`;
@@ -111,8 +111,12 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   if (!resActy) throw new AppError('Cannot fetch the activity', 400);
 
   // convert the req.imageFiles to fulfil the image object in activity model
-  const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
-  resActy.image.push(...convertedImgFiles);
+  // imgFiles array will be empty if no file detected
+
+  if (imgFiles.length > 0) {
+    const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
+    resActy.image.push(...convertedImgFiles);
+  }
 
   // save the update activity
   await resActy.save();

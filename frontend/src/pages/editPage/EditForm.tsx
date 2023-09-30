@@ -17,8 +17,11 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
 import { TActyEdit } from '.';
 import { TypeMapper } from '../../@types/TypeMapper';
+import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
+import useFlashMessage from '../../hooks/useFlashMessage';
 import { TActyDetail } from '../../services/getActyById';
 
 interface EditFormProps {
@@ -35,28 +38,7 @@ type EditFormInputs = {
 };
 
 type TRegisterEditInputs = TypeMapper<EditFormInputs, RegisterOptions>;
-// export const activitySchema = customJoi.object({
-//   activity: customJoi
-//     .object({
-//       activity_title: customJoi.string().min(5).required().escapeHTML(),
-//       location: customJoi.string().min(5).required().escapeHTML(),
-//       description: customJoi.string().min(5).max(50).required().escapeHTML(),
-//       avg_price: customJoi.number().max(10000).required(),
-//       tags: customJoi
-//         .array()
-//         .items(customJoi.string().valid('Adventure', 'Nature', 'Camping', 'Water Sport', 'Climbing').required()),
-//       image: customJoi.array().items(
-//         customJoi
-//           .object({
-//             url: customJoi.string().required(),
-//             // url: customJoi.string().required().escapeHTML(),
-//             //fileName: customJoi.string()
-//           })
-//           .required()
-//       ),
-//     })
-//     .required(),
-// });
+
 const validateInput: TRegisterEditInputs = {
   updatedTitle: {
     required: { value: true, message: 'Title must not be empty' },
@@ -96,6 +78,11 @@ function EditForm({ editData }: EditFormProps) {
   //!
   const [imgFileList, setImgFileList] = useState(editData.image);
 
+  const { id: actyId } = useParams();
+  const axiosInterceptor = useAxiosInterceptor();
+  const { setFlashMessage } = useFlashMessage();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -107,13 +94,13 @@ function EditForm({ editData }: EditFormProps) {
   const actyTags: TActyDetail['tags'] = editData.tags;
   // console.log({tagsToDisplay,actyTags});
 
-  const update: SubmitHandler<EditFormInputs> = data => {
-    console.log({ data });
+  const update: SubmitHandler<EditFormInputs> = async data => {
+    // console.log({ data });
     const updatedData: TUpdatedData = {
       activity: {
         activity_title: data.updatedTitle,
         location: data.updatedLocation,
-        description: data.updatedLocation,
+        description: data.updatedDesc,
         avg_price: data.updatedAvgPrice,
         tags: data.updatedTags,
         // deletedImages: data.updatedImage,
@@ -136,10 +123,26 @@ function EditForm({ editData }: EditFormProps) {
         formData.append('imageFiles', imgFile, imgFile.name);
       }
     }
-    // TODO: append jsonData (updated actyData, deletedImags if any) and imageFiles to form-data
-    // TODO: attach formData to axios request to update the activity -> check if the formData correctly present like in PostMan
 
-    console.log({ imageFiles: formData.getAll('imageFiles') });
+    console.log(formData.getAll('imageFiles'));
+    // const files = formData.getA
+
+    try {
+      const res = await axiosInterceptor.put(`activities/${actyId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      // handle success
+
+      // handle error
+      if (!res) throw new Error('Something went wrong');
+      setFlashMessage({ message: `Successfully updated ${updatedData.activity.activity_title}`, type: 'success' });
+      return navigate(`/activities/${actyId}`, { state: { openFlashMsg: true } });
+    } catch (error) {
+      console.error(error);
+      return navigate(`/activities/${actyId}`);
+    }
 
     // reset();
   };
@@ -207,6 +210,7 @@ function EditForm({ editData }: EditFormProps) {
             <input
               id="updatedImage"
               type="file"
+              accept=".png,.jpg,.jpeg"
               hidden
               {...register('updatedImage', validateInput.updatedImage)}
               multiple
@@ -263,7 +267,13 @@ function EditForm({ editData }: EditFormProps) {
         </Grid>
 
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
-          <Button variant="outlined" color="error">
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              return navigate(`/activities/${actyId}`);
+            }}
+          >
             Cancel
           </Button>
           <Button type="submit" variant="contained">

@@ -22,8 +22,9 @@ const parsingMultiForm = (req, res, next) => {
 };
 exports.parsingMultiForm = parsingMultiForm;
 const uploadCloudinaryFile = async (req, res, next) => {
-    if (!req.file && !req.files)
-        throw new AppError_1.default('image file key must be attached in the form', 400);
+    if (!req.file && !req.files) {
+        return next();
+    }
     const dataURIArr = Object.entries(req.files).map(f => {
         let b64 = Buffer.from(f[1].buffer).toString('base64');
         return `data:${f[1].mimetype};base64,${b64}`;
