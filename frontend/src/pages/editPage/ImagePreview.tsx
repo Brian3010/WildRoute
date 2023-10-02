@@ -1,23 +1,51 @@
-import { Grid, ImageList, ImageListItem, Paper } from '@mui/material';
-import { useState } from 'react';
+import RemoveIcon from '@mui/icons-material/RemoveCircle';
+import { Grid, IconButton, ImageList, ImageListItem, ImageListItemBar, Paper } from '@mui/material';
+import { MouseEvent } from 'react';
 import { TActyDetail } from '../../services/getActyById';
+
 interface ImagePreviewProps {
-  imgListFrmDbs: TActyDetail['image'];
+  imgList: TActyDetail['image'];
+  removeImg: (image: TActyDetail['image'][number]) => void;
 }
 
-const ImagePreview = ({ imgListFrmDbs }: ImagePreviewProps) => {
-  const [previewImg, setPreviewImg] = useState(imgListFrmDbs);
+/**Component**/
+const ImagePreview = ({ imgList, removeImg }: ImagePreviewProps) => {
+  // const [imgListFrmDbs, setPreviewImg] = useState(imgListFrmDbs);
+  console.log({ imgList });
+
+  const remove = (img: TActyDetail['image'][number]) => {
+    removeImg(img);
+  };
 
   return (
     <>
-      {previewImg.length > 0 ? (
+      {imgList.length > 0 ? (
         <Grid item xs={12}>
           <Paper variant="outlined" sx={{ padding: 2 }}>
-            <ImageList sx={{ maxHeight: 180 }}>
-              {previewImg.map(i => (
-                <ImageListItem key={i._id}>
+            <ImageList
+              sx={{
+                maxHeight: 250,
+                gridTemplateColumns: { xs: 'repeat(1,1fr)!important', sm: 'repeat(2,1fr)!important' },
+              }}
+              gap={10}
+            >
+              {imgList.map((img, idx) => (
+                <ImageListItem key={idx}>
+                  <ImageListItemBar
+                    sx={{
+                      background: 'none',
+                    }}
+                    position="top"
+                    actionIcon={
+                      <IconButton onClick={() => remove(img)}>
+                        <RemoveIcon fontSize="small" htmlColor="#FF6634" />
+                      </IconButton>
+                    }
+                    actionPosition="right"
+                  />
+
                   <img
-                    src={`${i.url}`}
+                    src={`${img.url}`}
                     alt="activityImg"
                     loading="lazy"
                     style={{ maxHeight: '140px', objectFit: 'cover' }}

@@ -1,4 +1,4 @@
-import { CloudUpload } from '@mui/icons-material';
+import { CloudUpload, ImageTwoTone } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import React, { ChangeEvent, ChangeEventHandler, useRef, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TActyEdit } from '.';
@@ -74,6 +75,11 @@ function EditForm({ editData }: EditFormProps) {
   const axiosInterceptor = useAxiosInterceptor();
   const { setFlashMessage } = useFlashMessage();
   const navigate = useNavigate();
+  // const [previewImg, setPreviewImg] = useState(editData.image);
+  const [previewImg, setPreviewImg] = useState<TActyDetail['image']>(editData.image);
+
+  // DataTransfer will allow to edit the file list
+  const imageRef = useRef(new DataTransfer());
 
   const {
     register,
@@ -100,7 +106,7 @@ function EditForm({ editData }: EditFormProps) {
       },
     };
 
-    if (!data.updatedImage) return console.error('image file not defined');
+    // if (!data.updatedImage) return console.error('image file not defined');
     if (data.updatedImage && data.updatedImage.length < 0) return console.error('file not uploaded');
 
     const formData = new FormData();
@@ -109,17 +115,17 @@ function EditForm({ editData }: EditFormProps) {
     console.log({ jsonData: formData.get('jsonData') });
 
     // check if files attached
-    if (data.updatedImage.length > 0) {
-      // console.log(data.updatedImage);
-      for (const imgFile of data.updatedImage) {
+    if (data.updatedImage && data.updatedImage.length > 0) {
+      // use imageRef as it has the final file list
+      for (const imgFile of imageRef.current.files) {
         // console.log(imgFile);
         formData.append('imageFiles', imgFile, imgFile.name);
       }
     }
 
     console.log(formData.getAll('imageFiles'));
-    // const files = formData.getA
 
+    // return;
     try {
       const res = await axiosInterceptor.put(`activities/${actyId}`, formData, {
         headers: {
@@ -140,9 +146,41 @@ function EditForm({ editData }: EditFormProps) {
     // reset();
   };
 
-  //TODO: handle image state in <PreviewImaage> when new file uploaded, probly use watch func from RMF
-  // <PreviewImage/> re-render when new file uploaded.
-  console.log(watch('updatedImage')?.length);
+  // handle new file added
+  const fileInputRegister = register('updatedImage', validateInput.updatedImage);
+  const handleFileAdded = (event: ChangeEvent<HTMLInputElement>) => {
+    // reset previewImg if there is new file uploaded
+    // setPreviewImg(editData.image);
+
+    const fileList = event.target.files;
+
+    console.log({ fileList });
+    if (!fileList) return console.error('fileList not found');
+
+    const urls: TActyDetail['image'] = [];
+    for (let i = 0; i < fileList.length; i++) {
+      // URL.createObjectURL(fileList.item(i) as File)
+      urls.push({ url: URL.createObjectURL(fileList.item(i) as File), _id: fileList.item(i)?.name as string });
+
+      // add to the file list
+      imageRef.current.items.add(fileList[i]);
+    }
+
+    if (urls.length !== 0) {
+      setPreviewImg(prev => [...prev, ...urls]);
+    }
+  };
+
+  const handleFileRemoved = (imgToRemove: TActyDetail['image'][number]) => {
+    for (let i = 0; i < imageRef.current.files.length; i++) {
+      // if file removed, then remove from the imageRef
+      if (imageRef.current.files.item(i)?.name === imgToRemove._id) {
+        imageRef.current.items.remove(i);
+      }
+    }
+    setPreviewImg(prev => prev.filter(img => img !== imgToRemove));
+    // setPreviewImg(prev => ({ preview: prev.preview.filter(img => img !== imgToRemove) }));
+  };
 
   return (
     <>
@@ -209,7 +247,12 @@ function EditForm({ editData }: EditFormProps) {
               type="file"
               accept=".png,.jpg,.jpeg"
               hidden
-              {...register('updatedImage', validateInput.updatedImage)}
+              name={fileInputRegister.name}
+              onChange={event => {
+                handleFileAdded(event);
+                fileInputRegister.onChange(event);
+              }}
+              ref={fileInputRegister.ref}
               multiple
             />
           </Button>
@@ -220,7 +263,7 @@ function EditForm({ editData }: EditFormProps) {
         </Grid>
 
         {/* Preview Image*/}
-        <ImagePreview imgListFrmDbs={editData.image} />
+        <ImagePreview imgList={previewImg} removeImg={handleFileRemoved} />
 
         {/* {imgFileList.length > 0 ? (
           <Grid item xs={12}>
