@@ -178,6 +178,9 @@ function EditForm({ editData }: EditFormProps) {
         imageRef.current.items.remove(i);
       }
     }
+    //TODO: check if multiple uploads happen, does the imageRef keeps track of it ?
+    //TODO: may be add files that are removed inside function update before submitting
+
     setPreviewImg(prev => prev.filter(img => img !== imgToRemove));
     // setPreviewImg(prev => ({ preview: prev.preview.filter(img => img !== imgToRemove) }));
   };
