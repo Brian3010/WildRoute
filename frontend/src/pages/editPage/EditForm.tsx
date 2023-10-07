@@ -1,4 +1,4 @@
-import { CloudUpload, ImageTwoTone } from '@mui/icons-material';
+import { CloudUpload } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { ChangeEvent, ChangeEventHandler, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TActyEdit } from '.';
@@ -77,16 +77,18 @@ function EditForm({ editData }: EditFormProps) {
   const navigate = useNavigate();
   // const [previewImg, setPreviewImg] = useState(editData.image);
   const [previewImg, setPreviewImg] = useState<TActyDetail['image']>(editData.image);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   // DataTransfer will allow to edit the file list
   const imageRef = useRef(new DataTransfer());
+  const imgFrmDbsRef = useRef<TUpdatedData['activity']['deletedImages']>([]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     // reset,
-    watch,
+    // watch,
   } = useForm<EditFormInputs>();
 
   const tagsToDisplay: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
@@ -105,6 +107,12 @@ function EditForm({ editData }: EditFormProps) {
         // deletedImages: data.updatedImage,
       },
     };
+
+    // check if database images has removed
+
+    if (Array.isArray(imgFrmDbsRef.current) && imgFrmDbsRef.current.length > 0) {
+      updatedData.activity.deletedImages = imgFrmDbsRef.current;
+    }
 
     // if (!data.updatedImage) return console.error('image file not defined');
     if (data.updatedImage && data.updatedImage.length < 0) return console.error('file not uploaded');
@@ -127,6 +135,8 @@ function EditForm({ editData }: EditFormProps) {
 
     // return;
     try {
+      //set updating state
+      setIsUpdating(true);
       const res = await axiosInterceptor.put(`activities/${actyId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -136,6 +146,7 @@ function EditForm({ editData }: EditFormProps) {
 
       // handle error
       if (!res) throw new Error('Something went wrong');
+
       setFlashMessage({ message: `Successfully updated ${updatedData.activity.activity_title}`, type: 'success' });
       return navigate(`/activities/${actyId}`, { state: { openFlashMsg: true } });
     } catch (error) {
@@ -153,8 +164,8 @@ function EditForm({ editData }: EditFormProps) {
     // setPreviewImg(editData.image);
 
     const fileList = event.target.files;
+    // console.log({ fileList });
 
-    console.log({ fileList });
     if (!fileList) return console.error('fileList not found');
 
     const urls: TActyDetail['image'] = [];
@@ -164,24 +175,37 @@ function EditForm({ editData }: EditFormProps) {
 
       // add to the file list
       imageRef.current.items.add(fileList[i]);
+      // console.log({ addImage: imageRef.current.files });
     }
 
+    // update adding image in preview image section
     if (urls.length !== 0) {
       setPreviewImg(prev => [...prev, ...urls]);
     }
   };
 
-  const handleFileRemoved = (imgToRemove: TActyDetail['image'][number]) => {
+  const handleFileRemoved = (imgToRemove: TActyDetail['image'][number] & { fileName?: string }) => {
     for (let i = 0; i < imageRef.current.files.length; i++) {
       // if file removed, then remove from the imageRef
       if (imageRef.current.files.item(i)?.name === imgToRemove._id) {
         imageRef.current.items.remove(i);
       }
     }
-    //TODO: check if multiple uploads happen, does the imageRef keeps track of it ?
-    //TODO: may be add files that are removed inside function update before submitting
+    // console.log({ removeImage: imageRef.current.files });
 
-    setPreviewImg(prev => prev.filter(img => img !== imgToRemove));
+    // check if the image from database
+    if (!imgToRemove.url.includes('blob:')) {
+      // console.log({ imgToRemove });
+      imgFrmDbsRef.current?.push({ dbsId: imgToRemove._id, cldId: imgToRemove.fileName || '' });
+      // console.log(imgFrmDbsRef.current);
+    }
+
+    // update removing image in preview image section
+    setPreviewImg(prev => {
+      const filterPrev = prev.filter(img => img !== imgToRemove);
+      return filterPrev;
+    });
+
     // setPreviewImg(prev => ({ preview: prev.preview.filter(img => img !== imgToRemove) }));
   };
 
@@ -268,25 +292,6 @@ function EditForm({ editData }: EditFormProps) {
         {/* Preview Image*/}
         <ImagePreview imgList={previewImg} removeImg={handleFileRemoved} />
 
-        {/* {imgFileList.length > 0 ? (
-          <Grid item xs={12}>
-            <Paper variant="outlined" sx={{ padding: 2 }}>
-              <ImageList sx={{ maxHeight: 180 }}>
-                {editData.image.map(i => (
-                  <ImageListItem key={i._id}>
-                    <img
-                      src={`${i.url}`}
-                      alt="activityImg"
-                      loading="lazy"
-                      style={{ maxHeight: '140px', objectFit: 'cover' }}
-                    />
-                  </ImageListItem>
-                ))}
-              </ImageList>
-            </Paper>
-          </Grid>
-        ) : null} */}
-
         <Grid item xs={12}>
           <FormControl error={Boolean(errors.updatedTags)} component="fieldset" variant="standard">
             <FormLabel component="legend">Tags</FormLabel>
@@ -321,8 +326,9 @@ function EditForm({ editData }: EditFormProps) {
           >
             Cancel
           </Button>
-          <Button type="submit" variant="contained">
-            Update
+
+          <Button type="submit" disabled={isUpdating} variant="contained">
+            {!isUpdating ? 'Update' : 'updating...'}
           </Button>
         </Grid>
       </Grid>
@@ -331,37 +337,3 @@ function EditForm({ editData }: EditFormProps) {
 }
 
 export default EditForm;
-
-/** render tags
-{Object.entries(tagStateVal).map(([tag, checked], index) => {
-  return (
-    <FormControlLabel
-      key={index}
-      control={
-        <Checkbox
-          checked={checked}
-          value={tag}
-          {...register('updatedTags')}
-          onChange={handleTags}
-          name={tag}
-        />
-      }
-      label={tag}
-    />
-    // <FormControlLabel
-    //   key={index}
-    //   control={
-    //     <Controller
-    //       name={`updatedTags`}
-    //       control={control}
-    //       render={({ field: props }) => {
-    //         console.log(props);
-    //         return <Checkbox {...props} checked={checked}  onChange={handleTags} />;
-    //       }}
-    //     />
-    //   }
-    //   label={tag}
-    // />
-  );
-})}
-**/

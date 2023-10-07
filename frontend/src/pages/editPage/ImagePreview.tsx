@@ -1,6 +1,5 @@
 import RemoveIcon from '@mui/icons-material/RemoveCircle';
 import { Grid, IconButton, ImageList, ImageListItem, ImageListItemBar, Paper } from '@mui/material';
-import { MouseEvent } from 'react';
 import { TActyDetail } from '../../services/getActyById';
 
 interface ImagePreviewProps {
@@ -11,7 +10,7 @@ interface ImagePreviewProps {
 /**Component**/
 const ImagePreview = ({ imgList, removeImg }: ImagePreviewProps) => {
   // const [imgListFrmDbs, setPreviewImg] = useState(imgListFrmDbs);
-  console.log({ imgList });
+  // console.log({ imgList });
 
   const remove = (img: TActyDetail['image'][number]) => {
     removeImg(img);
