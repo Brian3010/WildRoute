@@ -37,7 +37,7 @@ const router = express_1.default.Router();
 router
     .route('/')
     .get((0, catchAsync_1.default)(actyController.index))
-    .post(middleware_1.isLoggedIn, middleware_1.validateActivity, (0, catchAsync_1.default)(actyController.createActivity));
+    .post(middleware_1.isLoggedIn, upload.array('imageFiles', 4), middleware_1.parsingMultiForm, middleware_1.validateActivity, (0, catchAsync_1.default)(middleware_1.uploadCloudinaryFile), (0, catchAsync_1.default)(actyController.createActivity));
 router
     .route('/:id')
     .get((0, catchAsync_1.default)(actyController.displayActivity))

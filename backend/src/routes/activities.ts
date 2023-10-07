@@ -17,7 +17,14 @@ const router: Router = express.Router();
 router
   .route('/')
   .get(catchAsync(actyController.index))
-  .post(isLoggedIn, validateActivity, catchAsync(actyController.createActivity));
+  .post(
+    isLoggedIn,
+    upload.array('imageFiles', 4),
+    parsingMultiForm,
+    validateActivity,
+    catchAsync(uploadCloudinaryFile),
+    catchAsync(actyController.createActivity)
+  );
 
 router
   .route('/:id')
@@ -25,7 +32,7 @@ router
   .put(
     isLoggedIn,
     catchAsync(isAuthor),
-    upload.array('imageFiles',4),
+    upload.array('imageFiles', 4),
     parsingMultiForm,
     validateActivity,
     catchAsync(uploadCloudinaryFile),

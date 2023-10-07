@@ -50,6 +50,10 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
 
   // acty.au = req.user._id; // updated type in type folder
   const newActy = new ActivityList(acty);
+
+  // add upload file (on Cloudinary) to the database
+  if (req.imageFiles) newActy.image = req.imageFiles;
+
   // add user as author
   newActy.author = req.user._id;
 
