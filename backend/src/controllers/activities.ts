@@ -94,7 +94,8 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
 
     // remove images from cloudinary
     const cldIds = actyBody.deletedImages.map(i => i.cldId);
-    const cldRes = await removeCloudinaryImgs(cldIds);
+    // ignore if cldId is undefined or not exist
+    const cldRes = await removeCloudinaryImgs(cldIds.filter(i => i !== undefined));
     // console.log({ cldRes });
 
     imageResObj['dbsMsg'] =

@@ -132,7 +132,6 @@ function EditForm({ editData }: EditFormProps) {
     }
 
     console.log(formData.getAll('imageFiles'));
-
     // return;
     try {
       //set updating state
@@ -196,7 +195,7 @@ function EditForm({ editData }: EditFormProps) {
     // check if the image from database
     if (!imgToRemove.url.includes('blob:')) {
       // console.log({ imgToRemove });
-      imgFrmDbsRef.current?.push({ dbsId: imgToRemove._id, cldId: imgToRemove.fileName || '' });
+      imgFrmDbsRef.current?.push({ dbsId: imgToRemove._id, cldId: imgToRemove.fileName as string });
       // console.log(imgFrmDbsRef.current);
     }
 

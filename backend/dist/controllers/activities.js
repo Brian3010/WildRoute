@@ -66,7 +66,7 @@ const updateActy = async (req, res, next) => {
         const dbsId = actyBody.deletedImages.map(i => i.dbsId);
         const dbsRes = await activities_1.default.updateOne({ _id: actyId }, { $pull: { image: { _id: { $in: dbsId } } } });
         const cldIds = actyBody.deletedImages.map(i => i.cldId);
-        const cldRes = await (0, cloudinary_1.removeCloudinaryImgs)(cldIds);
+        const cldRes = await (0, cloudinary_1.removeCloudinaryImgs)(cldIds.filter(i => i !== undefined));
         imageResObj['dbsMsg'] =
             dbsRes.modifiedCount !== 1
                 ? 'Images not found in the database'

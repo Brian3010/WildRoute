@@ -48,7 +48,7 @@ export const activitySchema = customJoi.object({
         .object({
           dbsId: customJoi.string().required(),
           // url: customJoi.string().required().escapeHTML(),
-          cldId: customJoi.string().required(),
+          cldId: customJoi.string(),
         })
         .required()
     ),

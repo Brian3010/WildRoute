@@ -41,7 +41,7 @@ exports.activitySchema = customJoi.object({
         deletedImages: customJoi.array().items(customJoi
             .object({
             dbsId: customJoi.string().required(),
-            cldId: customJoi.string().required(),
+            cldId: customJoi.string(),
         })
             .required()),
     }),
