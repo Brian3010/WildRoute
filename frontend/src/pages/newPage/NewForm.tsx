@@ -30,6 +30,10 @@ type NewFormInputs = {
 
 type TRegisterNewInputs = TypeMapper<NewFormInputs, RegisterOptions>;
 
+type dataToSubmit = {
+  activity: Pick<TActyDetail, 'activity_title' | 'location' | 'description' | 'avg_price' | 'tags'>;
+};
+
 const validateInput: TRegisterNewInputs = {
   updatedTitle: {
     required: { value: true, message: 'Title must not be empty' },
@@ -69,13 +73,52 @@ function NewForm() {
   const tagsToDisplay: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
 
   const handleFileAdded = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event);
+    const fileList = event.target.files;
+    // console.log({ fileList });
+
+    if (!fileList) return console.error('fileList not found');
+
+    const urls: TActyDetail['image'] = [];
+    for (let i = 0; i < fileList.length; i++) {
+      // URL.createObjectURL(fileList.item(i) as File)
+      urls.push({ url: URL.createObjectURL(fileList.item(i) as File), _id: fileList.item(i)?.name as string });
+    }
+
+    // update adding image in preview image section
+    if (urls.length !== 0) {
+      setPreviewImg(prev => [...prev, ...urls]);
+    }
   };
 
-  const handleFileRemoved = () => {};
+  const handleFileRemoved = (imgToRemove: TActyDetail['image'][number] & { fileName?: string }) => {
+    // remove img in previewImg
+    setPreviewImg(prev => prev.filter(img => img !== imgToRemove));
+  };
+
+  const submit: SubmitHandler<NewFormInputs> = async data => {
+    console.log({ data });
+    console.log({ previewImg });
+
+    const dataToSubmit: dataToSubmit = {
+      activity: {
+        activity_title: data.updatedTitle,
+        avg_price: data.updatedAvgPrice,
+        description: data.updatedDesc,
+        location: data.updatedLocation,
+        tags: data.updatedTags,
+      },
+    };
+
+    console.log({ dataToSubmit });
+
+    // add dataToSubmit and file image to formData
+
+    //TODO: add dataToSubmit and the previewImg to formData
+    //TODO: check if the everything submited successfully
+  };
 
   return (
-    <Grid component={'form'} container spacing={3}>
+    <Grid component={'form'} container spacing={3} onSubmit={handleSubmit(submit)}>
       <Grid item xs={12} sm={8}>
         <TextField
           error={Boolean(errors.updatedTitle)}
@@ -161,13 +204,7 @@ function NewForm() {
                 <FormControlLabel
                   key={index}
                   label={t}
-                  control={
-                    <Checkbox
-                      defaultChecked={actyTags.includes(t)}
-                      value={t}
-                      {...register('updatedTags', validateInput.updatedTags)}
-                    />
-                  }
+                  control={<Checkbox value={t} {...register('updatedTags', validateInput.updatedTags)} />}
                 />
               );
             })}
