@@ -1,4 +1,4 @@
-import { CloudUpload } from '@mui/icons-material';
+import { CloudUpload, ContentPasteGo } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -96,7 +96,7 @@ function NewForm() {
   };
 
   const submit: SubmitHandler<NewFormInputs> = async data => {
-    console.log({ data });
+    // console.log({ data });
     console.log({ previewImg });
 
     const dataToSubmit: dataToSubmit = {
@@ -114,6 +114,24 @@ function NewForm() {
     // add dataToSubmit and file image to formData
 
     //TODO: add dataToSubmit and the previewImg to formData
+    const formData = new FormData();
+    formData.append('jsonData', JSON.stringify(dataToSubmit));
+    console.log(formData.get('jsonData'));
+
+    // if image files added/exist
+    if (data.updatedImage && data.updatedImage.length > 0) {
+      //TODO: filter from file inputs using previewIamge's _id
+      for (const imgFile of data.updatedImage) {
+        if (imgFile.name === previewImg[]) {
+          
+
+        }
+      }
+    
+    }
+
+    // formData.append('imageFiles', imgFile, imgFile.name);
+
     //TODO: check if the everything submited successfully
   };
 
