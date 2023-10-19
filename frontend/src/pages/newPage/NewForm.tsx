@@ -1,4 +1,4 @@
-import { CloudUpload, ContentPasteGo } from '@mui/icons-material';
+import { CloudUpload, ContentPasteGo, Margin } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -55,7 +55,7 @@ const validateInput: TRegisterNewInputs = {
     max: { value: 10000, message: 'Too expensive' },
   },
   updatedTags: { required: { value: true, message: 'At least one tag must be selected' } },
-  // updatedImage:{}
+  // updatedImage: { required: { value: true, message: 'ehhhh' },
 };
 
 function NewForm() {
@@ -66,9 +66,11 @@ function NewForm() {
     formState: { errors },
     // reset,
     // watch,
+    setError,
   } = useForm<NewFormInputs>();
   const [previewImg, setPreviewImg] = useState<TActyDetail['image']>([]);
 
+  // register file input for validating
   const fileInputRegister = register('updatedImage', validateInput.updatedImage);
   const tagsToDisplay: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
 
@@ -99,6 +101,12 @@ function NewForm() {
     // console.log({ data });
     console.log({ previewImg });
 
+    /** display error if 0 file added */
+    if (previewImg.length === 0) {
+      setError('updatedImage', { message: 'ehhhh' });
+      return;
+    }
+
     const dataToSubmit: dataToSubmit = {
       activity: {
         activity_title: data.updatedTitle,
@@ -122,12 +130,9 @@ function NewForm() {
     if (data.updatedImage && data.updatedImage.length > 0) {
       //TODO: filter from file inputs using previewIamge's _id
       for (const imgFile of data.updatedImage) {
-        if (imgFile.name === previewImg[]) {
-          
-
-        }
+        // if (imgFile.name === previewImg[]) {
+        // }
       }
-    
     }
 
     // formData.append('imageFiles', imgFile, imgFile.name);
@@ -208,6 +213,9 @@ function NewForm() {
           Choose files
         </Typography>
         {/* <TextField label="Image" type="file" InputProps={{ style: {}, startAdornment: <CloudUpload /> }} /> */}
+        <FormHelperText style={{ alignSelf: 'center' }} error={Boolean(errors.updatedImage?.message)}>
+          {errors.updatedImage?.message}
+        </FormHelperText>
       </Grid>
 
       {/* Preview Image*/}
