@@ -16,6 +16,7 @@ import { ChangeEvent, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
+import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
 import { TActyDetail } from '../../services/getActyById';
 import ImagePreview from '../editPage/ImagePreview';
 
@@ -60,6 +61,7 @@ const validateInput: TRegisterNewInputs = {
 
 function NewForm() {
   const navigate = useNavigate();
+  const axiosInterceptor = useAxiosInterceptor();
   const {
     register,
     handleSubmit,
@@ -103,7 +105,7 @@ function NewForm() {
 
     /** display error if 0 file added */
     if (previewImg.length === 0) {
-      setError('updatedImage', { message: 'ehhhh' });
+      setError('updatedImage', { message: 'At least one image file needed' });
       return;
     }
 
@@ -119,25 +121,25 @@ function NewForm() {
 
     console.log({ dataToSubmit });
 
-    // add dataToSubmit and file image to formData
-
-    //TODO: add dataToSubmit and the previewImg to formData
+    /** add dataToSubmit and the previewImg to formData */
     const formData = new FormData();
     formData.append('jsonData', JSON.stringify(dataToSubmit));
     console.log(formData.get('jsonData'));
 
-    // if image files added/exist
+    // only add image files if exist
     if (data.updatedImage && data.updatedImage.length > 0) {
-      //TODO: filter from file inputs using previewIamge's _id
       for (const imgFile of data.updatedImage) {
-        // if (imgFile.name === previewImg[]) {
-        // }
+        /** do this to keep track of removing/adding files */
+        previewImg.some(img => {
+          if (img._id === imgFile.name) {
+            formData.append('imageFiles', imgFile, imgFile.name);
+          }
+        });
       }
+      console.log(formData.getAll('imageFiles'));
     }
 
-    // formData.append('imageFiles', imgFile, imgFile.name);
-
-    //TODO: check if the everything submited successfully
+    //TODO: submit formdata using axiosInterceptor
   };
 
   return (
