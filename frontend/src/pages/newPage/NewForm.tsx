@@ -93,8 +93,18 @@ function NewForm() {
     }
 
     // update adding image in preview image section
-    if (urls.length !== 0) {
-      setPreviewImg(prev => [...prev, ...urls]);
+    if (urls.length > 0) {
+      // setPreviewImg(prev => [...prev, ...urls]);
+
+      setPreviewImg(prev => {
+        const filteredImgFile = prev.filter(p => {
+          if (urls.includes(p)) {
+            // !trying to extract _id that already in the pre
+          }
+        });
+        console.log({ filteredImgFile });
+        return filteredImgFile;
+      });
     }
   };
 
