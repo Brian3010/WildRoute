@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
@@ -62,6 +62,7 @@ const validateInput: TRegisterNewInputs = {
 function NewForm() {
   const navigate = useNavigate();
   const axiosInterceptor = useAxiosInterceptor();
+  const imageFileRef = useRef(new DataTransfer());
   const {
     register,
     handleSubmit,
@@ -84,8 +85,11 @@ function NewForm() {
 
     const urls: TActyDetail['image'] = [];
     for (let i = 0; i < fileList.length; i++) {
-      // URL.createObjectURL(fileList.item(i) as File)
+      /** create object {url:...,_id:...} to display image in preview section */
       urls.push({ url: URL.createObjectURL(fileList.item(i) as File), _id: fileList.item(i)?.name as string });
+
+      /** add files to ref */
+      imageFileRef.current.items.add(fileList[i]);
     }
 
     // update adding image in preview image section
@@ -95,12 +99,18 @@ function NewForm() {
   };
 
   const handleFileRemoved = (imgToRemove: TActyDetail['image'][number] & { fileName?: string }) => {
-    // remove img in previewImg
+    /** remove img in previewImg*/
     setPreviewImg(prev => prev.filter(img => img !== imgToRemove));
+
+    /** remove files in ref*/
+    for (let i = 0; i < imageFileRef.current.files.length; i++) {
+      if (imgToRemove._id === imageFileRef.current.files.item(i)?.name) {
+        imageFileRef.current.items.remove(i);
+      }
+    }
   };
 
   const submit: SubmitHandler<NewFormInputs> = async data => {
-    // console.log({ data });
     console.log({ previewImg });
 
     /** display error if 0 file added */
@@ -121,23 +131,32 @@ function NewForm() {
 
     console.log({ dataToSubmit });
 
-    /** add dataToSubmit and the previewImg to formData */
+    /** add dataToSubmit to formData */
     const formData = new FormData();
     formData.append('jsonData', JSON.stringify(dataToSubmit));
     console.log(formData.get('jsonData'));
 
-    // only add image files if exist
-    if (data.updatedImage && data.updatedImage.length > 0) {
-      for (const imgFile of data.updatedImage) {
-        /** do this to keep track of removing/adding files */
-        previewImg.some(img => {
-          if (img._id === imgFile.name) {
-            formData.append('imageFiles', imgFile, imgFile.name);
-          }
-        });
+    /** add image in imageFileRef to formData */
+    if (imageFileRef.current.files.length > 0) {
+      for (const imgFile of imageFileRef.current.files) {
+        formData.append('imageFiles', imgFile, imgFile.name);
       }
+
       console.log(formData.getAll('imageFiles'));
     }
+
+    // only add image files if exist
+    // if (data.updatedImage && data.updatedImage.length > 0) {
+    //   for (const imgFile of data.updatedImage) {
+    //     /** do this to keep track of removing/adding files */
+    //     previewImg.some(img => {
+    //       if (img._id === imgFile.name) {
+    //         formData.append('imageFiles', imgFile, imgFile.name);
+    //       }
+    //     });
+    //   }
+    //   console.log(formData.getAll('imageFiles'));
+    // }
 
     //TODO: submit formdata using axiosInterceptor
   };
