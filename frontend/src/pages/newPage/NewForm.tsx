@@ -82,7 +82,6 @@ function NewForm() {
     // console.log({ fileList });
 
     if (!fileList) return console.error('fileList not found');
-
     const urls: TActyDetail['image'] = [];
     for (let i = 0; i < fileList.length; i++) {
       /** create object {url:...,_id:...} to display image in preview section */
@@ -97,13 +96,13 @@ function NewForm() {
       // setPreviewImg(prev => [...prev, ...urls]);
 
       setPreviewImg(prev => {
-        const filteredImgFile = prev.filter(p => {
-          if (urls.includes(p)) {
-            // !trying to extract _id that already in the pre
-          }
-        });
-        console.log({ filteredImgFile });
-        return filteredImgFile;
+        if (prev.length === 0) {
+          return [...urls];
+        }
+        const combinedImgs = [...prev, ...urls];
+        const NoneDupImgFiles = [...new Map(combinedImgs.map(img => [img['_id'], img])).values()];
+
+        return [...NoneDupImgFiles];
       });
     }
   };
@@ -147,8 +146,12 @@ function NewForm() {
     console.log(formData.get('jsonData'));
 
     /** add image in imageFileRef to formData */
-    if (imageFileRef.current.files.length > 0) {
-      for (const imgFile of imageFileRef.current.files) {
+    console.log(imageFileRef.current.files);
+    const array = Array.from(imageFileRef.current.files);
+    const NoneDupImgRef = [...new Map(array.map(item => [item['name'], item])).values()];
+
+    if (NoneDupImgRef.length > 0) {
+      for (const imgFile of NoneDupImgRef) {
         formData.append('imageFiles', imgFile, imgFile.name);
       }
 
