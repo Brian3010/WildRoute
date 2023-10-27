@@ -17,6 +17,7 @@ import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
+import useFlashMessage from '../../hooks/useFlashMessage';
 import { TActyDetail } from '../../services/getActyById';
 import ImagePreview from '../editPage/ImagePreview';
 
@@ -62,6 +63,7 @@ const validateInput: TRegisterNewInputs = {
 function NewForm() {
   const navigate = useNavigate();
   const axiosInterceptor = useAxiosInterceptor();
+  const { setFlashMessage } = useFlashMessage();
   const imageFileRef = useRef(new DataTransfer());
   const {
     register,
@@ -72,6 +74,7 @@ function NewForm() {
     setError,
   } = useForm<NewFormInputs>();
   const [previewImg, setPreviewImg] = useState<TActyDetail['image']>([]);
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   // register file input for validating
   const fileInputRegister = register('updatedImage', validateInput.updatedImage);
@@ -146,32 +149,53 @@ function NewForm() {
     console.log(formData.get('jsonData'));
 
     /** add image in imageFileRef to formData */
-    console.log(imageFileRef.current.files);
-    const array = Array.from(imageFileRef.current.files);
-    const NoneDupImgRef = [...new Map(array.map(item => [item['name'], item])).values()];
+    // console.log(imageFileRef.current.files);
+    // const array = Array.from(imageFileRef.current.files);
+    // const NoneDupImgRef = [...new Map(array.map(item => [item['name'], item])).values()];
 
-    if (NoneDupImgRef.length > 0) {
-      for (const imgFile of NoneDupImgRef) {
-        formData.append('imageFiles', imgFile, imgFile.name);
-      }
-
-      console.log(formData.getAll('imageFiles'));
-    }
-
-    // only add image files if exist
-    // if (data.updatedImage && data.updatedImage.length > 0) {
-    //   for (const imgFile of data.updatedImage) {
-    //     /** do this to keep track of removing/adding files */
-    //     previewImg.some(img => {
-    //       if (img._id === imgFile.name) {
-    //         formData.append('imageFiles', imgFile, imgFile.name);
-    //       }
-    //     });
+    // if (NoneDupImgRef.length > 0) {
+    //   for (const imgFile of NoneDupImgRef) {
+    //     formData.append('imageFiles', imgFile, imgFile.name);
     //   }
+
     //   console.log(formData.getAll('imageFiles'));
     // }
 
+    /** add image in imageFileRef to formData */
+    // only add image files if exist
+    if (data.updatedImage && data.updatedImage.length > 0) {
+      console.log({ updatedImg: data.updatedImage });
+      for (const imgFile of data.updatedImage) {
+        /** do this to keep track of removing/adding files */
+        previewImg.some(img => {
+          if (img._id === imgFile.name) {
+            formData.append('imageFiles', imgFile, imgFile.name);
+          }
+        });
+      }
+      console.log(formData.getAll('imageFiles'));
+    }
+
     //TODO: submit formdata using axiosInterceptor
+    //! when submiited succeffully - if 2 image files submited, only 1 is showed up
+    try {
+      setIsSubmiting(true);
+      const res = await axiosInterceptor.post('activities/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      console.log(res);
+      if (!res) {
+        setFlashMessage({ type: 'error', message: 'Could not add the new activity' });
+        return navigate('/activities', { state: { openFlashMsg: true } });
+      } else {
+        setFlashMessage({ type: 'success', message: 'Successfully added' });
+        return navigate('/activities', { state: { openFlashMsg: true } });
+      }
+    } catch (error) {
+      console.error(error);
+      setFlashMessage({ type: 'error', message: 'Internal Error' });
+      return navigate('/activities', { state: { openFlashMsg: true } });
+    }
   };
 
   return (
@@ -284,8 +308,8 @@ function NewForm() {
           Cancel
         </Button>
 
-        <Button type="submit" variant="contained">
-          Submit
+        <Button type="submit" disabled={isSubmiting} variant="contained">
+          {!isSubmiting ? 'Submit' : 'Submiting...'}
         </Button>
       </Grid>
     </Grid>
