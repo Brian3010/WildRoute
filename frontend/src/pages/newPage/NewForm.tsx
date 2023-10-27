@@ -1,4 +1,4 @@
-import { CloudUpload, ContentPasteGo, Margin } from '@mui/icons-material';
+import { CatchingPokemon, CloudUpload, ContentPasteGo, Margin } from '@mui/icons-material';
 import {
   Button,
   Checkbox,
@@ -149,35 +149,27 @@ function NewForm() {
     console.log(formData.get('jsonData'));
 
     /** add image in imageFileRef to formData */
-    // console.log(imageFileRef.current.files);
-    // const array = Array.from(imageFileRef.current.files);
-    // const NoneDupImgRef = [...new Map(array.map(item => [item['name'], item])).values()];
-
-    // if (NoneDupImgRef.length > 0) {
-    //   for (const imgFile of NoneDupImgRef) {
-    //     formData.append('imageFiles', imgFile, imgFile.name);
-    //   }
-
-    //   console.log(formData.getAll('imageFiles'));
-    // }
-
-    /** add image in imageFileRef to formData */
     // only add image files if exist
     if (data.updatedImage && data.updatedImage.length > 0) {
-      console.log({ updatedImg: data.updatedImage });
-      for (const imgFile of data.updatedImage) {
-        /** do this to keep track of removing/adding files */
-        previewImg.some(img => {
+      const arrayFiles = Array.from(imageFileRef.current.files);
+      /** make sure files in ref are not duplicated */
+      const uniqueFiles = arrayFiles.filter((item, index, self) => {
+        return index === self.findIndex(f => f.name == item.name);
+      });
+      // console.log({ uniqueFiles });
+
+      for (const imgFile of uniqueFiles) {
+        /** only take files in previewImage */
+        previewImg.map(img => {
           if (img._id === imgFile.name) {
             formData.append('imageFiles', imgFile, imgFile.name);
           }
         });
       }
+
       console.log(formData.getAll('imageFiles'));
     }
 
-    //TODO: submit formdata using axiosInterceptor
-    //! when submiited succeffully - if 2 image files submited, only 1 is showed up
     try {
       setIsSubmiting(true);
       const res = await axiosInterceptor.post('activities/', formData, {
