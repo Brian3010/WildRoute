@@ -45,6 +45,7 @@ function NavBar() {
   const localUser = JSON.parse(localStorage.getItem('user')!);
 
   const isLoggedIn = auth.accessToken.length > 0 || Boolean(localUser);
+  // const isLoggedIn = auth.accessToken.length > 0;
 
   const handleLogout = async () => {
     // console.log(event);
@@ -86,9 +87,14 @@ function NavBar() {
               </Typography>
             </>
           ) : (
-            <Link to="/activities/user/login" className="custom-link">
-              Login
-            </Link>
+            <>
+              <Link to="/activities/user/login" className="custom-link">
+                Login
+              </Link>
+              <Link to="/activities/user/register" className="custom-link">
+                Register
+              </Link>
+            </>
           )}
         </ListItem>
       </List>
@@ -138,9 +144,14 @@ function NavBar() {
                     </Typography>
                   </>
                 ) : (
-                  <Link to="/activities/user/login" className="custom-link">
-                    Login
-                  </Link>
+                  <>
+                    <Link to="/activities/user/login" className="custom-link">
+                      Login
+                    </Link>
+                    <Link to="/activities/user/register" className="custom-link">
+                      Register
+                    </Link>
+                  </>
                 )}
                 {/* <Link to="/activities/user/login" className="custom-link" style={{ color: 'orange' }}>
                   Login

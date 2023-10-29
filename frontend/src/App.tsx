@@ -10,6 +10,7 @@ import NavBar from './components/NavBar';
 import PersistLogin from './components/PersistLogin';
 import RequireAuth from './components/requireAuth';
 import PageNotFound from './pages/PageNotFound';
+import RegisterPage from './pages/RegisterPage';
 import Activity from './pages/activityDetailPage';
 import ActivityList from './pages/activityListPage';
 import EditActivity from './pages/editPage';
@@ -63,6 +64,7 @@ function App() {
                   <ErrorBoundary FallbackComponent={ErrorFallBack} onError={logError} children={<LoginPage />} />
                 }
               />
+              <Route path="user/register" element={<RegisterPage />} />
               {/* -------------- */}
 
               {/* private routes */}

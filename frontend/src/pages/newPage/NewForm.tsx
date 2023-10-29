@@ -1,4 +1,4 @@
-import { CatchingPokemon, CloudUpload, ContentPasteGo, Margin } from '@mui/icons-material';
+import { CloudUpload } from '@mui/icons-material';
 import {
   Button,
   Checkbox,

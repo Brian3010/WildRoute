@@ -20,13 +20,13 @@ import { TypeMapper } from '../../@types/TypeMapper';
 import '../../assets/LoginPage.css';
 
 // import { useErrorBoundary } from 'react-error-boundary';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import loginUserIn from '../../services/logUserIn';
 
-interface LoginData {
+export interface LoginData {
   username: string;
   password: string;
 }
@@ -164,7 +164,10 @@ export default function LoginPage() {
             </FormControl>
             <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }} paddingX={2}>
               <Typography variant="h4" fontSize={'16px'}>
-                Don't have an account yet? Sign up here.
+                Don't have an account yet?{' '}
+                <Link style={{ textDecoration: 'none' }} to="../user/register">
+                  Sign up here.
+                </Link>
               </Typography>
             </Box>
 
