@@ -39,10 +39,7 @@ const registerOpts: RegisterFormType = {
   },
   confirmPwd: {
     required: 'This should not be empty',
-    minLength: {
-      value: 5,
-      message: 'The confirm password does not match',
-    },
+    // TODO: display message if confirmPwd and password does not match
   },
 };
 
@@ -58,6 +55,7 @@ function RegisterPage() {
   const handleShowPassword = () => setShowPassword(!showPwd);
 
   const submit: SubmitHandler<RegisterInputs> = data => {
+    // TODO: check matching password and confirmPwd
     console.log({ data });
   };
 
@@ -127,7 +125,7 @@ function RegisterPage() {
                   error={errors.confirmPwd && errors.confirmPwd.message ? true : false}
                   id="confirm-password"
                   type={showPwd ? 'text' : 'password'}
-                  {...register('password', registerOpts.confirmPwd)}
+                  {...register('confirmPwd', registerOpts.confirmPwd)}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton aria-label="toggle password visibility" onClick={handleShowPassword}>
