@@ -18,20 +18,33 @@ import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
+import axios from '../../services/axios';
 import { LoginData } from '../loginPage';
 
 interface RegisterInputs extends LoginData {
   confirmPwd: string;
+  email: string;
 }
 
 type RegisterFormType = TypeMapper<RegisterInputs, RegisterOptions>;
 
 const registerOpts: RegisterFormType = {
   username: {
-    required: 'Username must not empty',
+    required: 'Username should not be empty',
+    minLength: {
+      value: 5,
+      message: 'Username too short',
+    },
+  },
+  email: {
+    required: 'Email should not be empty',
+    pattern: {
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      message: 'Invalid email address',
+    },
   },
   password: {
-    required: 'Password must not empty',
+    required: 'Password should not be empty',
     minLength: {
       value: 5,
       message: 'The password should have at minimum length of 5',
@@ -39,24 +52,48 @@ const registerOpts: RegisterFormType = {
   },
   confirmPwd: {
     required: 'This should not be empty',
-    // TODO: display message if confirmPwd and password does not match
   },
 };
 
+/** Componnent */
 function RegisterPage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<RegisterInputs>();
 
   const [showPwd, setShowPassword] = useState(false);
 
   const handleShowPassword = () => setShowPassword(!showPwd);
 
-  const submit: SubmitHandler<RegisterInputs> = data => {
-    // TODO: check matching password and confirmPwd
-    console.log({ data });
+  const submit: SubmitHandler<RegisterInputs> = async data => {
+    /** check matching password */
+    if (data.password !== data.confirmPwd) {
+      setError('confirmPwd', { message: 'Password does not match' });
+      return;
+    }
+
+    // console.log({ data });
+
+    const dataToSubmit: { user: Omit<RegisterInputs, 'confirmPwd'> } = {
+      user: {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      },
+    };
+    console.log({ dataToSubmit });
+    // return;
+    try {
+      const res = await axios.post('/user/register', dataToSubmit);
+      console.log(res);
+      //TODO: add message when username duplicated
+      //TODO: consider potential errors may occur
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -86,6 +123,17 @@ function RegisterPage() {
                 {...register('username', registerOpts.username)}
                 helperText={errors.username && errors.username.message}
                 fullWidth
+              />
+
+              <TextField
+                error={errors.email && errors.email.message ? true : false}
+                type="text"
+                id="outlined-controlled"
+                label="Email"
+                {...register('email', registerOpts.email)}
+                helperText={errors.email && errors.email.message}
+                fullWidth
+                sx={{ margin: '16px 0 8px' }}
               />
 
               <FormControl fullWidth sx={{ margin: '16px 0 8px' }}>
