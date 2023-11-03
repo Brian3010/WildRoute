@@ -1,5 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -14,10 +15,12 @@ import {
   Typography,
 } from '@mui/material';
 
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
+import useFlashMessage from '../../hooks/useFlashMessage';
 import axios from '../../services/axios';
 import { LoginData } from '../loginPage';
 
@@ -65,6 +68,9 @@ function RegisterPage() {
   } = useForm<RegisterInputs>();
 
   const [showPwd, setShowPassword] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string>();
+  const navigate = useNavigate();
+  const { setFlashMessage } = useFlashMessage();
 
   const handleShowPassword = () => setShowPassword(!showPwd);
 
@@ -85,13 +91,20 @@ function RegisterPage() {
       },
     };
     console.log({ dataToSubmit });
-    // return;
     try {
       const res = await axios.post('/user/register', dataToSubmit);
-      console.log(res);
-      //TODO: add message when username duplicated
-      //TODO: consider potential errors may occur
+      // console.log(res);
+      if (res.status === 200) {
+        setFlashMessage({ type: 'success', message: 'Welcome to WildRoute, You can now log in with your credentials' });
+        return navigate('/activities/user/login', { state: { openFlashMsg: true } });
+      }
     } catch (error) {
+      if (isAxiosError(error)) {
+        const message = error.response?.data.error;
+        if (message) {
+          setErrorMsg(message);
+        }
+      }
       console.error(error);
     }
   };
@@ -108,17 +121,17 @@ function RegisterPage() {
               Fill in the fields below to sign up your account.
             </Typography>
 
-            {/* {errorMsg && (
+            {errorMsg && (
               <Alert severity="error" sx={{ borderRadius: '0.5rem', margin: '0px auto 1rem' }}>
                 {errorMsg}
               </Alert>
-            )} */}
+            )}
 
             <form action="" onSubmit={handleSubmit(submit)}>
               <TextField
                 error={errors.username && errors.username.message ? true : false}
                 type="text"
-                id="outlined-controlled"
+                id="username"
                 label="Username"
                 {...register('username', registerOpts.username)}
                 helperText={errors.username && errors.username.message}
@@ -128,7 +141,7 @@ function RegisterPage() {
               <TextField
                 error={errors.email && errors.email.message ? true : false}
                 type="text"
-                id="outlined-controlled"
+                id="email"
                 label="Email"
                 {...register('email', registerOpts.email)}
                 helperText={errors.email && errors.email.message}
