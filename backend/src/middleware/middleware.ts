@@ -102,6 +102,28 @@ export const isValidBody: RequestHandler = (req, res, next) => {
   next();
 };
 
+// validate users input when they register
+interface registerBody {
+  user: {
+    username: string;
+    email: string;
+    password: string;
+  };
+}
+
+export const validateRegister: RequestHandler<unknown, unknown, registerBody, unknown> = (req, res, next) => {
+  const { user } = req.body;
+  let specialChars = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+  console.log(user.username);
+  console.log(specialChars.test(user.username));
+
+  if (specialChars.test(user.username)) {
+    throw new AppError('Special characters like !, @, #, etc., are not allowed.', 401);
+  }
+
+  next();
+};
+
 // authenticate using local strategy (IIFE)
 export const authLoginInfo: RequestHandler = (req, res, next) => {
   passport.authenticate('local', { session: false, passReqToCallback: true }, (err: any, user: any, info: any) => {

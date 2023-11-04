@@ -31,7 +31,7 @@ const userController = __importStar(require("../controllers/user"));
 const middleware_1 = require("../middleware/middleware");
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const router = express_1.default.Router();
-router.route('/register').post((0, catchAsync_1.default)(userController.registerUser));
+router.route('/register').post(middleware_1.validateRegister, (0, catchAsync_1.default)(userController.registerUser));
 router.route('/login').post(middleware_1.authLoginInfo, (0, catchAsync_1.default)(userController.loginUser));
 router.route('/logout').get(middleware_1.isLoggedIn, (0, catchAsync_1.default)(userController.logoutUser));
 router.route('/refresh-token').post(middleware_1.isValidBody, (req, _res, next) => {

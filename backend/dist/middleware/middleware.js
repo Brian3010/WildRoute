@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isReviewAuthor = exports.isAuthor = exports.isLoggedIn = exports.authLoginInfo = exports.isValidBody = exports.validateReview = exports.validateActivity = exports.uploadCloudinaryFile = exports.parsingMultiForm = void 0;
+exports.isReviewAuthor = exports.isAuthor = exports.isLoggedIn = exports.authLoginInfo = exports.validateRegister = exports.isValidBody = exports.validateReview = exports.validateActivity = exports.uploadCloudinaryFile = exports.parsingMultiForm = void 0;
 const passport_1 = __importDefault(require("passport"));
 const cloudinary_1 = require("../cloudinary");
 const activities_1 = __importDefault(require("../models/activities"));
@@ -71,6 +71,17 @@ const isValidBody = (req, res, next) => {
     next();
 };
 exports.isValidBody = isValidBody;
+const validateRegister = (req, res, next) => {
+    const { user } = req.body;
+    let specialChars = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    console.log(user.username);
+    console.log(specialChars.test(user.username));
+    if (specialChars.test(user.username)) {
+        throw new AppError_1.default('Special characters like !, @, #, etc., are not allowed.', 401);
+    }
+    next();
+};
+exports.validateRegister = validateRegister;
 const authLoginInfo = (req, res, next) => {
     passport_1.default.authenticate('local', { session: false, passReqToCallback: true }, (err, user, info) => {
         if (err) {
