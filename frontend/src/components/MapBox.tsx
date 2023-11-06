@@ -1,25 +1,27 @@
-import mapboxgl, { MapboxEvent, MapboxOptions } from 'mapbox-gl';
+import mapboxgl, { Map } from 'mapbox-gl';
+import 'mapbox-gl/src/css/mapbox-gl.css'; // fix Mapbox CSS missing warning
 import { useEffect, useRef, useState } from 'react';
-
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOXTOKEN;
+import useMapBox from '../hooks/useMapBox';
+import { initMap } from '../utils/initMap';
 
 function MapBox() {
-  const mapContainner = useRef<MapboxOptions>(null);
-  const map = useRef(null);
-  const [lng, setLng] = useState();
-  const [lat, setLat] = useState();
-  const [zoom, setZoom] = useState();
-  //TODO: setup Mapbox https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/#set-up-the-react-app-structure
-  //! cannot find the type of mapbox
+  // return <div></div>;
+  const mapContainnerRef = useRef<HTMLDivElement>(null);
+  let controlMapRef = useRef<mapboxgl.Map | null>();
+
+  controlMapRef = useMapBox(mapContainnerRef, 145, -37, 5);
 
   useEffect(() => {
-    if (map.current) return; // intialize map only once
-    map.current = new mapboxgl.Map({
-      container: mapContainner.current,
-    });
-  });
+    if (controlMapRef.current) {
+      new mapboxgl.Marker().setLngLat([145, -37]).addTo(controlMapRef.current);
+    }
+  }, []);
 
-  return;
+  return (
+    <div>
+      <div id="mapBox" ref={mapContainnerRef} style={{ height: '500px' }} />
+    </div>
+  );
 }
 
 export default MapBox;

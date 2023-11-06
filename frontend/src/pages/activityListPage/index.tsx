@@ -4,6 +4,7 @@ import { useErrorBoundary } from 'react-error-boundary';
 import getActies, { TActies } from '../../services/getActies';
 import ActivityItem from './ActivityItem';
 import AppPagination from './Pagination';
+import MapBox from '../../components/MapBox';
 
 // type ActyDataList = {
 //   id: TActies['_id'];
@@ -119,6 +120,7 @@ function ActivityList() {
     return (
       <>
         <h1>Acitivity List Page</h1>
+        <MapBox/>
 
         <Grid container spacing={2}>
           {currentActies.map((el, i) => (
