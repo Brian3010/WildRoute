@@ -9,6 +9,7 @@ function MapBox() {
   const mapContainnerRef = useRef<HTMLDivElement>(null);
   let controlMapRef = useRef<mapboxgl.Map | null>();
 
+  // useMapBox() return instance of mapboxgl.Map
   controlMapRef = useMapBox(mapContainnerRef, 145, -37, 5);
 
   useEffect(() => {

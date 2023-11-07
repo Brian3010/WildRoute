@@ -7,6 +7,7 @@ const useMapBox = (mapContainer: RefObject<HTMLDivElement>, lng: number, lat: nu
 
   useEffect(() => {
     if (mapContainer.current) {
+      // initMap initialize mapboxgl
       mapRef.current = initMap(mapContainer.current, lng, lat, zoom);
     }
   }, [lat, lng, mapContainer, zoom]);
