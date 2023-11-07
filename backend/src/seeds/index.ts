@@ -73,6 +73,10 @@ const seedDb = async (): Promise<void> => {
     const ActList = new ActivityList({
       activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,
       location: `${cities[cityIdx].city}, ${cities[cityIdx].admin_name}`,
+      geometry: {
+        type: 'Point',
+        coordinates: [cities[i].lng, cities[i].lat],
+      },
       description:
         'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaquesaepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde.',
       avg_price: 2,

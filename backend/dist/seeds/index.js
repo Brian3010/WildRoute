@@ -63,6 +63,10 @@ const seedDb = async () => {
         const ActList = new activities_js_1.default({
             activity_title: `${seedHelpers_js_1.places[placeIdx[0]][1]} ${seedHelpers_js_1.descriptors[placeIdx[0]]}`,
             location: `${cities_js_1.cities[cityIdx].city}, ${cities_js_1.cities[cityIdx].admin_name}`,
+            geometry: {
+                type: 'Point',
+                coordinates: [cities_js_1.cities[i].lng, cities_js_1.cities[i].lat],
+            },
             description: 'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaquesaepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde.',
             avg_price: 2,
             tags: randTags,

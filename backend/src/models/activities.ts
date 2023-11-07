@@ -13,6 +13,7 @@ interface IActivityList {
   image: Array<{ url: string; fileName?: string }>;
   author?: Types.ObjectId;
   reviews?: Array<{ _id: Types.ObjectId; body: string; rating: number; owner: Types.ObjectId }>;
+  geometry?: { type: 'Point'; coordinates: [number, number] };
 }
 
 const schemaConfig: SchemaOptions = {
@@ -32,6 +33,17 @@ const ActivityListSchema = new Schema(
     location: {
       type: String,
       required: true,
+    },
+    geometry: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        required: true,
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
     description: {
       type: String,

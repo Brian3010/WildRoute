@@ -1,10 +1,10 @@
 import { Box, CircularProgress, Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
+import MapBox from '../../components/MapBox';
 import getActies, { TActies } from '../../services/getActies';
 import ActivityItem from './ActivityItem';
 import AppPagination from './Pagination';
-import MapBox from '../../components/MapBox';
 
 // type ActyDataList = {
 //   id: TActies['_id'];
@@ -90,6 +90,8 @@ function ActivityList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const geometryRef = useRef<TActies['geometry'][]>([]);
+
   // fetch data from backend
   useEffect(() => {
     setLoading(true);
@@ -97,6 +99,13 @@ function ActivityList() {
     (async () => {
       try {
         const res = await getActies();
+
+        if (geometryRef.current.length === 0) {
+          res.forEach(acty => {
+            geometryRef.current.push(acty.geometry);
+          });
+        }
+
         // store the result in the state
         setActyData(res);
         setLoading(false);
@@ -120,11 +129,11 @@ function ActivityList() {
     return (
       <>
         <h1>Acitivity List Page</h1>
-        <MapBox/>
+        <MapBox geometry={geometryRef.current} />
 
         <Grid container spacing={2}>
           {currentActies.map((el, i) => (
-            <Grid sx={{height:'405px'}} key={i} item xs={12} sm={6} md={4} lg={3}>
+            <Grid sx={{ height: '405px' }} key={i} item xs={12} sm={6} md={4} lg={3}>
               <ActivityItem data={el} />
             </Grid>
           ))}

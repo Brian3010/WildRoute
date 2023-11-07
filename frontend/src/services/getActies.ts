@@ -9,6 +9,7 @@ export type TActies = {
     url: string;
     _id: string;
   }>;
+  geometry: { type: 'Point'; coordinates: [number, number] };
 };
 
 export default async function getActies(): Promise<TActies[]> {

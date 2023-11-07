@@ -21,6 +21,17 @@ const ActivityListSchema = new Schema({
         type: String,
         required: true,
     },
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true,
+        },
+        coordinates: {
+            type: [Number],
+            required: true,
+        },
+    },
     description: {
         type: String,
         required: true,
