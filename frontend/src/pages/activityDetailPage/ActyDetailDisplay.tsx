@@ -8,7 +8,8 @@ import ActyInfoItem from './ActyInfoItem';
 import ActyReviews from './ActyReviews';
 import ImageItem from './ImageItem';
 import LeaveReview from './LeaveReview';
-import MapDisplay from './MapDisplay';
+// import MapDisplay from './MapDisplay';
+import SingleMarkerMap from '../../components/SingleMarkerMap';
 interface ActyDetailDisplayProps {
   actyData: TActyDetail;
   onRatingChanged: (isRatingChanded: boolean) => void;
@@ -52,9 +53,13 @@ export default function ActyDetailDisplay(props: ActyDetailDisplayProps) {
       <Grid item xs={12} md={6}>
         <ActyInfoItem actyDetail={actyDetail} reviewTotal={reviewsToPrint.length} />
       </Grid>
+
+      {/** display Mapbox */}
       <Grid item xs={12} md={6}>
-        <MapDisplay />
+        {/* <MapDisplay /> */}
+        <SingleMarkerMap geometry={actyDetail.geometry}/>
       </Grid>
+      
       <Grid item xs={12} md={6}>
         <Typography variant="h5" margin={'20px 0 10px 0'}>
           Reviews

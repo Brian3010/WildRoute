@@ -1,4 +1,5 @@
 import axios from '../services/axios';
+import { TActies } from './getActies';
 
 export type TTags = 'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climbing';
 export interface TActyDetail {
@@ -28,6 +29,7 @@ export interface TActyDetail {
   message?: string;
   rating?: number;
   tags: TTags[];
+  geometry: TActies['geometry'];
 }
 
 export default async function getActyById(id: string): Promise<TActyDetail> {

@@ -1,15 +1,16 @@
-import mapboxgl, { Map } from 'mapbox-gl';
-import 'mapbox-gl/src/css/mapbox-gl.css'; // fix Mapbox CSS missing warning
-import { useEffect, useRef, useState } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css'; // fix Mapbox CSS missing warning
+
+import { CSSProperties, useEffect, useRef, useState } from 'react';
 import useMapBox from '../hooks/useMapBox';
 import { TActies } from '../services/getActies';
-import { initMap } from '../utils/initMap';
 
 interface MapBoxProps {
   geometry: TActies['geometry'][];
+  style: CSSProperties;
 }
 
-function MapBox({ geometry }: MapBoxProps) {
+function MapBox({ geometry, style }: MapBoxProps) {
   // console.log(geometry);
   // return <div></div>;
   const mapContainnerRef = useRef<HTMLDivElement>(null);
@@ -28,14 +29,13 @@ function MapBox({ geometry }: MapBoxProps) {
         );
       });
       //TODO: display clusters, and dipslay map in detail's page
-      //! icon in navigatinControl won't show up
-      controlMapRef.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      controlMapRef.current.addControl(new mapboxgl.NavigationControl());
     }
   }, [geometry]);
 
   return (
     <div>
-      <div id="mapBox" ref={mapContainnerRef} style={{ height: '500px' }} />
+      <div id="mapBox" ref={mapContainnerRef} style={style} />
     </div>
   );
 }

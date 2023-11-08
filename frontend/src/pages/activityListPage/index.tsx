@@ -129,7 +129,7 @@ function ActivityList() {
     return (
       <>
         <h1>Acitivity List Page</h1>
-        <MapBox geometry={geometryRef.current} />
+        <MapBox geometry={geometryRef.current} style={{ height: '500px' }} />
 
         <Grid container spacing={2}>
           {currentActies.map((el, i) => (
