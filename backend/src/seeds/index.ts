@@ -75,7 +75,7 @@ const seedDb = async (): Promise<void> => {
       location: `${cities[cityIdx].city}, ${cities[cityIdx].admin_name}`,
       geometry: {
         type: 'Point',
-        coordinates: [cities[i].lng, cities[i].lat],
+        coordinates: [cities[cityIdx].lng, cities[cityIdx].lat],
       },
       description:
         'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaquesaepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde.',
