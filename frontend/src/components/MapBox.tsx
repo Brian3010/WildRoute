@@ -1,4 +1,4 @@
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css'; // fix Mapbox CSS missing warning
 
 import { CSSProperties, useEffect, useRef, useState } from 'react';
@@ -23,6 +23,8 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
   useEffect(() => {
     if (controlMapRef.current) {
       // new mapboxgl.Marker().setLngLat([145, -37]).addTo(controlMapRef.current);
+
+      // add markers on the map
       markerDetail.map(m => {
         return (
           controlMapRef.current &&
@@ -36,14 +38,21 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
             .addTo(controlMapRef.current)
         );
       });
-      //TODO: display clusters, and dipslay map in detail's page
+      // add navigation icon on the map
       controlMapRef.current.addControl(new mapboxgl.NavigationControl());
     }
   }, [markerDetail]);
 
   useEffect(() => {
+    //TODO: Display cluster https://docs.mapbox.com/mapbox-gl-js/example/cluster/
+    //? might consider to convert data to geojson type
     if (controlMapRef.current) {
-      // controlMapRef.current.
+      controlMapRef.current.on('load', () => {
+        controlMapRef.current?.addSource('activities', {
+          type: 'geojson',
+          data: markerDetail,
+        });
+      });
     }
   });
 

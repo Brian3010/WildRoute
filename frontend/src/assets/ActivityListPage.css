@@ -1,5 +1,4 @@
 .mapboxgl-popup {
-  cursor: pointer;
   max-width: 200px;
 }
 
@@ -8,3 +7,6 @@
   font-family: 'Open Sans', sans-serif;
 }
 
+.mapboxgl-marker-anchor-center {
+  cursor: pointer;
+}
