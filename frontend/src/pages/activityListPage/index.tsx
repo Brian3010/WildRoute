@@ -1,84 +1,25 @@
 import { Box, CircularProgress, Grid } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
+import '../../assets/ActivityListPage.css';
 import MapBox from '../../components/MapBox';
 import getActies, { TActies } from '../../services/getActies';
 import ActivityItem from './ActivityItem';
 import AppPagination from './Pagination';
 
-// type ActyDataList = {
-//   id: TActies['_id'];
-//   title: TActies['activity_title'];
-//   description: TActies['description'];
-//   location: TActies['location'];
-//   image: TActies['image'][0]['url']; // the first image URL
+// type convertToGeoJsonFuncT = (data: any) => {
+//   type: 'Feature';
+//   geometry: { type: 'Point'; coordinates: [number, number] };
+//   properties: { id: string; title: string; location: string };
 // };
 
-// const sampleData: ActyDataList = [
-//   {
-//     id: 1,
-//     title: 'Whitehaven Beach Swimming',
-//     description:
-//       'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
-//     location: 'Sanctuary Point New South Wales',
-//     image:
-//       'https://images.unsplash.com/photo-1532978328943-bb1c17fc599b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0Njc1MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTAyNjQ1MDV8&ixlib=rb-4.0.3&q=80&w=1080',
-//   },
-//   {
-//     id: 2,
-//     title: 'Whitehaven Beach Swimming',
-//     description:
-//       'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
-//     location: 'Sanctuary Point New South Wales',
-//     image:
-//       'https://images.unsplash.com/photo-1532978328943-bb1c17fc599b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0Njc1MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTAyNjQ1MDV8&ixlib=rb-4.0.3&q=80&w=1080',
-//   },
-//   {
-//     id: 3,
-//     title: 'Whitehaven Beach Swimming',
-//     description:
-//       'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
-//     location: 'Sanctuary Point New South Wales',
-//     image:
-//       'https://images.unsplash.com/photo-1532978328943-bb1c17fc599b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0Njc1MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTAyNjQ1MDV8&ixlib=rb-4.0.3&q=80&w=1080',
-//   },
-//   {
-//     id: 4,
-//     title: 'Whitehaven Beach Swimming',
-//     description:
-//       'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
-//     location: 'Sanctuary Point New South Wales',
-//     image:
-//       'https://images.unsplash.com/photo-1532978328943-bb1c17fc599b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0Njc1MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTAyNjQ1MDV8&ixlib=rb-4.0.3&q=80&w=1080',
-//   },
-//   {
-//     id: 5,
-//     title: 'Whitehaven Beach Swimming',
-//     description:
-//       'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
-//     location: 'Sanctuary Point New South Wales',
-//     image:
-//       'https://images.unsplash.com/photo-1532978328943-bb1c17fc599b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0Njc1MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTAyNjQ1MDV8&ixlib=rb-4.0.3&q=80&w=1080',
-//   },
-//   {
-//     id: 6,
-//     title: 'Whitehaven Beach Swimming',
-//     description:
-//       'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
-//     location: 'Sanctuary Point New South Wales',
-//     image:
-//       'https://images.unsplash.com/photo-1532978328943-bb1c17fc599b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0Njc1MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTAyNjQ1MDV8&ixlib=rb-4.0.3&q=80&w=1080',
-//   },
-//   {
-//     id: 7,
-//     title: 'Whitehaven Beach Swimming',
-//     description:
-//       'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt.',
-//     location: 'Sanctuary Point New South Wales',
-//     image:
-//       'https://images.unsplash.com/photo-1532978328943-bb1c17fc599b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0Njc1MjF8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTAyNjQ1MDV8&ixlib=rb-4.0.3&q=80&w=1080',
-//   },
-// ];
+// const convertToGeoJSON: convertToGeoJsonFuncT = data => {
+
+//   r
+// };
+
+// geometry, location, title, id
+export type TMarkerDetail = { geometry: TActies['geometry']; title: string; location: string; id: TActies['_id'] };
 
 function ActivityList() {
   // console.log('ActivityList component render');
@@ -92,6 +33,8 @@ function ActivityList() {
 
   const geometryRef = useRef<TActies['geometry'][]>([]);
 
+  const markerDetailRef = useRef<TMarkerDetail[]>([]);
+
   // fetch data from backend
   useEffect(() => {
     setLoading(true);
@@ -100,9 +43,20 @@ function ActivityList() {
       try {
         const res = await getActies();
 
-        if (geometryRef.current.length === 0) {
+        // if (geometryRef.current.length === 0) {
+        //   res.forEach(acty => {
+        //     geometryRef.current.push(acty.geometry);
+        //   });
+        // }
+
+        if (markerDetailRef.current.length === 0) {
           res.forEach(acty => {
-            geometryRef.current.push(acty.geometry);
+            return markerDetailRef.current.push({
+              geometry: acty.geometry,
+              id: acty._id,
+              location: acty.location,
+              title: acty.activity_title,
+            });
           });
         }
 
@@ -125,11 +79,13 @@ function ActivityList() {
   // change page
   const paginationOnChange: (pageNum: number) => void = pageNum => setCurrentPage(pageNum);
 
+  // console.log({ markerDetailRef });
+
   if (actyData.length > 0) {
     return (
       <>
         <h1>Acitivity List Page</h1>
-        <MapBox geometry={geometryRef.current} style={{ height: '500px' }} />
+        <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} />
 
         <Grid container spacing={2}>
           {currentActies.map((el, i) => (

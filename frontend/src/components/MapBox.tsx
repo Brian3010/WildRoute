@@ -3,14 +3,15 @@ import 'mapbox-gl/dist/mapbox-gl.css'; // fix Mapbox CSS missing warning
 
 import { CSSProperties, useEffect, useRef, useState } from 'react';
 import useMapBox from '../hooks/useMapBox';
-import { TActies } from '../services/getActies';
+// import { TActies } from '../services/getActies';
+import { TMarkerDetail } from '../pages/activityListPage';
 
 interface MapBoxProps {
-  geometry: TActies['geometry'][];
+  markerDetail: TMarkerDetail[];
   style: CSSProperties;
 }
 
-function MapBox({ geometry, style }: MapBoxProps) {
+function MapBox({ markerDetail, style }: MapBoxProps) {
   // console.log(geometry);
   // return <div></div>;
   const mapContainnerRef = useRef<HTMLDivElement>(null);
@@ -22,16 +23,29 @@ function MapBox({ geometry, style }: MapBoxProps) {
   useEffect(() => {
     if (controlMapRef.current) {
       // new mapboxgl.Marker().setLngLat([145, -37]).addTo(controlMapRef.current);
-      geometry.map(geo => {
+      markerDetail.map(m => {
         return (
           controlMapRef.current &&
-          new mapboxgl.Marker().setLngLat([geo.coordinates[0], geo.coordinates[1]]).addTo(controlMapRef.current)
+          new mapboxgl.Marker()
+            .setLngLat([m.geometry.coordinates[0], m.geometry.coordinates[1]])
+            .setPopup(
+              new mapboxgl.Popup({ offset: 25 }).setHTML(
+                `<h3><a style="color:#333" href="activities/${m.id}">${m.title}</a></h3><p>${m.location}</p>`
+              )
+            )
+            .addTo(controlMapRef.current)
         );
       });
       //TODO: display clusters, and dipslay map in detail's page
       controlMapRef.current.addControl(new mapboxgl.NavigationControl());
     }
-  }, [geometry]);
+  }, [markerDetail]);
+
+  useEffect(() => {
+    if (controlMapRef.current) {
+      // controlMapRef.current.
+    }
+  });
 
   return (
     <div>

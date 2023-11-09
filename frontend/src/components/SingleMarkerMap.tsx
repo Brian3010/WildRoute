@@ -16,12 +16,17 @@ function SingleMarkerMap({ geometry }: SingleMarkerMapProps) {
   // new mapboxgl.Marker().setLngLat([geo.coordinates[0], geo.coordinates[1]]).addTo(controlMapRef.current)
 
   useEffect(() => {
-    if (mapContainerRef.current && mapController.current) {
+    if (mapController.current) {
+      console.log('effect in singleMarkerMap');
       new mapboxgl.Marker().setLngLat([geometry.coordinates[0], geometry.coordinates[1]]).addTo(mapController.current);
+    }
+  }, [geometry.coordinates]);
 
+  useEffect(() => {
+    if (mapController.current) {
       mapController.current.addControl(new mapboxgl.NavigationControl());
     }
-  });
+  }, []);
 
   return (
     <div>

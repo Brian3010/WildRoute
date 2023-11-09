@@ -91,7 +91,8 @@ const seedDb = async (): Promise<void> => {
           fileName: `fileName${i}`,
         },
       ],
-      author: '64c0bfe1503dd1eda3269198', // 64bf616a3694715302680542 -> userId in the lap
+      author: '64c0bfe1503dd1eda3269198', //  -> userId when on PC
+      // author: '64bf616a3694715302680542', // -> userId when on laptop
     });
 
     await ActList.save();
