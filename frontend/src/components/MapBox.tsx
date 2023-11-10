@@ -4,12 +4,27 @@ import 'mapbox-gl/dist/mapbox-gl.css'; // fix Mapbox CSS missing warning
 import { CSSProperties, useEffect, useRef, useState } from 'react';
 import useMapBox from '../hooks/useMapBox';
 // import { TActies } from '../services/getActies';
+import { TGeoJSON } from '../@types/TGeoJSON';
 import { TMarkerDetail } from '../pages/activityListPage';
 
 interface MapBoxProps {
   markerDetail: TMarkerDetail[];
   style: CSSProperties;
 }
+
+type TConvertToGeoJSON = (data: TMarkerDetail[]) => TGeoJSON;
+
+const convertToGeoJSON: TConvertToGeoJSON = data => {
+  const features: TGeoJSON['features'] = data.map(e => {
+    return {
+      type: 'Feature',
+      geometry: { ...e.geometry },
+      properties: { location: e.location, title: e.title },
+    };
+  });
+
+  return { type: 'FeatureCollection', features: [...features] };
+};
 
 function MapBox({ markerDetail, style }: MapBoxProps) {
   // console.log(geometry);
@@ -44,17 +59,30 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
   }, [markerDetail]);
 
   useEffect(() => {
+    console.log('useEffect render when adding cluster');
+
     //TODO: Display cluster https://docs.mapbox.com/mapbox-gl-js/example/cluster/
-    //? might consider to convert data to geojson type
+    console.log({ markerDetail });
+
     if (controlMapRef.current) {
       controlMapRef.current.on('load', () => {
-        controlMapRef.current?.addSource('activities', {
-          type: 'geojson',
-          data: markerDetail,
-        });
+        controlMapRef.current?.getSource('activities') ||
+          controlMapRef.current?.addSource('activities', {
+            type: 'geojson',
+            data: convertToGeoJSON(markerDetail),
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 50,
+          });
       });
+
+      // controlMapRef.current.addLayer({
+      //   id: 'cluster',
+      //   type: 'circle',
+      //   source:'activities',
+      // })
     }
-  });
+  }, [markerDetail]);
 
   return (
     <div>
