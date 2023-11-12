@@ -4,7 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'; // fix Mapbox CSS missing warning
 import { CSSProperties, useEffect, useRef, useState } from 'react';
 import useMapBox from '../hooks/useMapBox';
 // import { TActies } from '../services/getActies';
-import { TGeoJSON } from '../@types/TGeoJSON';
+import { TGeoJSON, sampleGeoJSONData } from '../@types/TGeoJSON';
 import { TMarkerDetail } from '../pages/activityListPage';
 
 interface MapBoxProps {
@@ -64,6 +64,7 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
     console.log({ markerDetail });
 
     const activities = convertToGeoJSON(markerDetail);
+    // const activities = sampleGeoJSONData;
     console.log({ activities: activities.features });
 
     if (controlMapRef.current) {
@@ -93,6 +94,20 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
                 'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
               },
             });
+
+          controlMapRef.current.getLayer('cluster-count') ||
+            controlMapRef.current.addLayer({
+              id: 'cluster-count',
+              type: 'symbol',
+              source: 'activities',
+              filter: ['has', 'point_count'],
+              layout: {
+                'text-field': ['get', 'point_count_abbreviated'],
+                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-size': 12,
+              },
+            });
+
           // console.log(controlMapRef.current.getLayer('clusters'));
           controlMapRef.current.getLayer('unclusterd-point') ||
             controlMapRef.current.addLayer({
@@ -108,24 +123,12 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
               },
             });
 
-          controlMapRef.current.getLayer('cluster-count') ||
-            controlMapRef.current.addLayer({
-              id: 'cluster-count',
-              type: 'symbol',
-              source: 'activities',
-              filter: ['has', 'point_count'],
-              layout: {
-                'text-field': ['get', 'point_count_abbreviated'],
-                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-size': 12,
-              },
-            });
-
           // inspect a cluster on click
           controlMapRef.current.on('click', 'clusters', e => {
             const features = controlMapRef.current?.queryRenderedFeatures(e.point, {
               layers: ['clusters'],
             });
+            console.log(e);
 
             const clusterId = features && features[0].properties?.cluster_id;
             // console.log({ clusterId });
