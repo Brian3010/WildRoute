@@ -19,7 +19,7 @@ const convertToGeoJSON: TConvertToGeoJSON = data => {
     return {
       type: 'Feature',
       geometry: { ...e.geometry },
-      properties: { location: e.location, title: e.title },
+      properties: { id: e.id, location: e.location, title: e.title },
     };
   });
 
@@ -63,13 +63,16 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
     //TODO: Display cluster https://docs.mapbox.com/mapbox-gl-js/example/cluster/
     console.log({ markerDetail });
 
+    const activities = convertToGeoJSON(markerDetail);
+    console.log({ activities: activities.features });
+
     if (controlMapRef.current) {
       controlMapRef.current.on('load', () => {
         if (controlMapRef.current) {
           controlMapRef.current.getSource('activities') ||
             controlMapRef.current.addSource('activities', {
               type: 'geojson',
-              data: convertToGeoJSON(markerDetail),
+              data: activities,
               cluster: true,
               clusterMaxZoom: 14,
               clusterRadius: 50,
@@ -91,20 +94,6 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
               },
             });
           // console.log(controlMapRef.current.getLayer('clusters'));
-
-          controlMapRef.current.getLayer('cluster-count') ||
-            controlMapRef.current.addLayer({
-              id: 'cluster-count',
-              type: 'symbol',
-              source: 'activities',
-              filter: ['has', 'point_count'],
-              layout: {
-                'text-field': ['get', 'point_count_abbreviated'],
-                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                'text-size': 12,
-              },
-            });
-
           controlMapRef.current.getLayer('unclusterd-point') ||
             controlMapRef.current.addLayer({
               id: 'unclusterd-point',
@@ -116,6 +105,19 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
                 'circle-radius': 4,
                 'circle-stroke-width': 1,
                 'circle-stroke-color': '#fff',
+              },
+            });
+
+          controlMapRef.current.getLayer('cluster-count') ||
+            controlMapRef.current.addLayer({
+              id: 'cluster-count',
+              type: 'symbol',
+              source: 'activities',
+              filter: ['has', 'point_count'],
+              layout: {
+                'text-field': ['get', 'point_count_abbreviated'],
+                'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+                'text-size': 12,
               },
             });
 
@@ -155,8 +157,9 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
           controlMapRef.current.on('click', 'unclusterd-point', e => {
             const coordinates =
               e.features && e.features[0].geometry.type === 'Point' && e.features[0].geometry.coordinates.slice();
-            // const mag = e.features && e.features[0].geometry.type === 'Point' && e.features[0].properties?.mag;
-            // const tsunami = e.features[0].properties.tsunami === 1 ? 'yes' : 'no';
+            const title = e.features && e.features[0].properties?.title;
+            const location = e.features && e.features[0].properties?.location;
+            const id = e.features && e.features[0].properties?.id;
 
             // Ensure that if the map is zoomed out such that
             // multiple copies of the feature are visible, the
@@ -171,8 +174,7 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
                 .setLngLat(coordinates as mapboxgl.LngLatLike)
                 .setHTML(
                   //TODO: add here the activity preview {title, location}
-                  // `<h3><a style="color:#333" href="activities/${m.id}">${m.title}</a></h3><p>${m.location}</p>`
-                  `<h3>hello</h3>`
+                  `<h3><a style="color:#333" href="activities/${id}">${title}</a></h3><p>${location}</p>`
                 )
                 .addTo(controlMapRef.current);
             }
