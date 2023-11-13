@@ -33,7 +33,7 @@ const getPhotoUrl = async () => {
                 client_id: process.env.UNSPLASH_KEY,
             },
         });
-        return response.data.urls.regular;
+        return response.data.urls.small;
     }
     catch (error) {
         console.log('ERROR: ', error);

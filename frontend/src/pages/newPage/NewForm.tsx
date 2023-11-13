@@ -170,6 +170,8 @@ function NewForm() {
       console.log(formData.getAll('imageFiles'));
     }
 
+    return;
+    //TODO: read this https://docs.mapbox.com/api/search/geocoding/#geocoding-api-pricing
     try {
       setIsSubmiting(true);
       const res = await axiosInterceptor.post('activities/', formData, {

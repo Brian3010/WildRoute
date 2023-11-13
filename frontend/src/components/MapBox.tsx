@@ -1,10 +1,10 @@
-import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css'; // fix Mapbox CSS missing warning
 
-import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { CSSProperties, useEffect, useRef } from 'react';
 import useMapBox from '../hooks/useMapBox';
 // import { TActies } from '../services/getActies';
-import { TGeoJSON, sampleGeoJSONData } from '../@types/TGeoJSON';
+import { TGeoJSON } from '../@types/TGeoJSON';
 import { TMarkerDetail } from '../pages/activityListPage';
 
 interface MapBoxProps {
@@ -109,9 +109,9 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
             });
 
           // console.log(controlMapRef.current.getLayer('clusters'));
-          controlMapRef.current.getLayer('unclusterd-point') ||
+          controlMapRef.current.getLayer('unclustered-point') ||
             controlMapRef.current.addLayer({
-              id: 'unclusterd-point',
+              id: 'unclustered-point',
               type: 'circle',
               source: 'activities',
               filter: ['!', ['has', 'point_count']],
@@ -128,7 +128,7 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
             const features = controlMapRef.current?.queryRenderedFeatures(e.point, {
               layers: ['clusters'],
             });
-            console.log(e);
+            // console.log(e);
 
             const clusterId = features && features[0].properties?.cluster_id;
             // console.log({ clusterId });
@@ -157,7 +157,7 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
           // the unclustered-point layer, open a popup at
           // the location of the feature, with
           // description HTML from its properties.
-          controlMapRef.current.on('click', 'unclusterd-point', e => {
+          controlMapRef.current.on('click', 'unclustered-point', e => {
             const coordinates =
               e.features && e.features[0].geometry.type === 'Point' && e.features[0].geometry.coordinates.slice();
             const title = e.features && e.features[0].properties?.title;
