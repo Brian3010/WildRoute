@@ -1,7 +1,7 @@
 // random locations in Austrlia
 // https://simplemaps.com/data/au-cities
 
-type City = {
+export type City = {
   city: string;
   lat: string;
   lng: string;

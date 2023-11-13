@@ -2,7 +2,7 @@ require('dotenv').config();
 import axios, { AxiosResponse } from 'axios';
 import mongoose from 'mongoose';
 import ActivityList from '../models/activities.js';
-import { cities } from './cities.js';
+import { City, cities } from './cities.js';
 import { descriptors, places } from './seedHelpers.js';
 
 main()
@@ -56,6 +56,16 @@ const generateRandomTags = (): Array<string> => {
   return someTags;
 };
 
+// use The Fisher-Yates shuffle algorithm to get non-dup random index
+// const shuffleArray = (array: Array<City>) => {
+//   for (
+//     let j, x, i = array.length;
+//     i;
+//     j = Math.floor(Math.random() * i), x = array[--i], array[i] = array[j], array[j] = x
+//   );
+//   return array;
+// };
+
 const seedDb = async (): Promise<void> => {
   console.log('seedDb() TRIGGED');
   await ActivityList.deleteMany({});
@@ -66,9 +76,12 @@ const seedDb = async (): Promise<void> => {
     console.log(i);
 
     const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
-    const cityIdx = randomIndex(cities)[0];
+    // const cityIdx = randomIndex(shuffleArray(cities))[0]; // shufferArray return shuffle array of cities, then use randomIndex to get an random number out of the array
+    const cityIdx = randomIndex(cities)[0]; // shufferArray return shuffle array of cities, then use randomIndex to get an random number out of the array
     const imgUrl = await getPhotoUrl();
+    // console.log({ imgUrl });
     const randTags = generateRandomTags();
+    // const shuffleIdxCities = shuffleArray(cities)[0]
 
     const ActList = new ActivityList({
       activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,
