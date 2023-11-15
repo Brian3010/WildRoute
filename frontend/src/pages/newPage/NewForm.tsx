@@ -9,13 +9,17 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Select,
   TextField,
   Typography,
 } from '@mui/material';
 import { ChangeEvent, useRef, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Form, useNavigate } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
+import LocationInputField from '../../components/LocationInputField';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import { TActyDetail } from '../../services/getActyById';
@@ -28,6 +32,8 @@ type NewFormInputs = {
   updatedDesc: string;
   updatedImage?: FileList;
   updatedTags: [];
+  //!
+  updatedLocationTest: string;
 };
 
 type TRegisterNewInputs = TypeMapper<NewFormInputs, RegisterOptions>;
@@ -58,6 +64,10 @@ const validateInput: TRegisterNewInputs = {
   },
   updatedTags: { required: { value: true, message: 'At least one tag must be selected' } },
   // updatedImage: { required: { value: true, message: 'ehhhh' },
+  //!
+  updatedLocationTest: {
+    required: { value: true, message: 'Location must not be empty' },
+  },
 };
 
 function NewForm() {
@@ -124,6 +134,7 @@ function NewForm() {
 
   const submit: SubmitHandler<NewFormInputs> = async data => {
     console.log({ previewImg });
+    console.log({ data });
 
     /** display error if 0 file added */
     if (previewImg.length === 0) {
@@ -169,9 +180,12 @@ function NewForm() {
 
       console.log(formData.getAll('imageFiles'));
     }
-
+    //!
     return;
     //TODO: read this https://docs.mapbox.com/api/search/geocoding/#geocoding-api-pricing
+    //TODO: https://mui.com/material-ui/react-autocomplete/
+
+    //!
     try {
       setIsSubmiting(true);
       const res = await axiosInterceptor.post('activities/', formData, {
@@ -229,6 +243,13 @@ function NewForm() {
           helperText={errors.updatedLocation?.message}
         />
       </Grid>
+
+      {/* //! testing========================== */}
+
+      <LocationInputField register={register('updatedLocationTest', validateInput.updatedLocation)} />
+
+      {/* //! testing============================ */}
+
       <Grid item xs={12}>
         <TextField
           error={Boolean(errors.updatedDesc)}
