@@ -1,5 +1,5 @@
-import { FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from '@mui/material';
-import { useRef, useState } from 'react';
+import { Autocomplete, AutocompleteRenderInputParams, Grid, TextField } from '@mui/material';
+import { ChangeEvent, ReactNode, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface LocationInputFieldProps {
@@ -10,47 +10,54 @@ const mapBoxLocationSearch = () => {
   return new Promise<string[]>((resolve, reject) => {
     setTimeout(() => {
       console.log('requesting location suggestion');
-      return resolve(['Footscray', 'Avondale Heights', 'Hawthorn', 'Blackburn', 'Seddon']);
-    }, 5000);
+      return resolve(['Footscray', 'Avondale Heights', 'Hawthorn', 'Blackburn', 'Seddon', '129 Hyde St']);
+    }, 3000);
   });
 };
 
 function LocationInputField({ register }: LocationInputFieldProps) {
-  const [locationName, setLocationName] = useState<string>();
-  const locationList = useRef<string[]>([]);
+  // const [open, setOpen] = useState<boolean>(false);
+  const [locationList, setLocationList] = useState<string[]>([]);
 
-  const handleLocationChange = async (event: SelectChangeEvent<typeof locationName>) => {
-    const {
-      target: { value },
-    } = event;
-    setLocationName(value);
-    //! the solution below using select menu might not work
-    //* consider using autocomplte https://mui.com/material-ui/react-autocomplete/
-    //? implement autocomplete for this
-    const res = await mapBoxLocationSearch();
-    locationList.current = res;
+  console.log({ locationList });
+
+  const handleLocationChange = async (event: SyntheticEvent, value: string, reason: string) => {
+    console.log(value);
+    // const {
+    //   currentTarget: { value },
+    // } = event;
+    // // console.log({ value });
+
+    // decide dropdown menu close or open by the result from mapBox
+    console.log({ locationList });
+    if (value.length <= 5) setLocationList([]);
+    if (value.length > 5) {
+      const res = await mapBoxLocationSearch();
+      // locationList.current = res;
+      setLocationList(res);
+    }
+
+    // //* consider using autocomplte https://mui.com/material-ui/react-autocomplete/
+
+    // ! error the dropdown open again when there is values in the textfield
+  };
+
+  // prevent when user click again the drop down menu will not be triggered
+  const handleFocus = () => {
+    setLocationList([]);
   };
 
   return (
     <Grid item xs={12}>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="updatedLocation-label">Location</InputLabel>
-        <Select
-          labelId="updatedLocation-label"
-          id="updatedLocationTest"
-          value={locationName}
-          onChange={handleLocationChange}
-          input={<OutlinedInput label="Name" />}
-          // MenuProps={MenuProps}
-        >
-          {locationList.current.length > 0 &&
-            locationList.current.map(locName => (
-              <MenuItem key={locName} value={locName}>
-                {locName}
-              </MenuItem>
-            ))}
-        </Select>
-      </FormControl>
+      <Autocomplete
+        freeSolo
+        renderInput={function (params: AutocompleteRenderInputParams): ReactNode {
+          return <TextField {...params} label="Search input" variant="standard" />;
+        }}
+        onInputChange={handleLocationChange}
+        options={locationList}
+        onFocus={handleFocus}
+      />
     </Grid>
   );
 }
