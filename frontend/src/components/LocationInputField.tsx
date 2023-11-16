@@ -6,11 +6,25 @@ interface LocationInputFieldProps {
   register: UseFormRegisterReturn<'updatedLocationTest'>;
 }
 
-const mapBoxLocationSearch = () => {
-  return new Promise<string[]>((resolve, reject) => {
+const mapBoxLocationSearch = (value: string) => {
+  const locations = [
+    'Footscray',
+    'Avondale Heights',
+    'Hawthorn',
+    'Blackburn',
+    'Seddon',
+    '129 Hyde St',
+    'Hawthorn East',
+    '129 Hyde St, Mexico',
+  ];
+
+  const returnLoc = locations.filter(loc => loc.toLowerCase().includes(value.toLowerCase()));
+  // console.log({ returnLoc });
+
+  return new Promise<string[]>(resolve => {
     setTimeout(() => {
       console.log('requesting location suggestion');
-      return resolve(['Footscray', 'Avondale Heights', 'Hawthorn', 'Blackburn', 'Seddon', '129 Hyde St']);
+      return resolve(returnLoc);
     }, 3000);
   });
 };
@@ -18,45 +32,69 @@ const mapBoxLocationSearch = () => {
 function LocationInputField({ register }: LocationInputFieldProps) {
   // const [open, setOpen] = useState<boolean>(false);
   const [locationList, setLocationList] = useState<string[]>([]);
+  const [locationName, setLocationName] = useState<string>('');
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   console.log({ locationList });
 
-  const handleLocationChange = async (event: SyntheticEvent, value: string, reason: string) => {
-    console.log(value);
-    // const {
-    //   currentTarget: { value },
-    // } = event;
-    // // console.log({ value });
+  // useEffect set list empty for the first renders and num of chars  < minCharacterLength
+  // it only runs when chars > minCharacterLength
+  useEffect(() => {
+    async function fetchLocations() {
+      try {
+        const res = await mapBoxLocationSearch(locationName);
 
-    // decide dropdown menu close or open by the result from mapBox
-    console.log({ locationList });
-    if (value.length <= 5) setLocationList([]);
-    if (value.length > 5) {
-      const res = await mapBoxLocationSearch();
-      // locationList.current = res;
-      setLocationList(res);
+        setLocationList(res);
+      } catch (error) {
+        console.error(error);
+      }
     }
 
-    // //* consider using autocomplte https://mui.com/material-ui/react-autocomplete/
+    const minCharacterLength = 5;
+    const debounceTime = 300;
 
-    // ! error the dropdown open again when there is values in the textfield
+    // only trigger the fetch if the locationName reach the min char requirement
+    if (locationName.length > minCharacterLength) {
+      setIsFetching(true);
+      const timeId = setTimeout(() => {
+        fetchLocations();
+      }, debounceTime);
+
+      // clear time-out if the user keep typing
+      // useEffect will run again an trigger this.
+      return () => {
+        setIsFetching(false);
+        return clearTimeout(timeId);
+      };
+    } else {
+      // set empty list if not reach the requirement
+      setLocationList([]);
+    }
+  }, [locationName]);
+
+  const handleLocationChange = async (_event: SyntheticEvent, value: string) => {
+    setLocationName(value);
   };
 
-  // prevent when user click again the drop down menu will not be triggered
-  const handleFocus = () => {
-    setLocationList([]);
-  };
+  //TODO: get the search to work with Mapbox
+  //TODO: register input with react hook form using 'register'
+  //TODO: make sure the register('updatedLocation') updated in the <NewForm/>
+  //TODO: make data correctly submitted to the backend
+  //TODO: do the same for edit page
 
   return (
     <Grid item xs={12}>
       <Autocomplete
         freeSolo
         renderInput={function (params: AutocompleteRenderInputParams): ReactNode {
-          return <TextField {...params} label="Search input" variant="standard" />;
+          return <TextField {...params} label="LocationV2" variant="standard" />;
         }}
         onInputChange={handleLocationChange}
         options={locationList}
-        onFocus={handleFocus}
+        loading={isFetching}
+        loadingText={'Searching...'}
+
+        // onFocus={handleFocus}
       />
     </Grid>
   );
