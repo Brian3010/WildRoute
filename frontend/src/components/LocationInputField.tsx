@@ -1,4 +1,5 @@
 import { Autocomplete, AutocompleteRenderInputParams, Grid, TextField } from '@mui/material';
+import mapboxgl from 'mapbox-gl';
 import { ChangeEvent, ReactNode, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
@@ -35,7 +36,7 @@ function LocationInputField({ register }: LocationInputFieldProps) {
   const [locationName, setLocationName] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
-  console.log({ locationList });
+  // console.log({ locationList });
 
   // useEffect set list empty for the first renders and num of chars  < minCharacterLength
   // it only runs when chars > minCharacterLength
@@ -77,6 +78,7 @@ function LocationInputField({ register }: LocationInputFieldProps) {
   };
 
   //TODO: get the search to work with Mapbox
+  // //TODO: implement function getMapBoxSuggestion() to call to MapBoxAPI
   //TODO: register input with react hook form using 'register'
   //TODO: make sure the register('updatedLocation') updated in the <NewForm/>
   //TODO: make data correctly submitted to the backend
