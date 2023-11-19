@@ -39,3 +39,7 @@ export const axiosInterceptor = axios.create({
 //     }
 //   }
 // );
+
+export const axiosSearchMbx = axios.create({
+  baseURL: 'https://api.mapbox.com/search/searchbox/v1/',
+});
