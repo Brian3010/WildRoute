@@ -57,6 +57,10 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
   // add user as author
   newActy.author = req.user._id;
 
+  // add geometry using location
+  //TODO: change type newActivityBody
+  //TODO: Convert location string to geometry to store in the database
+
   const savedActy = await newActy.save();
 
   res.status(200).json(savedActy);
@@ -115,9 +119,10 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...updatedActy }, { returnDocument: 'after' });
   if (!resActy) throw new AppError('Cannot fetch the activity', 400);
 
+  //TODO: update geomotry here, using location string
+
   // convert the req.imageFiles to fulfil the image object in activity model
   // imgFiles array will be empty if no file detected
-
   if (imgFiles.length > 0) {
     const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
     resActy.image.push(...convertedImgFiles);
