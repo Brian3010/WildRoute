@@ -1,31 +1,74 @@
-import { AxiosResponse } from 'axios';
 import { axiosSearchMbx } from './axios';
 
-type GetMapBoxSuggestionT = (searchValue: string) => Promise<AxiosResponse<string[]>>;
+type GetMapBoxSuggestionT = (searchValue: {
+  q: string;
+}) => Promise<{ full_address: string; mapbox_id: string; place_formated: string }[]>;
+
+interface MapBoxSuggestResponseT {
+  suggestions: {
+    name: string;
+    mapbox_id: string;
+    feature_type: string;
+    address: string;
+    full_address: string;
+    place_formatted: string;
+    context: {
+      country: {
+        id: string;
+        name: string;
+        country_code: string;
+        country_code_alpha_3: string;
+      };
+      region: {
+        id: string;
+        name: string;
+        region_code: string;
+        region_code_full: string;
+      };
+      postcode: {
+        id: string;
+        name: string;
+      };
+      place: {
+        id: string;
+        name: string;
+      };
+      locality: {
+        id: string;
+        name: string;
+      };
+      street: {
+        id: string;
+        name: string;
+      };
+    };
+    language: string;
+    maki: string;
+    external_ids: object;
+    metadata: object;
+  }[];
+  attribution: string;
+}
 
 const getMapBoxSuggestion: GetMapBoxSuggestionT = async searchValue => {
   const language = 'en';
   const country = 'au';
   const types = 'address,street,place,city,postcode';
   const SESSION_TOKEN = '0ff5c245-8884-4821-88bd-bf549cd0a93d'; //! put this in .env
-  //https://api.mapbox.com/search/searchbox/v1/suggest?q=Camberwell+vic&language=en&country=au&types=address,street,place,city,postcode&session_token=0ff5c245-8884-4821-88bd-bf549cd0a93d&access_token=pk.eyJ1IjoiYnJpYW5uZzMwMTAiLCJhIjoiY2xwMjhvbXg5MHBlaTJsb2lscmV0Ync1ciJ9.iOwKaOlcFAIs89w1f_sblA
 
-  //TODO: convert searchValue to a query
+  const query = new URLSearchParams(searchValue).toString();
 
-  //TODO: research if this is a good practice
-
-  const query = searchValue;
-
-  const APIRequest = `/suggest?q=${query}&language=${language}&country=${country}&types=${types}&session_token=${SESSION_TOKEN}&access_token=${
+  const APIUrl = `/suggest?${query}&language=${language}&country=${country}&types=${types}&session_token=${SESSION_TOKEN}&access_token=${
     import.meta.env.VITE_MAPBOXSEARCHTOKEN
   }`;
 
-  try {
-    const res = await axiosSearchMbx.get(APIRequest);
-    return res;
-  } catch (error) {
-    throw new Error((error as Error).message);
-  }
+  const res = await axiosSearchMbx.get<MapBoxSuggestResponseT>(APIUrl);
+  const names = res.data.suggestions.map(i => ({
+    full_address: i.full_address,
+    mapbox_id: i.mapbox_id,
+    place_formated: i.place_formatted,
+  }));
+  return names;
 };
 
 export default getMapBoxSuggestion;

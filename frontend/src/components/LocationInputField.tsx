@@ -1,38 +1,19 @@
-import { Autocomplete, AutocompleteRenderInputParams, Grid, TextField } from '@mui/material';
-import mapboxgl from 'mapbox-gl';
-import { ChangeEvent, ReactNode, SyntheticEvent, useEffect, useRef, useState } from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
+import { Autocomplete, AutocompleteRenderInputParams, TextField } from '@mui/material';
+import { ReactNode, SyntheticEvent, useEffect, useState } from 'react';
+import { Control, Controller, UseFormRegisterReturn } from 'react-hook-form';
+import { NewFormInputs } from '../pages/newPage/NewForm';
+import getMapBoxSuggestion from '../services/getMapBoxSuggestion';
 
 interface LocationInputFieldProps {
-  register: UseFormRegisterReturn<'updatedLocationTest'>;
+  register: UseFormRegisterReturn<'updatedLocation'>;
+  control: Control<NewFormInputs>;
 }
 
-const mapBoxLocationSearch = (value: string) => {
-  const locations = [
-    'Footscray',
-    'Avondale Heights',
-    'Hawthorn',
-    'Blackburn',
-    'Seddon',
-    '129 Hyde St',
-    'Hawthorn East',
-    '129 Hyde St, Mexico',
-  ];
-
-  const returnLoc = locations.filter(loc => loc.toLowerCase().includes(value.toLowerCase()));
-  // console.log({ returnLoc });
-
-  return new Promise<string[]>(resolve => {
-    setTimeout(() => {
-      console.log('requesting location suggestion');
-      return resolve(returnLoc);
-    }, 3000);
-  });
-};
-
-function LocationInputField({ register }: LocationInputFieldProps) {
+function LocationInputField({ register, control }: LocationInputFieldProps) {
   // const [open, setOpen] = useState<boolean>(false);
-  const [locationList, setLocationList] = useState<string[]>([]);
+  const [locationList, setLocationList] = useState<
+    { full_address: string; mapbox_id?: string; place_formated?: string }[]
+  >([]);
   const [locationName, setLocationName] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -41,10 +22,11 @@ function LocationInputField({ register }: LocationInputFieldProps) {
   // useEffect set list empty for the first renders and num of chars  < minCharacterLength
   // it only runs when chars > minCharacterLength
   useEffect(() => {
+    console.log('useEffect run');
     async function fetchLocations() {
       try {
-        const res = await mapBoxLocationSearch(locationName);
-
+        // const res = await mapBoxLocationSearch(locationName);
+        const res = await getMapBoxSuggestion({ q: locationName });
         setLocationList(res);
       } catch (error) {
         console.error(error);
@@ -52,7 +34,7 @@ function LocationInputField({ register }: LocationInputFieldProps) {
     }
 
     const minCharacterLength = 5;
-    const debounceTime = 300;
+    const debounceTime = 500;
 
     // only trigger the fetch if the locationName reach the min char requirement
     if (locationName.length > minCharacterLength) {
@@ -64,6 +46,7 @@ function LocationInputField({ register }: LocationInputFieldProps) {
       // clear time-out if the user keep typing
       // useEffect will run again an trigger this.
       return () => {
+        console.log('clean up');
         setIsFetching(false);
         return clearTimeout(timeId);
       };
@@ -77,28 +60,49 @@ function LocationInputField({ register }: LocationInputFieldProps) {
     setLocationName(value);
   };
 
-  //TODO: get the search to work with Mapbox
-  // //TODO: implement function getMapBoxSuggestion() to call to MapBoxAPI
-  //TODO: register input with react hook form using 'register'
-  //TODO: make sure the register('updatedLocation') updated in the <NewForm/>
   //TODO: make data correctly submitted to the backend
   //TODO: do the same for edit page
-
+  // console.log(register);
   return (
-    <Grid item xs={12}>
-      <Autocomplete
-        freeSolo
-        renderInput={function (params: AutocompleteRenderInputParams): ReactNode {
-          return <TextField {...params} label="LocationV2" variant="standard" />;
-        }}
-        onInputChange={handleLocationChange}
-        options={locationList}
-        loading={isFetching}
-        loadingText={'Searching...'}
+    // use Controller to work with RHF
+    <Controller
+      name={'updatedLocation'}
+      control={control} // passed form useForm in RHF
+      render={({ field, fieldState: { error } }) => {
+        const { onChange, value } = field;
+        // console.log({ value });
+        return (
+          <>
+            <Autocomplete
+              freeSolo
+              value={value || null}
+              getOptionLabel={locationList => locationList}
+              onChange={(_e: unknown, newValue) => {
+                onChange(newValue);
+              }}
+              onInputChange={handleLocationChange}
+              options={locationList.map(i => i.full_address || i.place_formated || '')}
+              // options={[footscraty]}
 
-        // onFocus={handleFocus}
-      />
-    </Grid>
+              renderInput={function (params: AutocompleteRenderInputParams): ReactNode {
+                return (
+                  <TextField
+                    {...params}
+                    label="Location"
+                    variant="standard"
+                    // inputRef={ref}
+                    error={Boolean(error)}
+                    helperText={error?.message}
+                  />
+                );
+              }}
+              loading={isFetching}
+              loadingText={'Searching...'}
+            />
+          </>
+        );
+      }}
+    />
   );
 }
 

@@ -25,15 +25,13 @@ import useFlashMessage from '../../hooks/useFlashMessage';
 import { TActyDetail } from '../../services/getActyById';
 import ImagePreview from '../editPage/ImagePreview';
 
-type NewFormInputs = {
+export type NewFormInputs = {
   updatedTitle: string;
   updatedAvgPrice: number;
   updatedLocation: string;
   updatedDesc: string;
   updatedImage?: FileList;
   updatedTags: [];
-  //!
-  updatedLocationTest: string;
 };
 
 type TRegisterNewInputs = TypeMapper<NewFormInputs, RegisterOptions>;
@@ -64,10 +62,6 @@ const validateInput: TRegisterNewInputs = {
   },
   updatedTags: { required: { value: true, message: 'At least one tag must be selected' } },
   // updatedImage: { required: { value: true, message: 'ehhhh' },
-  //!
-  updatedLocationTest: {
-    required: { value: true, message: 'Location must not be empty' },
-  },
 };
 
 function NewForm() {
@@ -80,8 +74,9 @@ function NewForm() {
     handleSubmit,
     formState: { errors },
     // reset,
-    // watch,
+    watch,
     setError,
+    control,
   } = useForm<NewFormInputs>();
   const [previewImg, setPreviewImg] = useState<TActyDetail['image']>([]);
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -181,6 +176,7 @@ function NewForm() {
       console.log(formData.getAll('imageFiles'));
     }
     //!
+    console.log({ locationV2: watch('updatedLocation') });
     return;
     //TODO: read this https://docs.mapbox.com/api/search/geocoding/#geocoding-api-pricing
     //TODO: https://mui.com/material-ui/react-autocomplete/
@@ -232,7 +228,7 @@ function NewForm() {
           helperText={errors.updatedAvgPrice?.message}
         />
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <TextField
           error={Boolean(errors.updatedLocation)}
           id="updatedLocation"
@@ -242,11 +238,12 @@ function NewForm() {
           {...register('updatedLocation', validateInput.updatedLocation)}
           helperText={errors.updatedLocation?.message}
         />
-      </Grid>
+      </Grid> */}
 
       {/* //! testing========================== */}
-
-      <LocationInputField register={register('updatedLocationTest', validateInput.updatedLocation)} />
+      <Grid item xs={12}>
+        <LocationInputField control={control} register={register('updatedLocation', validateInput.updatedLocation)} />
+      </Grid>
 
       {/* //! testing============================ */}
 
@@ -317,7 +314,7 @@ function NewForm() {
           variant="outlined"
           color="error"
           onClick={() => {
-            return navigate(`/activities/}`);
+            return navigate(`/activities`);
           }}
         >
           Cancel
