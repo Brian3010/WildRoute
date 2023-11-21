@@ -60,13 +60,10 @@ function LocationInputField({ register, control }: LocationInputFieldProps) {
     setLocationName(value);
   };
 
-  //TODO: make data correctly submitted to the backend
-  //TODO: do the same for edit page
-  // console.log(register);
   return (
     // use Controller to work with RHF
     <Controller
-      name={'updatedLocation'}
+      name={register.name} // must be named accordingly to the one useForm() from React Hook Form
       control={control} // passed form useForm in RHF
       render={({ field, fieldState: { error } }) => {
         const { onChange, value } = field;
@@ -75,6 +72,7 @@ function LocationInputField({ register, control }: LocationInputFieldProps) {
           <>
             <Autocomplete
               freeSolo
+              id="updateLocation"
               value={value || null}
               getOptionLabel={locationList => locationList}
               onChange={(_e: unknown, newValue) => {

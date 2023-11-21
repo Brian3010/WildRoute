@@ -9,15 +9,12 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Select,
   TextField,
   Typography,
 } from '@mui/material';
 import { ChangeEvent, useRef, useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
-import { Form, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
 import LocationInputField from '../../components/LocationInputField';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
@@ -175,13 +172,11 @@ function NewForm() {
 
       console.log(formData.getAll('imageFiles'));
     }
-    //!
+    //!------------------------------
     console.log({ locationV2: watch('updatedLocation') });
     return;
-    //TODO: read this https://docs.mapbox.com/api/search/geocoding/#geocoding-api-pricing
-    //TODO: https://mui.com/material-ui/react-autocomplete/
 
-    //!
+    //!------------------------------
     try {
       setIsSubmiting(true);
       const res = await axiosInterceptor.post('activities/', formData, {
@@ -240,12 +235,10 @@ function NewForm() {
         />
       </Grid> */}
 
-      {/* //! testing========================== */}
+      {/* location input */}
       <Grid item xs={12}>
         <LocationInputField control={control} register={register('updatedLocation', validateInput.updatedLocation)} />
       </Grid>
-
-      {/* //! testing============================ */}
 
       <Grid item xs={12}>
         <TextField
