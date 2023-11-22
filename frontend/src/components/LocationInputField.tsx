@@ -7,10 +7,12 @@ import getMapBoxSuggestion from '../services/getMapBoxSuggestion';
 interface LocationInputFieldProps {
   register: UseFormRegisterReturn<'updatedLocation'>;
   control: Control<NewFormInputs>;
+  default_value?: string;
 }
 
-function LocationInputField({ register, control }: LocationInputFieldProps) {
+function LocationInputField({ register, control, default_value }: LocationInputFieldProps) {
   // const [open, setOpen] = useState<boolean>(false);
+
   const [locationList, setLocationList] = useState<
     { full_address: string; mapbox_id?: string; place_formated?: string }[]
   >([]);
@@ -18,6 +20,7 @@ function LocationInputField({ register, control }: LocationInputFieldProps) {
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   // console.log({ locationList });
+  // console.log({ default_value });
 
   // useEffect set list empty for the first renders and num of chars  < minCharacterLength
   // it only runs when chars > minCharacterLength

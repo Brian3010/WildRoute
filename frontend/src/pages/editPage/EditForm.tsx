@@ -17,6 +17,7 @@ import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TActyEdit } from '.';
 import { TypeMapper } from '../../@types/TypeMapper';
+import LocationInputField from '../../components/LocationInputField';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
 import useFlashMessage from '../../hooks/useFlashMessage';
 import { TActyDetail } from '../../services/getActyById';
@@ -88,8 +89,9 @@ function EditForm({ editData }: EditFormProps) {
     handleSubmit,
     formState: { errors },
     // reset,
-    // watch,
-  } = useForm<EditFormInputs>();
+    watch,
+    control,
+  } = useForm<EditFormInputs>({ defaultValues: { updatedLocation: editData.location } });
 
   const tagsToDisplay: TActyDetail['tags'] = ['Adventure', 'Camping', 'Climbing', 'Nature', 'Water Sport'];
   const actyTags: TActyDetail['tags'] = editData.tags;
@@ -132,7 +134,15 @@ function EditForm({ editData }: EditFormProps) {
     }
 
     console.log(formData.getAll('imageFiles'));
-    // return;
+
+    //!-----------
+    //TODO: add LocationInputField component here
+    //TODO: make sure it work as in the NewForm component
+
+    console.log(watch('updatedLocation'));
+    return;
+    //!-----------
+
     try {
       //set updating state
       setIsUpdating(true);
@@ -237,7 +247,9 @@ function EditForm({ editData }: EditFormProps) {
             helperText={errors.updatedAvgPrice?.message}
           />
         </Grid>
-        <Grid item xs={12}>
+
+        {/* //! ----------------- */}
+        {/* <Grid item xs={12}>
           <TextField
             error={Boolean(errors.updatedLocation)}
             id="updatedLocation"
@@ -248,7 +260,16 @@ function EditForm({ editData }: EditFormProps) {
             {...register('updatedLocation', validateInput.updatedLocation)}
             helperText={errors.updatedLocation?.message}
           />
+        </Grid> */}
+        <Grid item xs={12}>
+          <LocationInputField
+            default_value={editData.location}
+            control={control}
+            register={register('updatedLocation', validateInput.updatedLocation)}
+          />
         </Grid>
+        {/* //! ----------------- */}
+
         <Grid item xs={12}>
           <TextField
             error={Boolean(errors.updatedDesc)}
@@ -263,7 +284,6 @@ function EditForm({ editData }: EditFormProps) {
             helperText={errors.updatedDesc?.message}
           />
         </Grid>
-
         {/* Upload Image */}
         <Grid item xs={12} display={{ sm: 'flex' }} gap={2}>
           <Button component={'label'} startIcon={<CloudUpload />} color="info" variant="contained">
@@ -287,10 +307,8 @@ function EditForm({ editData }: EditFormProps) {
           </Typography>
           {/* <TextField label="Image" type="file" InputProps={{ style: {}, startAdornment: <CloudUpload /> }} /> */}
         </Grid>
-
         {/* Preview Image*/}
         <ImagePreview imgList={previewImg} removeImg={handleFileRemoved} />
-
         <Grid item xs={12}>
           <FormControl error={Boolean(errors.updatedTags)} component="fieldset" variant="standard">
             <FormLabel component="legend">Tags</FormLabel>
@@ -314,7 +332,6 @@ function EditForm({ editData }: EditFormProps) {
             {Boolean(errors.updatedTags) && <FormHelperText>{errors.updatedTags?.message}</FormHelperText>}
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
           <Button
             variant="outlined"

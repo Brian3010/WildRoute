@@ -17,7 +17,7 @@ function SingleMarkerMap({ geometry }: SingleMarkerMapProps) {
 
   useEffect(() => {
     if (mapController.current) {
-      console.log('effect in singleMarkerMap');
+      // console.log('effect in singleMarkerMap');
       new mapboxgl.Marker().setLngLat([geometry.coordinates[0], geometry.coordinates[1]]).addTo(mapController.current);
     }
   }, [geometry.coordinates]);
