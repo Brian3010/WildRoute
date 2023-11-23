@@ -135,13 +135,8 @@ function EditForm({ editData }: EditFormProps) {
 
     console.log(formData.getAll('imageFiles'));
 
-    //!-----------
-    //TODO: add LocationInputField component here
-    //TODO: make sure it work as in the NewForm component
-
-    console.log(watch('updatedLocation'));
-    return;
-    //!-----------
+    // console.log(watch('updatedLocation'));
+    // return;
 
     try {
       //set updating state

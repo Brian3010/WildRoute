@@ -123,8 +123,6 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
   const resActy = await ActivityList.findByIdAndUpdate(actyId, { ...updatedActy }, { returnDocument: 'after' });
   if (!resActy) throw new AppError('Cannot fetch the activity', 400);
 
-  //TODO: update geomotry here, using location string
-
   // convert the req.imageFiles to fulfil the image object in activity model
   // imgFiles array will be empty if no file detected
   if (imgFiles.length > 0) {
@@ -132,10 +130,18 @@ export const updateActy: RequestHandler<actyparams, unknown, NewActivityBody, un
     resActy.image.push(...convertedImgFiles);
   }
 
-  // save the update activity
-  await resActy.save();
+  //TODO: update geomotry here, using location string
+  // add geometry using location
+  const locationQuery = convertStringToURLParams(resActy.location) + '.json';
+  const mbxGeometry = await getMapboxGeometry(locationQuery);
+  resActy.geometry!.type = mbxGeometry.type;
+  resActy.geometry!.coordinates = mbxGeometry.coordinates;
+  // console.log({ mbxGeometry, resActyGeo: resActy.geometry });
 
-  // res.status(202).send({ dataReceived: req.body, cloudinaryRes:acty.image });
+  // res.status(202).json({ resActy });
+
+  // save the updated activity
+  await resActy.save();
   res.status(201).json({ resActy, imageResObj });
 };
 

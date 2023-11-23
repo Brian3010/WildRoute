@@ -91,6 +91,10 @@ const updateActy = async (req, res, next) => {
         const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
         resActy.image.push(...convertedImgFiles);
     }
+    const locationQuery = (0, convertStringToURLParams_1.default)(resActy.location) + '.json';
+    const mbxGeometry = await (0, getMapBoxGeometry_1.default)(locationQuery);
+    resActy.geometry.type = mbxGeometry.type;
+    resActy.geometry.coordinates = mbxGeometry.coordinates;
     await resActy.save();
     res.status(201).json({ resActy, imageResObj });
 };
