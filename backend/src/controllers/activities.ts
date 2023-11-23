@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { NewActivityBody } from '../@types/type-controller';
 import { removeCloudinaryImgs } from '../cloudinary';
 import ActivityList from '../models/activities';
-import getMapboxGeometry from '../service/getMapBoxGeometry';
+import getMapboxGeometry from '../service/getMapboxGeometry';
 import AppError from '../utils/AppError';
 import convertStringToURLParams from '../utils/convertStringToURLParams';
 import { isValidMongooseId } from '../utils/isValidId';
