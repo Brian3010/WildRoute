@@ -1,3 +1,4 @@
+require('dotenv').config();
 import axios from 'axios';
 
 interface MapboxGeoResponse {
@@ -42,10 +43,10 @@ const getMapboxGeometry = async (queryParam: string): Promise<MapboxGeoResponse[
   const country = 'au';
   const types = 'address%2Cpostcode';
   const limit = 1;
-  const access_token = 'pk.eyJ1IjoiYnJpYW5uZzMwMTAiLCJhIjoiY2xwOGZyNGg0MGU1OTJsdGR1cnpmbWtrMiJ9.dCAa4VLNULL7c1ZIa5RJvg'; //! put this in .env
+  // const access_token = 'pk.eyJ1IjoiYnJpYW5uZzMwMTAiLCJhIjoiY2xwOGZyNGg0MGU1OTJsdGR1cnpmbWtrMiJ9.dCAa4VLNULL7c1ZIa5RJvg'; //! put this in .env
   // TODO: call API to Mapbox geocoding
   const res = await axios.get<MapboxGeoResponse>(
-    `https://api.mapbox.com/geocoding/v5/mapbox.places/${queryParam}?country=${country}&limit=${limit}&types=${types}&language=${language}&access_token=${access_token}`
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${queryParam}?country=${country}&limit=${limit}&types=${types}&language=${language}&access_token=${process.env.MAPBOXGEOTOKEN}`
   );
 
   return res.data.features[0].geometry;

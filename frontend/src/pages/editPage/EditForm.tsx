@@ -89,7 +89,7 @@ function EditForm({ editData }: EditFormProps) {
     handleSubmit,
     formState: { errors },
     // reset,
-    watch,
+    // watch,
     control,
   } = useForm<EditFormInputs>({ defaultValues: { updatedLocation: editData.location } });
 
@@ -106,7 +106,6 @@ function EditForm({ editData }: EditFormProps) {
         description: data.updatedDesc,
         avg_price: data.updatedAvgPrice,
         tags: data.updatedTags,
-        // deletedImages: data.updatedImage,
       },
     };
 
@@ -135,7 +134,6 @@ function EditForm({ editData }: EditFormProps) {
 
     console.log(formData.getAll('imageFiles'));
 
-    // console.log(watch('updatedLocation'));
     // return;
 
     try {
@@ -157,15 +155,12 @@ function EditForm({ editData }: EditFormProps) {
       console.error(error);
       return navigate(`/activities/${actyId}`);
     }
-
-    // reset();
   };
 
   // handle new file added
   const fileInputRegister = register('updatedImage', validateInput.updatedImage);
   const handleFileAdded = (event: ChangeEvent<HTMLInputElement>) => {
     // reset previewImg if there is new file uploaded
-    // setPreviewImg(editData.image);
 
     const fileList = event.target.files;
     // console.log({ fileList });
@@ -209,8 +204,6 @@ function EditForm({ editData }: EditFormProps) {
       const filterPrev = prev.filter(img => img !== imgToRemove);
       return filterPrev;
     });
-
-    // setPreviewImg(prev => ({ preview: prev.preview.filter(img => img !== imgToRemove) }));
   };
 
   return (
@@ -243,19 +236,7 @@ function EditForm({ editData }: EditFormProps) {
           />
         </Grid>
 
-        {/* //! ----------------- */}
-        {/* <Grid item xs={12}>
-          <TextField
-            error={Boolean(errors.updatedLocation)}
-            id="updatedLocation"
-            variant="standard"
-            label="Location"
-            defaultValue={editData.location}
-            fullWidth
-            {...register('updatedLocation', validateInput.updatedLocation)}
-            helperText={errors.updatedLocation?.message}
-          />
-        </Grid> */}
+        {/* // location input */}
         <Grid item xs={12}>
           <LocationInputField
             default_value={editData.location}
@@ -263,7 +244,6 @@ function EditForm({ editData }: EditFormProps) {
             register={register('updatedLocation', validateInput.updatedLocation)}
           />
         </Grid>
-        {/* //! ----------------- */}
 
         <Grid item xs={12}>
           <TextField

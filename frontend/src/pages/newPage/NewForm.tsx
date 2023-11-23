@@ -71,7 +71,7 @@ function NewForm() {
     handleSubmit,
     formState: { errors },
     // reset,
-    watch,
+    // watch,
     setError,
     control,
   } = useForm<NewFormInputs>();
@@ -172,11 +172,9 @@ function NewForm() {
 
       console.log(formData.getAll('imageFiles'));
     }
-    // //!------------------------------
-    // console.log({ locationV2: watch('updatedLocation') });
+
     // return;
 
-    // //!------------------------------
     try {
       setIsSubmiting(true);
       const res = await axiosInterceptor.post('activities/', formData, {
@@ -223,17 +221,6 @@ function NewForm() {
           helperText={errors.updatedAvgPrice?.message}
         />
       </Grid>
-      {/* <Grid item xs={12}>
-        <TextField
-          error={Boolean(errors.updatedLocation)}
-          id="updatedLocation"
-          variant="standard"
-          label="Location"
-          fullWidth
-          {...register('updatedLocation', validateInput.updatedLocation)}
-          helperText={errors.updatedLocation?.message}
-        />
-      </Grid> */}
 
       {/* location input */}
       <Grid item xs={12}>
@@ -275,7 +262,6 @@ function NewForm() {
         <Typography marginTop={{ xs: 2, sm: 'inherit' }} alignSelf={'center'}>
           Choose files
         </Typography>
-        {/* <TextField label="Image" type="file" InputProps={{ style: {}, startAdornment: <CloudUpload /> }} /> */}
         <FormHelperText style={{ alignSelf: 'center' }} error={Boolean(errors.updatedImage?.message)}>
           {errors.updatedImage?.message}
         </FormHelperText>

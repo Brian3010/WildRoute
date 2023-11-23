@@ -54,13 +54,12 @@ const getMapBoxSuggestion: GetMapBoxSuggestionT = async searchValue => {
   const language = 'en';
   const country = 'au';
   const types = 'address,street,place,city,postcode';
-  const SESSION_TOKEN = '0ff5c245-8884-4821-88bd-bf549cd0a93d'; //! put this in .env
 
   const query = new URLSearchParams(searchValue).toString();
 
-  const APIUrl = `/suggest?${query}&language=${language}&country=${country}&types=${types}&session_token=${SESSION_TOKEN}&access_token=${
-    import.meta.env.VITE_MAPBOXSEARCHTOKEN
-  }`;
+  const APIUrl = `/suggest?${query}&language=${language}&country=${country}&types=${types}&session_token=${
+    import.meta.env.VITE_MAPBOXSESSIONTOKEN
+  }&access_token=${import.meta.env.VITE_MAPBOXSEARCHTOKEN}`;
 
   const res = await axiosSearchMbx.get<MapBoxSuggestResponseT>(APIUrl);
   const names = res.data.suggestions.map(i => ({

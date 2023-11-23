@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteActy = exports.updateActy = exports.createActivity = exports.displayActivity = exports.index = void 0;
 const cloudinary_1 = require("../cloudinary");
 const activities_1 = __importDefault(require("../models/activities"));
-const getMapBoxGeometry_1 = __importDefault(require("../service/getMapBoxGeometry"));
+const getMapboxGeometry_1 = __importDefault(require("../service/getMapboxGeometry"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
 const convertStringToURLParams_1 = __importDefault(require("../utils/convertStringToURLParams"));
 const isValidId_1 = require("../utils/isValidId");
@@ -45,7 +45,7 @@ const createActivity = async (req, res, next) => {
         newActy.image = req.imageFiles;
     newActy.author = req.user._id;
     const locationQuery = (0, convertStringToURLParams_1.default)(acty.location) + '.json';
-    const mbxGeometry = await (0, getMapBoxGeometry_1.default)(locationQuery);
+    const mbxGeometry = await (0, getMapboxGeometry_1.default)(locationQuery);
     newActy.geometry.type = mbxGeometry.type;
     newActy.geometry.coordinates = mbxGeometry.coordinates;
     const savedActy = await newActy.save();
@@ -92,7 +92,7 @@ const updateActy = async (req, res, next) => {
         resActy.image.push(...convertedImgFiles);
     }
     const locationQuery = (0, convertStringToURLParams_1.default)(resActy.location) + '.json';
-    const mbxGeometry = await (0, getMapBoxGeometry_1.default)(locationQuery);
+    const mbxGeometry = await (0, getMapboxGeometry_1.default)(locationQuery);
     resActy.geometry.type = mbxGeometry.type;
     resActy.geometry.coordinates = mbxGeometry.coordinates;
     await resActy.save();
