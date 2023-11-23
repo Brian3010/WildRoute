@@ -3,7 +3,9 @@ import { ObjectId } from 'mongodb';
 import { NewActivityBody } from '../@types/type-controller';
 import { removeCloudinaryImgs } from '../cloudinary';
 import ActivityList from '../models/activities';
+import getMapboxGeometry from '../service/getMapBoxGeometry';
 import AppError from '../utils/AppError';
+import convertStringToURLParams from '../utils/convertStringToURLParams';
 import { isValidMongooseId } from '../utils/isValidId';
 
 // show a list of activities
@@ -46,6 +48,7 @@ export const displayActivity: RequestHandler = async (req, res, next) => {
 export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, unknown> = async (req, res, next) => {
   console.log('/activities POST REQUEST');
   const acty = req.body.activity;
+  console.log({ acty });
   if (!acty) throw new AppError('Cannot fetch data from body', 400);
 
   // acty.au = req.user._id; // updated type in type folder
@@ -57,14 +60,15 @@ export const createActivity: RequestHandler<unknown, unknown, NewActivityBody, u
   // add user as author
   newActy.author = req.user._id;
 
+  //* https://docs.mapbox.com/api/search/geocoding/#forward-geocoding
   // add geometry using location
-  //TODO: change type newActivityBody
-  //TODO: Convert location string to geometry to store in the database
-
+  const locationQuery = convertStringToURLParams(acty.location) + '.json';
+  const mbxGeometry = await getMapboxGeometry(locationQuery);
+  newActy.geometry!.type = mbxGeometry.type;
+  newActy.geometry!.coordinates = mbxGeometry.coordinates;
+  // console.log({ mbxGeometry });
   const savedActy = await newActy.save();
-
   res.status(200).json(savedActy);
-  // res.send(req.user);
 };
 
 // update activity

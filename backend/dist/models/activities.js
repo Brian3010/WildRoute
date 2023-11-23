@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+const cloudinary_1 = require("../cloudinary");
 const review_1 = __importDefault(require("./review"));
 const { Schema } = mongoose_1.default;
 const schemaConfig = {
@@ -80,6 +81,11 @@ ActivityListSchema.post('findOneAndDelete', async function (actyToDel) {
                 $in: actyToDel.reviews,
             },
         });
+    }
+    console.log(actyToDel.image);
+    if (actyToDel.image) {
+        const cldFileNames = actyToDel.image.map(i => i.fileName);
+        await (0, cloudinary_1.removeCloudinaryImgs)(cldFileNames);
     }
 });
 ActivityListSchema.post('findOneAndUpdate', async function (acty) {

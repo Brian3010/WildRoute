@@ -1,4 +1,5 @@
 import mongoose, { SchemaOptions, Types } from 'mongoose';
+import { removeCloudinaryImgs } from '../cloudinary';
 import Review from './review';
 const { Schema } = mongoose;
 
@@ -94,6 +95,7 @@ ActivityListSchema.post('findOneAndDelete', async function (actyToDel: IActivity
   console.log('POST "findbyIdandDelete"');
   console.log('file: activities.ts:58 ~ actyToDel:', actyToDel);
 
+  // delete reviews
   if (actyToDel) {
     // delete all reviews that are in actyTodel.reviews[]
     await Review.deleteMany({
@@ -101,6 +103,14 @@ ActivityListSchema.post('findOneAndDelete', async function (actyToDel: IActivity
         $in: actyToDel.reviews,
       },
     });
+  }
+
+  // detele images from Cloudinary
+  console.log(actyToDel.image);
+  if (actyToDel.image) {
+    const cldFileNames = actyToDel.image.map(i => i.fileName!);
+    // console.log({ cldFileNames });
+    await removeCloudinaryImgs(cldFileNames);
   }
 });
 

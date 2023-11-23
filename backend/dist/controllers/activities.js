@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteActy = exports.updateActy = exports.createActivity = exports.displayActivity = exports.index = void 0;
 const cloudinary_1 = require("../cloudinary");
 const activities_1 = __importDefault(require("../models/activities"));
+const getMapBoxGeometry_1 = __importDefault(require("../service/getMapBoxGeometry"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
+const convertStringToURLParams_1 = __importDefault(require("../utils/convertStringToURLParams"));
 const isValidId_1 = require("../utils/isValidId");
 const index = async (req, res, next) => {
     console.log('/activitites GET REQUEST');
@@ -35,12 +37,17 @@ exports.displayActivity = displayActivity;
 const createActivity = async (req, res, next) => {
     console.log('/activities POST REQUEST');
     const acty = req.body.activity;
+    console.log({ acty });
     if (!acty)
         throw new AppError_1.default('Cannot fetch data from body', 400);
     const newActy = new activities_1.default(acty);
     if (req.imageFiles)
         newActy.image = req.imageFiles;
     newActy.author = req.user._id;
+    const locationQuery = (0, convertStringToURLParams_1.default)(acty.location) + '.json';
+    const mbxGeometry = await (0, getMapBoxGeometry_1.default)(locationQuery);
+    newActy.geometry.type = mbxGeometry.type;
+    newActy.geometry.coordinates = mbxGeometry.coordinates;
     const savedActy = await newActy.save();
     res.status(200).json(savedActy);
 };

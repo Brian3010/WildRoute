@@ -172,11 +172,11 @@ function NewForm() {
 
       console.log(formData.getAll('imageFiles'));
     }
-    //!------------------------------
-    console.log({ locationV2: watch('updatedLocation') });
-    return;
+    // //!------------------------------
+    // console.log({ locationV2: watch('updatedLocation') });
+    // return;
 
-    //!------------------------------
+    // //!------------------------------
     try {
       setIsSubmiting(true);
       const res = await axiosInterceptor.post('activities/', formData, {
