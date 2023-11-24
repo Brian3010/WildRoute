@@ -16,6 +16,7 @@ export const index: RequestHandler = async (req, res, next) => {
   const actList = await ActivityList.find();
   if (actList.length === 0) throw new AppError('Cannot fetch the activity list', 404);
 
+  // res.status(200).json({ actyList: actList[actList.length - 1] });
   res.status(200).json(actList);
 };
 

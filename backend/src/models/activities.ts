@@ -15,10 +15,28 @@ interface IActivityList {
   author?: Types.ObjectId;
   reviews?: Array<{ _id: Types.ObjectId; body: string; rating: number; owner: Types.ObjectId }>;
   geometry?: { type: 'Point'; coordinates: [number, number] };
+  imgThumbnail?: Array<{ url: string; fileName?: string }>;
 }
+
+// image virtual
+const imageSchema = new Schema({
+  url: {
+    type: String,
+    required: true,
+  },
+  fileName: {
+    type: String,
+  },
+});
+
+// thumbnail image virtual
+imageSchema.virtual('imgThumbnail').get(function () {
+  return this.url.replace('/upload', '/upload/c_thumb,w_200');
+});
 
 const schemaConfig: SchemaOptions = {
   strict: 'throw',
+  toJSON: { virtuals: true },
 };
 
 const ActivityListSchema = new Schema(
@@ -61,17 +79,7 @@ const ActivityListSchema = new Schema(
       },
     ],
     image: {
-      type: [
-        {
-          url: {
-            type: String,
-            required: true,
-          },
-          fileName: {
-            type: String,
-          },
-        },
-      ],
+      type: [imageSchema],
       required: true,
     },
     author: {

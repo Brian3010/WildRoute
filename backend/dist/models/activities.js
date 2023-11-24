@@ -7,8 +7,21 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cloudinary_1 = require("../cloudinary");
 const review_1 = __importDefault(require("./review"));
 const { Schema } = mongoose_1.default;
+const imageSchema = new Schema({
+    url: {
+        type: String,
+        required: true,
+    },
+    fileName: {
+        type: String,
+    },
+});
+imageSchema.virtual('imgThumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/c_thumb,w_200');
+});
 const schemaConfig = {
     strict: 'throw',
+    toJSON: { virtuals: true },
 };
 const ActivityListSchema = new Schema({
     activity_title: {
@@ -48,17 +61,7 @@ const ActivityListSchema = new Schema({
         },
     ],
     image: {
-        type: [
-            {
-                url: {
-                    type: String,
-                    required: true,
-                },
-                fileName: {
-                    type: String,
-                },
-            },
-        ],
+        type: [imageSchema],
         required: true,
     },
     author: {
