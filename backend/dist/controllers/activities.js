@@ -8,7 +8,7 @@ const cloudinary_1 = require("../cloudinary");
 const activities_1 = __importDefault(require("../models/activities"));
 const getMapboxGeometry_1 = __importDefault(require("../service/getMapboxGeometry"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
-const convertStringToURLParams_1 = __importDefault(require("../utils/convertStringToURLParams"));
+const helper_1 = require("../utils/helper");
 const isValidId_1 = require("../utils/isValidId");
 const index = async (req, res, next) => {
     console.log('/activitites GET REQUEST');
@@ -44,7 +44,7 @@ const createActivity = async (req, res, next) => {
     if (req.imageFiles)
         newActy.image = req.imageFiles;
     newActy.author = req.user._id;
-    const locationQuery = (0, convertStringToURLParams_1.default)(acty.location) + '.json';
+    const locationQuery = (0, helper_1.convertStringToURLParams)(acty.location) + '.json';
     const mbxGeometry = await (0, getMapboxGeometry_1.default)(locationQuery);
     newActy.geometry.type = mbxGeometry.type;
     newActy.geometry.coordinates = mbxGeometry.coordinates;
@@ -91,7 +91,7 @@ const updateActy = async (req, res, next) => {
         const convertedImgFiles = imgFiles.map(f => ({ url: f.url, fileName: f.fileName }));
         resActy.image.push(...convertedImgFiles);
     }
-    const locationQuery = (0, convertStringToURLParams_1.default)(resActy.location) + '.json';
+    const locationQuery = (0, helper_1.convertStringToURLParams)(resActy.location) + '.json';
     const mbxGeometry = await (0, getMapboxGeometry_1.default)(locationQuery);
     resActy.geometry.type = mbxGeometry.type;
     resActy.geometry.coordinates = mbxGeometry.coordinates;

@@ -22,6 +22,7 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
   console.log(`${req.originalUrl} POST method`);
 
   const { email, username, password } = req.body.user;
+  
   const user = new User({ email, username });
   await User.register(user, password);
 
@@ -30,7 +31,7 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
 
   // store refresh to redis database
   await setRedisToken(refreshToken, user._id.toString());
-  // TODO: would do this for register
+
   //res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
   // res.status(200).json({ accessToken, user: userTosend });
   res.status(200).json({ accessToken: token, refreshToken, message: 'redirect to other routes' });
@@ -117,21 +118,3 @@ export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = 
   // res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
   res.status(200).json({ accessToken: newAccessToken });
 };
-
-// export const updateCookie: RequestHandler<{ cookieName: string }, unknown, { newRefreshToken: string }, unknown> = (
-//   req,
-//   res
-// ) => {
-//   const { cookieName } = req.params;
-//   const { newRefreshToken } = req.body;
-//   if (cookieName !== 'jwt') throw new AppError('Invalid cookie name', 404);
-//   if (!newRefreshToken) throw new AppError('Invalid token',404)
-
-//   res.cookie(cookieName, newRefreshToken, {
-//     httpOnly: true,
-//     sameSite: 'none',
-//     secure: true,
-//     maxAge: 30 * 24 * 60 * 60 * 1000,
-//   });
-//   res.status(200).json({ message: 'Cookie updated successfully' });
-// };

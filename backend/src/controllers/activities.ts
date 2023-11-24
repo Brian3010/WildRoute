@@ -5,7 +5,7 @@ import { removeCloudinaryImgs } from '../cloudinary';
 import ActivityList from '../models/activities';
 import getMapboxGeometry from '../service/getMapboxGeometry';
 import AppError from '../utils/AppError';
-import convertStringToURLParams from '../utils/convertStringToURLParams';
+import { convertStringToURLParams } from '../utils/helper';
 import { isValidMongooseId } from '../utils/isValidId';
 
 // show a list of activities
