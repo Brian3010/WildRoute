@@ -8,11 +8,13 @@ export type TActies = {
   image: Array<{
     url: string;
     _id: string;
+    // imgThumbnail?: string;
   }>;
   geometry: { type: 'Point'; coordinates: [number, number] };
 };
 
 export default async function getActies(): Promise<TActies[]> {
-  const res = await axios.get<TActies[]>('/activities');
-  return res.data.reverse();
+  const res = await axios.get('/activities');
+  // return res.data.reverse();
+  return res.data.actyList?.reverse();
 }

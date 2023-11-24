@@ -11,11 +11,11 @@ interface IActivityList {
   description: string;
   avg_price: number;
   tags: 'Adventure' | 'Nature' | 'Camping' | 'Water Sport' | 'Climbing';
-  image: Array<{ url: string; fileName?: string }>;
+  image: Array<{ url: string; fileName?: string; imgThumbnail?: string }>;
   author?: Types.ObjectId;
   reviews?: Array<{ _id: Types.ObjectId; body: string; rating: number; owner: Types.ObjectId }>;
   geometry?: { type: 'Point'; coordinates: [number, number] };
-  imgThumbnail?: Array<{ url: string; fileName?: string }>;
+  // imgThumbnail?: IActivityList['image'];
 }
 
 // image virtual
@@ -36,6 +36,7 @@ imageSchema.virtual('imgThumbnail').get(function () {
 
 const schemaConfig: SchemaOptions = {
   strict: 'throw',
+  toObject: { virtuals: true },
   toJSON: { virtuals: true },
 };
 

@@ -21,6 +21,7 @@ imageSchema.virtual('imgThumbnail').get(function () {
 });
 const schemaConfig = {
     strict: 'throw',
+    toObject: { virtuals: true },
     toJSON: { virtuals: true },
 };
 const ActivityListSchema = new Schema({

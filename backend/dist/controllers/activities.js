@@ -12,10 +12,12 @@ const helper_1 = require("../utils/helper");
 const isValidId_1 = require("../utils/isValidId");
 const index = async (req, res, next) => {
     console.log('/activitites GET REQUEST');
-    const actList = await activities_1.default.find();
+    const actList = await activities_1.default.find({});
     if (actList.length === 0)
         throw new AppError_1.default('Cannot fetch the activity list', 404);
-    res.status(200).json(actList);
+    res.status(200).json({
+        actyList: actList.map(i => i.toObject({ virtuals: true })),
+    });
 };
 exports.index = index;
 const displayActivity = async (req, res, next) => {

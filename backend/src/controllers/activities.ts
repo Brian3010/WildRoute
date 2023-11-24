@@ -13,11 +13,12 @@ export const index: RequestHandler = async (req, res, next) => {
   console.log('/activitites GET REQUEST');
 
   // const actList = await ActivityList.find().skip(0).limit(2);
-  const actList = await ActivityList.find();
+  const actList = await ActivityList.find({});
   if (actList.length === 0) throw new AppError('Cannot fetch the activity list', 404);
 
-  // res.status(200).json({ actyList: actList[actList.length - 1] });
-  res.status(200).json(actList);
+  res.status(200).json({
+    actyList: actList.map(i => i.toObject({ virtuals: true })),
+  });
 };
 
 // show activity's details
