@@ -31,7 +31,7 @@ const imageSchema = new Schema({
 
 // thumbnail image virtual
 imageSchema.virtual('imgThumbnail').get(function () {
-  return this.url.replace('/upload', '/upload/c_thumb,w_200');
+  return this.url.replace('/upload', '/upload/w_400');
 });
 
 const schemaConfig: SchemaOptions = {

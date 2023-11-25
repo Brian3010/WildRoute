@@ -17,7 +17,7 @@ const imageSchema = new Schema({
     },
 });
 imageSchema.virtual('imgThumbnail').get(function () {
-    return this.url.replace('/upload', '/upload/c_thumb,w_200');
+    return this.url.replace('/upload', '/upload/w_400');
 });
 const schemaConfig = {
     strict: 'throw',

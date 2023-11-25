@@ -8,7 +8,7 @@ export type TActies = {
   image: Array<{
     url: string;
     _id: string;
-    // imgThumbnail?: string;
+    imgThumbnail?: string;
   }>;
   geometry: { type: 'Point'; coordinates: [number, number] };
 };

@@ -31,7 +31,7 @@ function ActivityList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const geometryRef = useRef<TActies['geometry'][]>([]);
+  // const geometryRef = useRef<TActies['geometry'][]>([]);
 
   const markerDetailRef = useRef<TMarkerDetail[]>([]);
 

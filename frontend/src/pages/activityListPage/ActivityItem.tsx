@@ -21,7 +21,7 @@ export default function ActivityItem(props: ActyItemProps) {
         <CardMedia
           component="img"
           sx={{ height: 200 }}
-          image={data.image[0] && data.image[0].url}
+          image={data.image[0] && (data.image[0].imgThumbnail || data.image[0].url)}
           title="activity image"
         />
         <CardContent>
