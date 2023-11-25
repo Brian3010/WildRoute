@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid } from '@mui/material';
+import { Box, CircularProgress, Grid, TextField } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import '../../assets/ActivityListPage.css';
@@ -86,8 +86,13 @@ function ActivityList() {
       <>
         <h1>Acitivity List Page</h1>
         <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} />
-
-        <Grid container spacing={2}>
+        <TextField
+          sx={{ margin: '15px 0 15px 0' }}
+          id="activity-search-bar"
+          label="Activity Search"
+          variant="standard"
+        />
+        <Grid sx={{}} container spacing={2}>
           {currentActies.map((el, i) => (
             <Grid sx={{ height: '405px' }} key={i} item xs={12} sm={6} md={4} lg={3}>
               <ActivityItem data={el} />
