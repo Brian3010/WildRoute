@@ -28,7 +28,6 @@ const convertToGeoJSON: TConvertToGeoJSON = data => {
 
 function MapBox({ markerDetail, style }: MapBoxProps) {
   // console.log(geometry);
-  // return <div></div>;
   const mapContainnerRef = useRef<HTMLDivElement>(null);
   let controlMapRef = useRef<mapboxgl.Map | null>();
 
@@ -60,8 +59,7 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
   useEffect(() => {
     console.log('useEffect render when adding cluster');
 
-    //TODO: Display cluster https://docs.mapbox.com/mapbox-gl-js/example/cluster/
-    console.log({ markerDetail });
+    // console.log({ markerDetail });
 
     const activities = convertToGeoJSON(markerDetail);
     // const activities = sampleGeoJSONData;
@@ -175,10 +173,7 @@ function MapBox({ markerDetail, style }: MapBoxProps) {
             if (controlMapRef.current) {
               new mapboxgl.Popup()
                 .setLngLat(coordinates as mapboxgl.LngLatLike)
-                .setHTML(
-                  //TODO: add here the activity preview {title, location}
-                  `<h3><a style="color:#333" href="activities/${id}">${title}</a></h3><p>${location}</p>`
-                )
+                .setHTML(`<h3><a style="color:#333" href="activities/${id}">${title}</a></h3><p>${location}</p>`)
                 .addTo(controlMapRef.current);
             }
           });
