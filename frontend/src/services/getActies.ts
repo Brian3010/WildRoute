@@ -1,4 +1,5 @@
 import axios from '../services/axios';
+import { TTags } from './getActyById';
 
 export type TActies = {
   _id: number;
@@ -11,6 +12,7 @@ export type TActies = {
     imgThumbnail?: string;
   }>;
   geometry: { type: 'Point'; coordinates: [number, number] };
+  tags: TTags[];
 };
 
 export default async function getActies(): Promise<TActies[]> {

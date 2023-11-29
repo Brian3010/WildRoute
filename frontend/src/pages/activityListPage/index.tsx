@@ -1,7 +1,8 @@
-import { Box, CircularProgress, Grid, TextField } from '@mui/material';
+import { Box, CircularProgress, Grid } from '@mui/material';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import '../../assets/ActivityListPage.css';
+import ActivitySearchInputs from '../../components/ActivitySearchInputs';
 import MapBox from '../../components/MapBox';
 import getActies, { TActies } from '../../services/getActies';
 import ActivityItem from './ActivityItem';
@@ -83,20 +84,19 @@ function ActivityList() {
     }
   };
 
+  const checkBoxOnChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    console.log({ event, checked });
+  };
+
   if (loading) return <CircularProgress className="loader" color="inherit" />;
 
+  console.log({ actyData });
   return (
     <>
       <h1>Acitivity List Page</h1>
       <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} />
 
-      <TextField
-        sx={{ margin: '15px 0 15px 0' }}
-        id="activity-search-bar"
-        label="Activity Search"
-        variant="standard"
-        onChange={searchBarOnChange}
-      />
+      <ActivitySearchInputs searchChange={searchBarOnChange} checkBoxChange={checkBoxOnChange} />
 
       <Grid container spacing={2}>
         {actiesDisplay.length > 0 ? (
@@ -107,7 +107,7 @@ function ActivityList() {
           ))
         ) : (
           <Grid item>
-            <div>Nothing to display</div>
+            <div>Activity Not Found</div>
           </Grid>
         )}
       </Grid>
