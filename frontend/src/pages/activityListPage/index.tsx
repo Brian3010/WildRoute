@@ -5,6 +5,7 @@ import '../../assets/ActivityListPage.css';
 import ActivitySearchInputs from '../../components/ActivitySearchInputs';
 import MapBox from '../../components/MapBox';
 import getActies, { TActies } from '../../services/getActies';
+import { TTags } from '../../services/getActyById';
 import ActivityItem from './ActivityItem';
 import AppPagination from './Pagination';
 
@@ -85,7 +86,20 @@ function ActivityList() {
   };
 
   const checkBoxOnChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    console.log({ event, checked });
+    const { value } = event.target;
+    // const valArr: string[] = [];
+    // valArr.push(value);
+
+    console.log({ event, checked, value, actyData });
+    if (checked) {
+      const actyFilteredByTags = actyData.filter((acty, i) => {
+        // const test =
+        // return acty.tags.some(t => t === value);
+        return acty.tags.includes(value as TTags);
+      });
+
+      console.log({ actyFilteredByTags });
+    }
   };
 
   if (loading) return <CircularProgress className="loader" color="inherit" />;
@@ -94,10 +108,9 @@ function ActivityList() {
   return (
     <>
       <h1>Acitivity List Page</h1>
-      <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} />
-
+      {/* //! */}
+      {/* <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} /> */}
       <ActivitySearchInputs searchChange={searchBarOnChange} checkBoxChange={checkBoxOnChange} />
-
       <Grid container spacing={2}>
         {actiesDisplay.length > 0 ? (
           actiesDisplay.map((el, i) => (
@@ -111,7 +124,6 @@ function ActivityList() {
           </Grid>
         )}
       </Grid>
-
       <Box display={'flex'} justifyContent={'center'} marginTop={2} marginBottom={2}>
         <AppPagination actiesPerPage={actiesPerPage} totalActies={actyData.length} pageOnchange={paginationOnChange} />
       </Box>
