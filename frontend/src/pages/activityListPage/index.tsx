@@ -6,6 +6,7 @@ import ActivitySearchInputs from '../../components/ActivitySearchInputs';
 import MapBox from '../../components/MapBox';
 import getActies, { TActies } from '../../services/getActies';
 import { TTags } from '../../services/getActyById';
+import { getActiesByTextAndTags } from '../../utils/helper';
 import ActivityItem from './ActivityItem';
 import AppPagination from './Pagination';
 
@@ -20,8 +21,17 @@ function ActivityList() {
   const [loading, setLoading] = useState(false);
   const [actiesDisplay, setActiesDisplay] = useState<TActies[]>([]);
 
-  const actyListRef = useRef<TActies[]>([]);
+  const actyListRef = useRef<TActies[]>([]); // store the activity list
   const markerDetailRef = useRef<TMarkerDetail[]>([]);
+  const filteredActies = useRef<TActies[]>([]);
+  // const filteredActies = useRef<{ isPreviouslyFiltered: boolean; data: TActies[] }>({
+  //   isPreviouslyFiltered: false,
+  //   data: [],
+  // });
+
+  const searchValues = useRef<{ searchVal: string; tagsArray: string[] }>({ searchVal: '', tagsArray: [] });
+
+  const tagsArray = useRef<string[]>([]);
 
   // const geometryRef = useRef<TActies['geometry'][]>([]);
 
@@ -78,28 +88,89 @@ function ActivityList() {
     // console.log({ value, actyList: actyData, actiesDisplay, actyListRef: actyListRef.current });
 
     if (value.length > 3) {
-      const actiesFiltered = actyData.filter(i => i.activity_title.toLowerCase().includes(value.toLowerCase()));
+      // const actiesFiltered = actyData.filter(i => i.activity_title.toLowerCase().includes(value.toLowerCase()));
+      const actiesFiltered = getActiesByTextAndTags(actyListRef.current, { text: value, tagsArray: tagsArray.current });
       setActyData(actiesFiltered);
+      searchValues.current.searchVal = value;
     } else {
       setActyData(actyListRef.current);
     }
   };
 
+  // activiate when checkbox checked
   const checkBoxOnChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     const { value } = event.target;
-    // const valArr: string[] = [];
-    // valArr.push(value);
+
+    // create an array of tags for searching
+    if (checked && !tagsArray.current.includes(value)) {
+      tagsArray.current.push(value);
+    } else {
+      // remove when unchecked
+      tagsArray.current = tagsArray.current.filter(t => t !== value);
+    }
+    searchValues.current.tagsArray = tagsArray.current;
+
+    console.log({ searchValues });
+
+    // if (tagsArray.current.length > 0) {
+
+    // }
+    // put data back when checkbox tags empty
+    if (tagsArray.current.length === 0) {
+      // filteredActies.current = actyData;
+      setActyData(actyListRef.current);
+    } else {
+      let isFiltered = false;
+      console.log({ isFiltered });
+
+      for (let i = 0; i < tagsArray.current.length; i++) {
+        // if not previously filtered with actyData
+        if (!isFiltered) {
+          filteredActies.current = actyData.filter(acty => acty.tags.includes(tagsArray.current[i] as TTags));
+
+          isFiltered = true;
+        } else {
+          // filtered using previous filtered data
+          filteredActies.current = filteredActies.current.filter(acty =>
+            acty.tags.includes(tagsArray.current[i] as TTags)
+          );
+        }
+      }
+      setActyData(filteredActies.current);
+    }
+    // console.log({ tagsArray: actyListRef.current });
+
+    // // is at least 1 check box checked
+    // if (!filteredActies.current.isPreviouslyFiltered && checked) {
+    //   filteredActies.current.data = actyData.filter(acty => {
+    //     // const test =
+    //     // return acty.tags.some(t => t === value);
+    //     return acty.tags.includes(value as TTags);
+    //   });
+    //   filteredActies.current.isPreviouslyFiltered = true;
+    // }
+
+    // if (filteredActies.current.isPreviouslyFiltered && checked) {
+    //   filteredActies.current.data = filteredActies.current.data.filter(acty => {
+    //     return acty.tags.includes(value as TTags);
+    //   });
+    // }
+    // // when unchecked
 
     console.log({ event, checked, value, actyData });
-    if (checked) {
-      const actyFilteredByTags = actyData.filter((acty, i) => {
-        // const test =
-        // return acty.tags.some(t => t === value);
-        return acty.tags.includes(value as TTags);
-      });
+    // if (checked && filteredActies.current?.isPreviouslyFiltered) {
+    //   if (filteredActies.current.length > 0) {
+    //     filteredActies.current = actyData.filter(acty => {
+    //       // const test =
+    //       // return acty.tags.some(t => t === value);
+    //       return acty.tags.includes(value as TTags);
+    //     });
+    //   }
 
-      console.log({ actyFilteredByTags });
-    }
+    console.log({ filteredActies });
+    // setActyData(filteredActies.current);
+
+    // }
   };
 
   if (loading) return <CircularProgress className="loader" color="inherit" />;
