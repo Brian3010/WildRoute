@@ -1,6 +1,7 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { TActies } from '../../services/getActies';
+import { trucateString } from '../../utils/helper';
 
 type ActyItemProps = {
   data: TActies;
@@ -8,12 +9,6 @@ type ActyItemProps = {
 
 export default function ActivityItem(props: ActyItemProps) {
   const data = props.data;
-
-  const trucateString = (text: string, numWords: number) => {
-    const words = text.split(' ');
-    const truncatedWords = words.slice(0, numWords);
-    return truncatedWords.join(' ');
-  };
 
   return (
     <>
@@ -48,7 +43,7 @@ export default function ActivityItem(props: ActyItemProps) {
             {trucateString(data.description, 20)}...
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            {data.location}
+            {trucateString(data.location, 5)}...
           </Typography>
         </CardContent>
         <CardActions sx={{ position: 'absolute', bottom: '2px' }}>

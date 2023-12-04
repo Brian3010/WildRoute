@@ -51,3 +51,9 @@ export const getActiesByTextAndTags = (
 
   return acties;
 };
+
+export const trucateString = (text: string, numWords: number) => {
+  const words = text.split(' ');
+  const truncatedWords = words.slice(0, numWords);
+  return truncatedWords.join(' ');
+};
