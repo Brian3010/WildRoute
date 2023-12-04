@@ -24,18 +24,22 @@ export const mapBoxLocationSearchSimulate = (value: string) => {
   });
 };
 
-// TODO: return acties that match both tags and search text input
-
 const strcmp = (fString: string, sString: string): boolean => fString.toLowerCase().includes(sString.toLowerCase());
 
+/**
+ * return a list of actitivies that match the search values
+ */
 export const getActiesByTextAndTags = (
   data: TActies[],
   searchValues: { text: string; tagsArray: string[] }
 ): TActies[] => {
+  // filter the data with text input
   const filterdByText = data.filter(acty => strcmp(acty.activity_title, searchValues.text));
   console.log({ filterdByText });
   let acties: TActies[] = filterdByText || data;
   let isFiltered = false;
+
+  // loop thorough the tags array and filterd down the matching item in the array
   for (let i = 0; i < searchValues.tagsArray.length; i++) {
     if (!isFiltered) {
       acties = filterdByText.filter(acty => acty.tags.includes(searchValues.tagsArray[i] as TTags));

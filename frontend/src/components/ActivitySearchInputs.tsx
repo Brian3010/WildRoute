@@ -1,5 +1,5 @@
 import { Box, Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent } from 'react';
 import { TTags } from '../services/getActyById';
 
 interface ActivitySearchProps {

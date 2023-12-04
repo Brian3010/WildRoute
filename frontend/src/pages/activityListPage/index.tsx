@@ -5,12 +5,13 @@ import '../../assets/ActivityListPage.css';
 import ActivitySearchInputs from '../../components/ActivitySearchInputs';
 import MapBox from '../../components/MapBox';
 import getActies, { TActies } from '../../services/getActies';
-import { TTags } from '../../services/getActyById';
 import { getActiesByTextAndTags } from '../../utils/helper';
 import ActivityItem from './ActivityItem';
 import AppPagination from './Pagination';
 
 export type TMarkerDetail = { geometry: TActies['geometry']; title: string; location: string; id: TActies['_id'] };
+
+const charLimit = 4;
 
 function ActivityList() {
   // console.log('ActivityList component render');
@@ -23,13 +24,8 @@ function ActivityList() {
 
   const actyListRef = useRef<TActies[]>([]); // store the activity list
   const markerDetailRef = useRef<TMarkerDetail[]>([]);
-  const filteredActies = useRef<TActies[]>([]);
-  // const filteredActies = useRef<{ isPreviouslyFiltered: boolean; data: TActies[] }>({
-  //   isPreviouslyFiltered: false,
-  //   data: [],
-  // });
 
-  const searchValues = useRef<{ searchVal: string; tagsArray: string[] }>({ searchVal: '', tagsArray: [] });
+  const searchValues = useRef<{ textValue: string; tagsArray: string[] }>({ textValue: '', tagsArray: [] });
 
   const tagsArray = useRef<string[]>([]);
 
@@ -82,28 +78,40 @@ function ActivityList() {
   // change page
   const paginationOnChange: (pageNum: number) => void = pageNum => setCurrentPage(pageNum);
 
-  // display acties based on search value
+  // display acties based on search text
   const searchBarOnChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // event.preventDefault();
     const { value } = event.target;
-    // console.log({ value, actyList: actyData, actiesDisplay, actyListRef: actyListRef.current });
 
-    // if (searchValues.current.tagsArray.length > 0 && value.length > 3) {
-    //   setActyData(getActiesByTextAndTags(actyListRef.current, { text: value, tagsArray: tagsArray.current }));
-    // }
+    // store text value to searchValues ref
+    searchValues.current.textValue = value;
 
-    if (value.length > 3) {
+    // filter acties when there are checked boxes
+    if (searchValues.current.tagsArray.length > 0) {
+      setActyData(
+        getActiesByTextAndTags(actyListRef.current, {
+          text: searchValues.current.textValue,
+          tagsArray: tagsArray.current,
+        })
+      );
+    }
+
+    // filter acties when the text input's at the limit
+    if (searchValues.current.textValue.length > charLimit) {
       // store in input ref obj
-      searchValues.current.searchVal = value;
-      // const actiesFiltered = actyData.filter(i => i.activity_title.toLowerCase().includes(value.toLowerCase()));
-      const actiesFiltered = getActiesByTextAndTags(actyListRef.current, { text: value, tagsArray: tagsArray.current });
+      const actiesFiltered = getActiesByTextAndTags(actyListRef.current, {
+        text: searchValues.current.textValue,
+        tagsArray: tagsArray.current,
+      });
       setActyData(actiesFiltered);
-    } else {
+    }
+
+    // reset acties when no inputs
+    if (searchValues.current.textValue.length === 0 && searchValues.current.tagsArray.length === 0) {
       setActyData(actyListRef.current);
     }
   };
 
-  // activiate when checkbox checked
+  // display acties when checkboxes change
   const checkBoxOnChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     const { value } = event.target;
 
@@ -119,20 +127,17 @@ function ActivityList() {
 
     console.log({ searchValues });
 
-    if (tagsArray.current.length === 0 && searchValues.current.searchVal.length === 0) {
+    // reset acties when no inputs
+    if (tagsArray.current.length === 0 && searchValues.current.textValue.length === 0) {
       setActyData(actyListRef.current);
     } else {
       setActyData(
         getActiesByTextAndTags(actyListRef.current, {
-          text: searchValues.current.searchVal,
+          text: searchValues.current.textValue,
           tagsArray: searchValues.current.tagsArray,
         })
       );
     }
-
-    // console.log({ event, checked, value, actyData });
-
-    // console.log({ filteredActies });
   };
 
   if (loading) return <CircularProgress className="loader" color="inherit" />;
@@ -141,8 +146,7 @@ function ActivityList() {
   return (
     <>
       <h1>Acitivity List Page</h1>
-      {/* //! */}
-      {/* <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} /> */}
+      <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} />
       <ActivitySearchInputs searchChange={searchBarOnChange} checkBoxChange={checkBoxOnChange} />
       <Grid container spacing={2}>
         {actiesDisplay.length > 0 ? (
