@@ -1,4 +1,5 @@
-import { Box, Checkbox, FormControlLabel, FormGroup, TextField } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Checkbox, FormControlLabel, FormGroup, InputAdornment, TextField } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { TTags } from '../services/getActyById';
 
@@ -18,16 +19,30 @@ export default function ActivitySearchInputs({ searchChange, checkBoxChange }: A
   };
 
   return (
-    <Box sx={{ margin: '15px 0 15px 0', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+    <Box
+      sx={{
+        margin: '30px 0 40px 0',
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        alignItems: 'flex-end',
+      }}
+    >
       <TextField
         // sx={{ margin: '15px 0 15px 0' }}
         id="activity-search-bar"
-        label="Activity Search"
-        variant="standard"
+        variant="outlined"
         size="small"
         onChange={searchBarOnChange}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon fontSize="small" />
+            </InputAdornment>
+          ),
+        }}
       />
-      <FormGroup sx={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
+      <FormGroup sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
         {tags.map((t, key) => (
           <FormControlLabel
             // sx={{ margin: '15px 0 15px 0' }}

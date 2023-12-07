@@ -12,7 +12,7 @@ export default function ActivityItem(props: ActyItemProps) {
 
   return (
     <>
-      <Card sx={{ width: '100%', height: '100%', position: 'relative' }}>
+      <Card sx={{ width: '100%', height: '100%', position: 'relative', boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px' }}>
         <CardMedia
           component="img"
           sx={{ height: 200 }}

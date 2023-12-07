@@ -145,8 +145,7 @@ function ActivityList() {
   console.log({ actyData });
   return (
     <>
-      <h1>Acitivity List Page</h1>
-      <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px' }} />
+      <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px',borderRadius:'6px' }} />
       <ActivitySearchInputs searchChange={searchBarOnChange} checkBoxChange={checkBoxOnChange} />
       <Grid container spacing={2}>
         {actiesDisplay.length > 0 ? (
