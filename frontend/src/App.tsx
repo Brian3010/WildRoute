@@ -17,6 +17,7 @@ import EditActivity from './pages/editPage';
 import HomePage from './pages/homepage';
 import LoginPage from './pages/loginPage';
 import NewActivity from './pages/newPage';
+import Footer from './components/Footer';
 
 function App() {
   const location = useLocation();
@@ -90,6 +91,7 @@ function App() {
         </Route>
         {/* </Route> */}
       </Routes>
+      <Footer/>
     </div>
   );
 }

@@ -21,15 +21,18 @@ export default function ActivitySearchInputs({ searchChange, checkBoxChange }: A
   return (
     <Box
       sx={{
-        margin: '30px 0 40px 0',
+        margin: '30px 0 20px 0',
         display: 'flex',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
+        flexDirection: 'column',
         flexWrap: 'wrap',
-        alignItems: 'flex-end',
+        alignItems: 'center',
+        gap: 2,
       }}
     >
       <TextField
         // sx={{ margin: '15px 0 15px 0' }}
+        label="Search activity"
         id="activity-search-bar"
         variant="outlined"
         size="small"
@@ -44,12 +47,14 @@ export default function ActivitySearchInputs({ searchChange, checkBoxChange }: A
       />
       <FormGroup sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
         {tags.map((t, key) => (
-          <FormControlLabel
-            // sx={{ margin: '15px 0 15px 0' }}
-            key={key}
-            control={<Checkbox size="small" onChange={handleCheckBoxChange} value={t} />}
-            label={t}
-          />
+          <Box>
+            <FormControlLabel
+              // sx={{ margin: '15px 0 15px 0' }}
+              key={key}
+              control={<Checkbox size="small" onChange={handleCheckBoxChange} value={t} />}
+              label={t}
+            />
+          </Box>
         ))}
       </FormGroup>
     </Box>
