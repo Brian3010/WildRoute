@@ -220,7 +220,7 @@ function NavBar() {
         </AppBar>
       </ThemeProvider>
       <FlashMessage key={location.pathname} />
-      <main style={{ marginTop: '2em' }}>
+      <main style={{ marginTop: '2em',minHeight:'100vh', marginBottom:'100px'}}>
         <Container maxWidth="xl">
           <Outlet />
         </Container>

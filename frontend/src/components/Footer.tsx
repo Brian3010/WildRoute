@@ -6,13 +6,11 @@ function Footer() {
     <Box
       component={'footer'}
       sx={{
-        position: 'fixed',
-        left: '0',
-        bottom: '0',
-        width: '100%',
+        marginTop: 'auto',
+        padding: '10px',
         textAlign: 'center',
-        background: 'black',
-        color: 'white',
+        background: '#121212',
+        color: '#fff',
       }}
     >
       <Typography

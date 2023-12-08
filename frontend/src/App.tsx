@@ -5,6 +5,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
 import ErrorFallBack from './components/ErrorFallBack';
 // import FlashMessage from './components/FlashMessage';
+import Footer from './components/Footer';
 import IsOwner from './components/IsOwner';
 import NavBar from './components/NavBar';
 import PersistLogin from './components/PersistLogin';
@@ -17,7 +18,6 @@ import EditActivity from './pages/editPage';
 import HomePage from './pages/homepage';
 import LoginPage from './pages/loginPage';
 import NewActivity from './pages/newPage';
-import Footer from './components/Footer';
 
 function App() {
   const location = useLocation();
@@ -31,7 +31,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App" style={{display:'flex',flexDirection:'column',minHeight:'100vh'}}>
       {/* <NavBar /> */}
 
       {/* <FlashMessage /> */}
@@ -91,7 +91,7 @@ function App() {
         </Route>
         {/* </Route> */}
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

@@ -160,7 +160,7 @@ function ActivityList() {
           </Grid>
         )}
       </Grid>
-      <Box display={'flex'} justifyContent={'center'} marginTop={2} marginBottom={2}>
+      <Box display={'flex'} justifyContent={'center'} marginTop={5} marginBottom={2}>
         <AppPagination actiesPerPage={actiesPerPage} totalActies={actyData.length} pageOnchange={paginationOnChange} />
       </Box>
     </>
