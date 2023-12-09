@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Grid } from '@mui/material';
+import { Box, CircularProgress, Container, Grid } from '@mui/material';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import '../../assets/ActivityListPage.css';
@@ -144,7 +144,7 @@ function ActivityList() {
 
   console.log({ actyData });
   return (
-    <>
+    <Container maxWidth="xl">
       <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px',borderRadius:'6px' }} />
       <ActivitySearchInputs searchChange={searchBarOnChange} checkBoxChange={checkBoxOnChange} />
       <Grid container spacing={2}>
@@ -163,7 +163,7 @@ function ActivityList() {
       <Box display={'flex'} justifyContent={'center'} marginTop={5} marginBottom={2}>
         <AppPagination actiesPerPage={actiesPerPage} totalActies={actyData.length} pageOnchange={paginationOnChange} />
       </Box>
-    </>
+    </Container>
   );
 }
 

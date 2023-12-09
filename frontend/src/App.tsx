@@ -5,9 +5,8 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import './assets/App.css';
 import ErrorFallBack from './components/ErrorFallBack';
 // import FlashMessage from './components/FlashMessage';
-import Footer from './components/Footer';
 import IsOwner from './components/IsOwner';
-import NavBar from './components/NavBar';
+import Layout from './components/Layout';
 import PersistLogin from './components/PersistLogin';
 import RequireAuth from './components/requireAuth';
 import PageNotFound from './pages/PageNotFound';
@@ -31,14 +30,14 @@ function App() {
   }
 
   return (
-    <div className="App" style={{display:'flex',flexDirection:'column',minHeight:'100vh'}}>
+    <div className="App" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh',position:'relative'}}>
       {/* <NavBar /> */}
 
       {/* <FlashMessage /> */}
 
       <Routes>
         {/* <Route element={<PersistLogin />}> */}
-        <Route element={<NavBar />}>
+        <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
 
           <Route path="/activities">
@@ -91,7 +90,6 @@ function App() {
         </Route>
         {/* </Route> */}
       </Routes>
-      <Footer />
     </div>
   );
 }

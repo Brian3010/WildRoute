@@ -47,10 +47,10 @@ export default function ActivitySearchInputs({ searchChange, checkBoxChange }: A
       />
       <FormGroup sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
         {tags.map((t, key) => (
-          <Box>
+          <Box key={key}>
             <FormControlLabel
               // sx={{ margin: '15px 0 15px 0' }}
-              key={key}
+
               control={<Checkbox size="small" onChange={handleCheckBoxChange} value={t} />}
               label={t}
             />

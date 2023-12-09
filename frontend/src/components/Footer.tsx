@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
 import '../assets/Footer.css';
 import socialMediaIcons from '../images/socialMediaIcons';
 
@@ -41,7 +40,7 @@ function Footer() {
             <a href="https://www.linkedin.com/in/brian-nguyen-411483196" target="_blank">
               <img src={socialMediaIcons.LinkedInIcon} alt="Linkedin icon" />
             </a>
-            <a href="mailto:briannguyenwg@gmail.com" >
+            <a href="mailto:briannguyenwg@gmail.com">
               <img src={socialMediaIcons.GmailIcon} alt="Gmail icon" />
             </a>
           </Box>
