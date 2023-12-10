@@ -28,7 +28,7 @@ function Layout() {
       <main className="main-container">
         <Outlet />
       </main>
-      {location.pathname !== '/' && <Footer />}
+      <Footer />
     </>
   );
 }

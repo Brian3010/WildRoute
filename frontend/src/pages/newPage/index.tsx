@@ -4,7 +4,7 @@ import NewForm from './NewForm';
 /** Component */
 function NewActivity() {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm"  sx={{marginTop:4}}>
       <Paper variant="outlined" sx={{ padding: 3 }}>
         <Typography component="h1" variant="h4" align="center" marginBottom={5}>
           Create New Activity

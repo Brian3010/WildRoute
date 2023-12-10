@@ -57,7 +57,7 @@ function Activity() {
   if (actyDetail) {
     return (
       <>
-        <Container maxWidth="lg">
+        <Container maxWidth="lg"  sx={{marginTop:4}}>
           <ActyDetailDisplay actyData={actyDetail} onRatingChanged={onRatingChanged} />
         </Container>
       </>

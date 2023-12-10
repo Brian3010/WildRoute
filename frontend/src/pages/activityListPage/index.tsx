@@ -144,7 +144,7 @@ function ActivityList() {
 
   console.log({ actyData });
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" sx={{marginTop:4}}>
       <MapBox markerDetail={markerDetailRef.current} style={{ height: '500px',borderRadius:'6px' }} />
       <ActivitySearchInputs searchChange={searchBarOnChange} checkBoxChange={checkBoxOnChange} />
       <Grid container spacing={2}>

@@ -61,7 +61,7 @@ export default function EditActivity() {
   if (isLoading) return <CircularProgress className="loader" color="inherit" />;
 
   return editData ? (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm"  sx={{marginTop:4}}>
       {/* <h1>render edit form here activity id is {actyId}</h1> */}
       <Paper variant="outlined" sx={{ padding: 3 }}>
         <Typography component="h1" variant="h4" align="center" marginBottom={5}>
