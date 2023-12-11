@@ -16,6 +16,7 @@ const NavBarStyle: CSSProperties | undefined = {
   left: 0,
   paddingLeft: '2.5vw',
   paddingRight: '3.5vw',
+  zIndex: 1
 };
 
 function NavigationBar() {
