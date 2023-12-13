@@ -1,5 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Checkbox, FormControlLabel, FormGroup, InputAdornment, TextField } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, FormGroup, InputAdornment, TextField, Typography } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { TTags } from '../services/getActyById';
 
@@ -45,18 +45,23 @@ export default function ActivitySearchInputs({ searchChange, checkBoxChange }: A
           ),
         }}
       />
-      <FormGroup sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-        {tags.map((t, key) => (
-          <Box key={key}>
-            <FormControlLabel
-              // sx={{ margin: '15px 0 15px 0' }}
+      <Box display={'flex'} alignItems={'center'} gap={3} flexWrap={'wrap'}>
+        <Typography fontWeight={700} variant="body1">
+          Categories:{' '}
+        </Typography>
+        <FormGroup sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          {tags.map((t, key) => (
+            <Box key={key}>
+              <FormControlLabel
+                // sx={{ margin: '15px 0 15px 0' }}
 
-              control={<Checkbox size="small" onChange={handleCheckBoxChange} value={t} />}
-              label={t}
-            />
-          </Box>
-        ))}
-      </FormGroup>
+                control={<Checkbox size="small" onChange={handleCheckBoxChange} value={t} />}
+                label={t}
+              />
+            </Box>
+          ))}
+        </FormGroup>
+      </Box>
     </Box>
   );
 }
