@@ -88,6 +88,8 @@ function NavigationBar() {
       </List>
     </Box>
   );
+
+  
   return (
     <AppBar position="static" color="default" component={'nav'}>
       <div

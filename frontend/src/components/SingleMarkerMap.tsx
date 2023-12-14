@@ -30,7 +30,7 @@ function SingleMarkerMap({ geometry }: SingleMarkerMapProps) {
 
   return (
     <div>
-      <div id="mapBox" ref={mapContainerRef} style={{ height: '400px' }}></div>
+      <div id="mapBox" ref={mapContainerRef} style={{ height: '400px',borderRadius:'2%' }}></div>
     </div>
   );
 }

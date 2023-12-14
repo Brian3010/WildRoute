@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -9,6 +9,8 @@ import ActyReviews from './ActyReviews';
 import ImageItem from './ImageItem';
 import LeaveReview from './LeaveReview';
 // import MapDisplay from './MapDisplay';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import SingleMarkerMap from '../../components/SingleMarkerMap';
 interface ActyDetailDisplayProps {
   actyData: TActyDetail;
@@ -57,9 +59,20 @@ export default function ActyDetailDisplay(props: ActyDetailDisplayProps) {
       {/** display Mapbox */}
       <Grid item xs={12} md={6}>
         {/* <MapDisplay /> */}
-        <SingleMarkerMap geometry={actyDetail.geometry}/>
+        <SingleMarkerMap geometry={actyDetail.geometry} />
+        <Box sx={{ display: { xs: 'none', sm: 'none', md: 'inline-block' }, marginTop: '15px' }}>
+          <Button
+            disableRipple
+            size="small"
+            startIcon={<ArrowBackIcon />}
+            href="/activities"
+            className="back-to-list-btn"
+          >
+            Back to the list
+          </Button>
+        </Box>
       </Grid>
-      
+
       <Grid item xs={12} md={6}>
         <Typography variant="h5" margin={'20px 0 10px 0'}>
           Reviews
