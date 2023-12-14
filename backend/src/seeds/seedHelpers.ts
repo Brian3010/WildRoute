@@ -16,7 +16,6 @@ export const descriptors: Array<string> = [
   'Surfing',
   'Swimming',
   'Whale Watching',
-  'White Water Rafting',
   'Wildlife Tours',
 ];
 
@@ -33,11 +32,7 @@ const placesWithLoc: Array<string>[] = [
   ['Freycinet National Park (Tasmania)', 'Ningaloo Reef', 'Noosa Everglades'],
   ['Blue Mountains', 'Mount Arapiles (Victoria)', 'Barrington Tops National Park'],
   ['Whitsunday Islands', 'Sydney Harbour', 'Great Barrier Reef'],
-  [
-    'Moreton Island',
-    'Stockton Sand Dunes (Port Stephens)',
-    'Lancelin Sand Dunes (Western Australia)',
-  ],
+  ['Moreton Island', 'Stockton Sand Dunes (Port Stephens)', 'Lancelin Sand Dunes (Western Australia)'],
   ['Great Barrier Reef', 'Ningaloo Reef', 'Lord Howe Island'],
   ['Gold Coast', 'Bells Beach (Victoria)', 'Margaret River (Western Australia)'],
   ['Bondi Beach (Sydney)', 'Whitehaven Beach (Whitsunday Islands)', 'Litchfield National Park'],
@@ -48,7 +43,7 @@ const placesWithLoc: Array<string>[] = [
 
 // strip () out of the array
 
-export const places : string[][] = placesWithLoc.map(place => {
+export const places: string[][] = placesWithLoc.map(place => {
   return place.map(pW => {
     return pW.replace(/\s*\([^)]*\)/, '');
   });

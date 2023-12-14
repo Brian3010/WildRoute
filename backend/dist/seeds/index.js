@@ -54,10 +54,18 @@ const generateRandomTags = () => {
 const seedDb = async () => {
     console.log('seedDb() TRIGGED');
     await activities_js_1.default.deleteMany({});
+    const nonDupIndexArray = new Array();
     for (let i = 0; i < 50; i++) {
         console.log(i);
         const placeIdx = randomIndex(seedHelpers_js_1.places);
         const cityIdx = randomIndex(cities_js_1.cities)[0];
+        if (!nonDupIndexArray.includes(cityIdx)) {
+            nonDupIndexArray.push(cityIdx);
+        }
+        else {
+            i = i - 1;
+            continue;
+        }
         const imgUrl = await getPhotoUrl();
         const randTags = generateRandomTags();
         const ActList = new activities_js_1.default({

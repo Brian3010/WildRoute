@@ -72,12 +72,24 @@ const seedDb = async (): Promise<void> => {
   // const imgUrl = await getPhotoUrl();
   // console.log(imgUrl);
 
+  const nonDupIndexArray = new Array();
+
   for (let i = 0; i < 50; i++) {
     console.log(i);
 
     const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
     // const cityIdx = randomIndex(shuffleArray(cities))[0]; // shufferArray return shuffle array of cities, then use randomIndex to get an random number out of the array
     const cityIdx = randomIndex(cities)[0]; // shufferArray return shuffle array of cities, then use randomIndex to get an random number out of the array
+
+    // check if index duplicates
+    if (!nonDupIndexArray.includes(cityIdx)) {
+      nonDupIndexArray.push(cityIdx);
+    } else {
+      // if there is duplicate, decrement the index and jump/try again
+      i = i - 1;
+      continue;
+    }
+
     const imgUrl = await getPhotoUrl();
     // console.log({ imgUrl });
     const randTags = generateRandomTags();
