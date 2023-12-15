@@ -1,5 +1,5 @@
 require('dotenv').config();
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, isAxiosError } from 'axios';
 import mongoose from 'mongoose';
 import ActivityList from '../models/activities.js';
 import { City, cities } from './cities.js';
@@ -35,9 +35,16 @@ const getPhotoUrl = async (): Promise<string | undefined> => {
         client_id: process.env.UNSPLASH_KEY,
       },
     });
+
     return response.data.urls.small;
   } catch (error) {
     console.log('ERROR: ', error);
+    // if (isAxiosError(error) && error.response?.status === 403) {
+    //   // console.log({ error: error.response.status });
+
+    // }
+  } finally {
+    return 'https://images.unsplash.com/photo-1698713234303-d64920be3e31?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
   }
   return undefined;
 };
@@ -74,7 +81,7 @@ const seedDb = async (): Promise<void> => {
 
   const nonDupIndexArray = new Array();
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 1; i++) {
     console.log(i);
 
     const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
