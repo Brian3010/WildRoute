@@ -27,7 +27,12 @@ const randomIndex = <T extends Array<string>[] | object[]>(data: T): [number, nu
   return [randIndex, subIndex];
 };
 
-const getPhotoUrl = async (): Promise<string | undefined> => {
+const getPhotoUrl = async (index: number): Promise<string | undefined> => {
+  //image urls to be used when exceed limit when calling unsplash API
+
+  const defaultImg =
+    'https://images.unsplash.com/photo-1476979735039-2fdea9e9e407?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+
   try {
     const response: AxiosResponse = await axios.get('https://api.unsplash.com/photos/random', {
       params: {
@@ -38,13 +43,11 @@ const getPhotoUrl = async (): Promise<string | undefined> => {
 
     return response.data.urls.small;
   } catch (error) {
-    console.log('ERROR: ', error);
-    // if (isAxiosError(error) && error.response?.status === 403) {
-    //   // console.log({ error: error.response.status });
-
-    // }
-  } finally {
-    return 'https://images.unsplash.com/photo-1698713234303-d64920be3e31?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+    // console.log('ERROR: ', error);
+    if (isAxiosError(error) && error.response?.status === 403) {
+      console.log('replacing with default image due to limit exceeded');
+      return defaultImg;
+    }
   }
   return undefined;
 };
@@ -75,13 +78,13 @@ const generateRandomTags = (): Array<string> => {
 
 const seedDb = async (): Promise<void> => {
   console.log('seedDb() TRIGGED');
-  await ActivityList.deleteMany({});
+  // await ActivityList.deleteMany({});
   // const imgUrl = await getPhotoUrl();
   // console.log(imgUrl);
 
   const nonDupIndexArray = new Array();
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 50; i++) {
     console.log(i);
 
     const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
@@ -97,13 +100,14 @@ const seedDb = async (): Promise<void> => {
       continue;
     }
 
-    const imgUrl = await getPhotoUrl();
+    const imgUrl = await getPhotoUrl(i);
+
     // console.log({ imgUrl });
     const randTags = generateRandomTags();
     // const shuffleIdxCities = shuffleArray(cities)[0]
 
     const ActList = new ActivityList({
-      activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]]}`,
+      activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]] || 'Hiking'}`,
       location: `${cities[cityIdx].city}, ${cities[cityIdx].admin_name}`,
       geometry: {
         type: 'Point',

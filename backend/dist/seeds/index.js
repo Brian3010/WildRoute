@@ -48,7 +48,8 @@ const randomIndex = (data) => {
     }
     return [randIndex, subIndex];
 };
-const getPhotoUrl = async () => {
+const getPhotoUrl = async (index) => {
+    const defaultImg = 'https://images.unsplash.com/photo-1476979735039-2fdea9e9e407?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
     try {
         const response = await axios_1.default.get('https://api.unsplash.com/photos/random', {
             params: {
@@ -59,9 +60,9 @@ const getPhotoUrl = async () => {
         return response.data.urls.small;
     }
     catch (error) {
-        console.log('ERROR: ', error);
         if ((0, axios_1.isAxiosError)(error) && error.response?.status === 403) {
-            return 'https://images.unsplash.com/photo-1698713234303-d64920be3e31?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+            console.log('replacing with default image due to limit exceeded');
+            return defaultImg;
         }
     }
     return undefined;
@@ -79,9 +80,8 @@ const generateRandomTags = () => {
 };
 const seedDb = async () => {
     console.log('seedDb() TRIGGED');
-    await activities_js_1.default.deleteMany({});
     const nonDupIndexArray = new Array();
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 50; i++) {
         console.log(i);
         const placeIdx = randomIndex(seedHelpers_js_1.places);
         const cityIdx = randomIndex(cities_js_1.cities)[0];
@@ -92,10 +92,10 @@ const seedDb = async () => {
             i = i - 1;
             continue;
         }
-        const imgUrl = await getPhotoUrl();
+        const imgUrl = await getPhotoUrl(i);
         const randTags = generateRandomTags();
         const ActList = new activities_js_1.default({
-            activity_title: `${seedHelpers_js_1.places[placeIdx[0]][1]} ${seedHelpers_js_1.descriptors[placeIdx[0]]}`,
+            activity_title: `${seedHelpers_js_1.places[placeIdx[0]][1]} ${seedHelpers_js_1.descriptors[placeIdx[0]] || 'Hiking'}`,
             location: `${cities_js_1.cities[cityIdx].city}, ${cities_js_1.cities[cityIdx].admin_name}`,
             geometry: {
                 type: 'Point',
