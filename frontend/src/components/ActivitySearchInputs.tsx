@@ -55,7 +55,7 @@ export default function ActivitySearchInputs({ searchChange, checkBoxChange }: A
               <FormControlLabel
                 // sx={{ margin: '15px 0 15px 0' }}
 
-                control={<Checkbox size="small" onChange={handleCheckBoxChange} value={t} />}
+                control={<Checkbox id={t} size="small" onChange={handleCheckBoxChange} value={t} />}
                 label={t}
               />
             </Box>

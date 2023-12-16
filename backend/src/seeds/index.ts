@@ -78,7 +78,7 @@ const generateRandomTags = (): Array<string> => {
 
 const seedDb = async (): Promise<void> => {
   console.log('seedDb() TRIGGED');
-  // await ActivityList.deleteMany({});
+  await ActivityList.deleteMany({});
   // const imgUrl = await getPhotoUrl();
   // console.log(imgUrl);
 
