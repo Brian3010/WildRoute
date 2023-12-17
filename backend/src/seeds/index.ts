@@ -12,7 +12,7 @@ main()
   .catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wildRoute');
+  await mongoose.connect(process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/wildRoute');
 }
 
 // utils func
@@ -84,12 +84,11 @@ const seedDb = async (): Promise<void> => {
 
   const nonDupIndexArray = new Array();
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 51; i++) {
     console.log(i);
 
-    const placeIdx = randomIndex(places); // pass places to get randome place ['Fraser Island', 'Cape York Peninsula', 'Gibb River Road']
-    // const cityIdx = randomIndex(shuffleArray(cities))[0]; // shufferArray return shuffle array of cities, then use randomIndex to get an random number out of the array
-    const cityIdx = randomIndex(cities)[0]; // shufferArray return shuffle array of cities, then use randomIndex to get an random number out of the array
+    const placeIdx = randomIndex(places);
+    const cityIdx = randomIndex(cities)[0];
 
     // check if index duplicates
     if (!nonDupIndexArray.includes(cityIdx)) {
@@ -127,8 +126,9 @@ const seedDb = async (): Promise<void> => {
           fileName: `fileName${i}`,
         },
       ],
-      author: '64c0bfe1503dd1eda3269198', //  -> userId when on PC
+      // author: '64c0bfe1503dd1eda3269198', //  -> userId when on PC
       // author: '64bf616a3694715302680542', // -> userId when on laptop
+      author: '657e977538375d876877fb98', // -> userId when deploying
     });
 
     await ActList.save();

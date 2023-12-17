@@ -1,4 +1,5 @@
 require('dotenv').config();
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
@@ -12,7 +13,6 @@ import reviewRoute from './routes/review';
 import userRoute from './routes/user';
 import AppError from './utils/AppError';
 import { connectToRedis } from './utils/redis';
-import cookieParser from 'cookie-parser';
 // import multer from 'multer';
 
 const PORT = 3000;
@@ -26,7 +26,7 @@ main()
   .catch(err => console.log('ERROR CONNECTING TO DBS -- ', err));
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wildRoute');
+  await mongoose.connect(process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/wildRoute');
   await connectToRedis();
 }
 
@@ -36,7 +36,6 @@ const app: Express = express();
 // const storage = multer.memoryStorage();
 // const upload = multer({ storage });
 // app.use(upload.any);
-
 
 // use this so dont need to set Content-Type': 'application/json' on client
 app.use(express.json());

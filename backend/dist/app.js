@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
@@ -16,7 +17,6 @@ const review_1 = __importDefault(require("./routes/review"));
 const user_2 = __importDefault(require("./routes/user"));
 const AppError_1 = __importDefault(require("./utils/AppError"));
 const redis_1 = require("./utils/redis");
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const PORT = 3000;
 main()
     .then(() => {
@@ -25,7 +25,7 @@ main()
 })
     .catch(err => console.log('ERROR CONNECTING TO DBS -- ', err));
 async function main() {
-    await mongoose_1.default.connect('mongodb://127.0.0.1:27017/wildRoute');
+    await mongoose_1.default.connect(process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/wildRoute');
     await (0, redis_1.connectToRedis)();
 }
 const app = (0, express_1.default)();

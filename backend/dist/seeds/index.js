@@ -38,7 +38,7 @@ main()
 })
     .catch(err => console.log(err));
 async function main() {
-    await mongoose_1.default.connect('mongodb://127.0.0.1:27017/wildRoute');
+    await mongoose_1.default.connect(process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/wildRoute');
 }
 const randomIndex = (data) => {
     const randIndex = Math.floor(Math.random() * data.length);
@@ -80,8 +80,9 @@ const generateRandomTags = () => {
 };
 const seedDb = async () => {
     console.log('seedDb() TRIGGED');
+    await activities_js_1.default.deleteMany({});
     const nonDupIndexArray = new Array();
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 51; i++) {
         console.log(i);
         const placeIdx = randomIndex(seedHelpers_js_1.places);
         const cityIdx = randomIndex(cities_js_1.cities)[0];
@@ -114,7 +115,7 @@ const seedDb = async () => {
                     fileName: `fileName${i}`,
                 },
             ],
-            author: '64c0bfe1503dd1eda3269198',
+            author: '657e977538375d876877fb98',
         });
         await ActList.save();
     }
