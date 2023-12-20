@@ -49,7 +49,6 @@ const randomIndex = (data) => {
     return [randIndex, subIndex];
 };
 const getPhotoUrl = async (index) => {
-    const defaultImg = 'https://images.unsplash.com/photo-1476979735039-2fdea9e9e407?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
     try {
         const response = await axios_1.default.get('https://api.unsplash.com/photos/random', {
             params: {
@@ -62,7 +61,7 @@ const getPhotoUrl = async (index) => {
     catch (error) {
         if ((0, axios_1.isAxiosError)(error) && error.response?.status === 403) {
             console.log('replacing with default image due to limit exceeded');
-            return defaultImg;
+            return seedHelpers_js_1.images[index].photo_image_url.concat('?q=80&w=800&auto=format&fit=crop');
         }
     }
     return undefined;
@@ -81,26 +80,19 @@ const generateRandomTags = () => {
 const seedDb = async () => {
     console.log('seedDb() TRIGGED');
     await activities_js_1.default.deleteMany({});
-    const nonDupIndexArray = new Array();
-    for (let i = 0; i < 51; i++) {
+    console.log({ numOfCities: cities_js_1.cities.length });
+    for (let i = 0; i < 100; i++) {
         console.log(i);
         const placeIdx = randomIndex(seedHelpers_js_1.places);
         const cityIdx = randomIndex(cities_js_1.cities)[0];
-        if (!nonDupIndexArray.includes(cityIdx)) {
-            nonDupIndexArray.push(cityIdx);
-        }
-        else {
-            i = i - 1;
-            continue;
-        }
         const imgUrl = await getPhotoUrl(i);
         const randTags = generateRandomTags();
         const ActList = new activities_js_1.default({
             activity_title: `${seedHelpers_js_1.places[placeIdx[0]][1]} ${seedHelpers_js_1.descriptors[placeIdx[0]] || 'Hiking'}`,
-            location: `${cities_js_1.cities[cityIdx].city}, ${cities_js_1.cities[cityIdx].admin_name}`,
+            location: `${cities_js_1.cities[i].city}, ${cities_js_1.cities[i].admin_name}`,
             geometry: {
                 type: 'Point',
-                coordinates: [cities_js_1.cities[cityIdx].lng, cities_js_1.cities[cityIdx].lat],
+                coordinates: [cities_js_1.cities[i].lng, cities_js_1.cities[i].lat],
             },
             description: 'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaquesaepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde.',
             avg_price: 2,

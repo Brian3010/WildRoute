@@ -3,7 +3,7 @@ import axios, { AxiosResponse, isAxiosError } from 'axios';
 import mongoose from 'mongoose';
 import ActivityList from '../models/activities.js';
 import { City, cities } from './cities.js';
-import { descriptors, places } from './seedHelpers.js';
+import { descriptors, images, places } from './seedHelpers.js';
 
 main()
   .then(() => {
@@ -30,8 +30,8 @@ const randomIndex = <T extends Array<string>[] | object[]>(data: T): [number, nu
 const getPhotoUrl = async (index: number): Promise<string | undefined> => {
   //image urls to be used when exceed limit when calling unsplash API
 
-  const defaultImg =
-    'https://images.unsplash.com/photo-1476979735039-2fdea9e9e407?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+  // const defaultImg =
+  //   'https://images.unsplash.com/photo-1476979735039-2fdea9e9e407?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
   try {
     const response: AxiosResponse = await axios.get('https://api.unsplash.com/photos/random', {
@@ -46,7 +46,7 @@ const getPhotoUrl = async (index: number): Promise<string | undefined> => {
     // console.log('ERROR: ', error);
     if (isAxiosError(error) && error.response?.status === 403) {
       console.log('replacing with default image due to limit exceeded');
-      return defaultImg;
+      return images[index].photo_image_url.concat('?q=80&w=800&auto=format&fit=crop');
     }
   }
   return undefined;
@@ -82,22 +82,21 @@ const seedDb = async (): Promise<void> => {
   // const imgUrl = await getPhotoUrl();
   // console.log(imgUrl);
 
-  const nonDupIndexArray = new Array();
-
-  for (let i = 0; i < 51; i++) {
+  console.log({ numOfCities: cities.length }); // 114
+  for (let i = 0; i < 100; i++) {
     console.log(i);
 
     const placeIdx = randomIndex(places);
     const cityIdx = randomIndex(cities)[0];
 
     // check if index duplicates
-    if (!nonDupIndexArray.includes(cityIdx)) {
-      nonDupIndexArray.push(cityIdx);
-    } else {
-      // if there is duplicate, decrement the index and jump/try again
-      i = i - 1;
-      continue;
-    }
+    // if (!nonDupIndexArray.includes(cityIdx)) {
+    //   nonDupIndexArray.push(cityIdx);
+    // } else {
+    //   // if there is duplicate, decrement the index and jump/try again
+    //   i = i - 1;
+    //   continue;
+    // }
 
     const imgUrl = await getPhotoUrl(i);
 
@@ -107,10 +106,12 @@ const seedDb = async (): Promise<void> => {
 
     const ActList = new ActivityList({
       activity_title: `${places[placeIdx[0]][1]} ${descriptors[placeIdx[0]] || 'Hiking'}`,
-      location: `${cities[cityIdx].city}, ${cities[cityIdx].admin_name}`,
+      //! location: `${cities[cityIdx].city}, ${cities[cityIdx].admin_name}`,
+      location: `${cities[i].city}, ${cities[i].admin_name}`,
       geometry: {
         type: 'Point',
-        coordinates: [cities[cityIdx].lng, cities[cityIdx].lat],
+        // coordinates: [cities[cityIdx].lng, cities[cityIdx].lat],
+        coordinates: [cities[i].lng, cities[i].lat],
       },
       description:
         'Excepturi esse minus illum, totam doloribus reiciendis at quis aliquam? Quae labore fugit, quia maxime minima sunt. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorem eligendi eaquesaepe aliquid iusto molestias ut cupiditate quisquam, laboriosam, quo quia culpa obcaecati, modi unde.',
@@ -131,6 +132,7 @@ const seedDb = async (): Promise<void> => {
       author: '657e977538375d876877fb98', // -> userId when deploying
     });
 
+    // console.log('saving to the database');
     await ActList.save();
   }
 };
