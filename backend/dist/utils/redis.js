@@ -1,18 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteRedisToken = exports.getRedisToken = exports.setRedisToken = exports.disconnectRedis = exports.connectToRedis = exports.initializeRedis = void 0;
+exports.deleteRedisToken = exports.getRedisToken = exports.setRedisToken = exports.disconnectRedis = exports.connectToRedis = void 0;
+require('dotenv').config();
 const redis_1 = require("redis");
 let redisClient;
-const initializeRedis = async () => {
-    redisClient = (0, redis_1.createClient)();
-    redisClient.on('error', error => console.error(`Error : ${error}`));
-    await redisClient.connect();
-};
-exports.initializeRedis = initializeRedis;
 const connectToRedis = () => {
     return new Promise(async (resolve, reject) => {
         try {
-            redisClient = (0, redis_1.createClient)();
+            redisClient = (0, redis_1.createClient)({
+                password: process.env.REDIS_PASSWORD,
+                socket: { host: process.env.REDIS_SOCKET_HOST, port: Number(process.env.REDIS_SOCKET_PORT) },
+            });
             redisClient.on('error', error => reject(error));
             await redisClient.connect();
             return resolve();

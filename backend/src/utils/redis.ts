@@ -1,19 +1,25 @@
+require('dotenv').config();
+
 import type { RedisClientType } from 'redis';
 import { createClient } from 'redis';
 
 let redisClient: RedisClientType;
-export const initializeRedis = async () => {
-  redisClient = createClient();
+// export const initializeRedis = async () => {
+//   redisClient = createClient();
 
-  redisClient.on('error', error => console.error(`Error : ${error}`));
+//   redisClient.on('error', error => console.error(`Error : ${error}`));
 
-  await redisClient.connect();
-};
+//   await redisClient.connect();
+// };
 
 export const connectToRedis = (): Promise<void> => {
   return new Promise(async (resolve, reject) => {
     try {
-      redisClient = createClient(); // will need to specify an url for production ({url:...})
+      redisClient = createClient({
+        password: process.env.REDIS_PASSWORD,
+        socket: { host: process.env.REDIS_SOCKET_HOST, port: Number(process.env.REDIS_SOCKET_PORT) },
+      }); // will need to specify an url for production ({url:...})
+
       redisClient.on('error', error => reject(error));
 
       await redisClient.connect();
