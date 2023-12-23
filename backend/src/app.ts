@@ -13,7 +13,7 @@ import User from './models/user';
 import activitiesRoute from './routes/activities';
 import reviewRoute from './routes/review';
 import userRoute from './routes/user';
-import { shutDownRedisDbs } from './service/shuttingDownDbs';
+import { shutDownDbs } from './service/shuttingDownDbs';
 import AppError from './utils/AppError';
 import { connectToRedis, disconnectRedis } from './utils/redis';
 // import multer from 'multer';
@@ -35,8 +35,9 @@ async function main() {
 
 const app: Express = express();
 
-process.on('SIGINT', shutDownRedisDbs);
-process.on('SIGTERM', shutDownRedisDbs);
+// shutting down dbs service when receiving interuption signal
+process.on('SIGINT', shutDownDbs);
+process.on('SIGTERM', shutDownDbs);
 
 // configure Multer
 // const storage = multer.memoryStorage();

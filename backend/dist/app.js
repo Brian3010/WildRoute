@@ -30,8 +30,8 @@ async function main() {
     await (0, redis_1.connectToRedis)();
 }
 const app = (0, express_1.default)();
-process.on('SIGINT', shuttingDownDbs_1.shutDownRedisDbs);
-process.on('SIGTERM', shuttingDownDbs_1.shutDownRedisDbs);
+process.on('SIGINT', shuttingDownDbs_1.shutDownDbs);
+process.on('SIGTERM', shuttingDownDbs_1.shutDownDbs);
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, express_mongo_sanitize_1.default)({
