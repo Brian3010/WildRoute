@@ -15,6 +15,7 @@ const user_1 = __importDefault(require("./models/user"));
 const activities_1 = __importDefault(require("./routes/activities"));
 const review_1 = __importDefault(require("./routes/review"));
 const user_2 = __importDefault(require("./routes/user"));
+const shuttingDownDbs_1 = require("./service/shuttingDownDbs");
 const AppError_1 = __importDefault(require("./utils/AppError"));
 const redis_1 = require("./utils/redis");
 const PORT = 3000;
@@ -29,6 +30,8 @@ async function main() {
     await (0, redis_1.connectToRedis)();
 }
 const app = (0, express_1.default)();
+process.on('SIGINT', shuttingDownDbs_1.shutDownRedisDbs);
+process.on('SIGTERM', shuttingDownDbs_1.shutDownRedisDbs);
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use((0, express_mongo_sanitize_1.default)({

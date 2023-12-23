@@ -8,8 +8,7 @@ const connectToRedis = () => {
     return new Promise(async (resolve, reject) => {
         try {
             redisClient = (0, redis_1.createClient)({
-                password: process.env.REDIS_PASSWORD,
-                socket: { host: process.env.REDIS_SOCKET_HOST, port: Number(process.env.REDIS_SOCKET_PORT) },
+                url: `redis://default:${process.env.REDIS_PASSWORD}@${process.env.REDIS_SOCKET_HOST}:${process.env.REDIS_SOCKET_PORT}`,
             });
             redisClient.on('error', error => reject(error));
             await redisClient.connect();
@@ -22,7 +21,8 @@ const connectToRedis = () => {
 };
 exports.connectToRedis = connectToRedis;
 const disconnectRedis = async () => {
-    await redisClient.disconnect();
+    console.log('disconnecting redis server');
+    return redisClient.disconnect();
 };
 exports.disconnectRedis = disconnectRedis;
 const setRedisToken = (refreshToken, id) => {

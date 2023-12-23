@@ -7,13 +7,15 @@ import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import PassportJwt from 'passport-jwt';
+import { resolve } from 'path';
 import { callbackify } from 'util';
 import User from './models/user';
 import activitiesRoute from './routes/activities';
 import reviewRoute from './routes/review';
 import userRoute from './routes/user';
+import { shutDownRedisDbs } from './service/shuttingDownDbs';
 import AppError from './utils/AppError';
-import { connectToRedis } from './utils/redis';
+import { connectToRedis, disconnectRedis } from './utils/redis';
 // import multer from 'multer';
 
 const PORT = 3000;
@@ -32,6 +34,9 @@ async function main() {
 }
 
 const app: Express = express();
+
+process.on('SIGINT', shutDownRedisDbs);
+process.on('SIGTERM', shutDownRedisDbs);
 
 // configure Multer
 // const storage = multer.memoryStorage();

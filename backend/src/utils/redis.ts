@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+import { resolve } from 'path';
 import type { RedisClientType } from 'redis';
 import { createClient } from 'redis';
 
@@ -15,10 +16,13 @@ let redisClient: RedisClientType;
 export const connectToRedis = (): Promise<void> => {
   return new Promise(async (resolve, reject) => {
     try {
+      // redisClient = createClient({
+      //   password: process.env.REDIS_PASSWORD || undefined,
+      //   socket: { host: process.env.REDIS_SOCKET_HOST, port: Number(process.env.REDIS_SOCKET_PORT) },
+      // }); // will need to specify an url for production ({url:...})
       redisClient = createClient({
-        password: process.env.REDIS_PASSWORD,
-        socket: { host: process.env.REDIS_SOCKET_HOST, port: Number(process.env.REDIS_SOCKET_PORT) },
-      }); // will need to specify an url for production ({url:...})
+        url: `redis://default:${process.env.REDIS_PASSWORD}@${process.env.REDIS_SOCKET_HOST}:${process.env.REDIS_SOCKET_PORT}`,
+      });
 
       redisClient.on('error', error => reject(error));
 
@@ -31,7 +35,8 @@ export const connectToRedis = (): Promise<void> => {
 };
 
 export const disconnectRedis = async () => {
-  await redisClient.disconnect();
+  console.log('disconnecting redis server');
+  return redisClient.disconnect();
 };
 
 // export const getOrSetCache = (key: string, currentToken: string) => {
