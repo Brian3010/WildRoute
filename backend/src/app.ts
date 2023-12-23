@@ -1,12 +1,13 @@
 require('dotenv').config();
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import express, { Express, NextFunction, Request, Response } from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import PassportJwt from 'passport-jwt';
+import { callbackify } from 'util';
 import User from './models/user';
 import activitiesRoute from './routes/activities';
 import reviewRoute from './routes/review';
@@ -49,11 +50,21 @@ app.use(
   })
 );
 // TODO: use cors or helmet to allow frontend to hit backend API
+const whiteList = ['http://localhost:5173']; // TODO: would need to add more due to security issues
+
 app.use(
   cors({
     // origin: '*',
-    origin: 'http://localhost:5173',
+    // origin: 'http://localhost:5173',
+    origin: (origin, callbackify) => {
+      if (typeof origin === 'string' && whiteList.indexOf(origin) !== -1) {
+        callbackify(null, true);
+      } else {
+        callbackify(new Error());
+      }
+    },
     credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
 

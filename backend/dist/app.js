@@ -34,9 +34,18 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, express_mongo_sanitize_1.default)({
     replaceWith: '_',
 }));
+const whiteList = ['http://localhost:5173'];
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:5173',
+    origin: (origin, callbackify) => {
+        if (typeof origin === 'string' && whiteList.indexOf(origin) !== -1) {
+            callbackify(null, true);
+        }
+        else {
+            callbackify(new Error());
+        }
+    },
     credentials: true,
+    optionsSuccessStatus: 200,
 }));
 const jwtOpts = {
     jwtFromRequest: passport_jwt_1.default.ExtractJwt.fromAuthHeaderAsBearerToken(),
