@@ -1,0 +1,25 @@
+.carousel-image {
+  height: 450px;
+  border-radius: 3%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.carousel-image > * {
+  border-radius: 3%;
+}
+
+.carousel.carousel-slider {
+  height: 100%;
+}
+
+.slider-wrapper.axis-horizontal > * {
+  height: 100%;
+}
+.carousel {
+  height: 100%;
+}
+.slider-wrapper.axis-horizontal{
+  height: 100%;
+}
+
+
