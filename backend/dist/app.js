@@ -37,7 +37,7 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, express_mongo_sanitize_1.default)({
     replaceWith: '_',
 }));
-const whiteList = ['http://localhost:5173'];
+const whiteList = ['https://wild-route.vercel.app'];
 app.use((0, cors_1.default)({
     origin: (origin, callbackify) => {
         if (typeof origin === 'string' && whiteList.indexOf(origin) !== -1) {

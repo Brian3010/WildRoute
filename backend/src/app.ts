@@ -56,7 +56,7 @@ app.use(
   })
 );
 // TODO: use cors or helmet to allow frontend to hit backend API
-const whiteList = ['http://localhost:5173']; // TODO: would need to add more due to security issues
+const whiteList = ['https://wild-route.vercel.app']; // TODO: would need to add more due to security issues
 
 app.use(
   cors({
