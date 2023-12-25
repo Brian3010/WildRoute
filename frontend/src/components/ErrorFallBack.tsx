@@ -20,7 +20,7 @@ export default function ErrorFallBack(props: FallbackProps) {
 
   if (axios.isAxiosError(error)) {
     // console.log('Axios Error: ', error.name);
-    const errorMessage = error.response?.data.error;
+   const errorMessage = error.response?.data.error;
     // const errorMessage = error.response?.data;
 
     // *render this only with network error in production, other error types should be handled (redirect?)
