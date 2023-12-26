@@ -12,6 +12,7 @@
 }
 
 .social-media-container > a {
-  width: fit-content;
   height: 25px;
+  aspect-ratio: auto 25 / 25;
+  width: 25px;
 }
