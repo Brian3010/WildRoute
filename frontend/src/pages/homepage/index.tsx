@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 import '../../assets/HomePage.css';
 
 export default function HomePage() {
@@ -17,7 +18,6 @@ export default function HomePage() {
         </Typography>
 
         <Button
-          href="/activities"
           className="homepage-btn"
           sx={{
             color: '#ffff',
@@ -28,7 +28,9 @@ export default function HomePage() {
             marginTop: 2,
           }}
         >
-          Explore now
+          <Link to="/activities" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Explore Now
+          </Link>
         </Button>
       </Box>
     </div>
