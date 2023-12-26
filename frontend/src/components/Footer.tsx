@@ -61,7 +61,7 @@ function Footer() {
             </a>
           </Box>
         </Box>
-        <Typography alignSelf="flex-end" variant="overline">
+        <Typography textAlign="center" alignSelf="flex-end" variant="overline">
           &copy; 2023 Brian Nguyen. All rights reserved.
         </Typography>
       </Box>
@@ -70,5 +70,3 @@ function Footer() {
 }
 
 export default Footer;
-//TODO: add social medias
-//TODO: add background and stuff for the homepage
