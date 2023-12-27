@@ -56,17 +56,17 @@ app.use(
   })
 );
 // TODO: use cors or helmet to allow frontend to hit backend API
-const whiteList = ['https://wild-route.vercel.app', 'https://wildroute-api.onrender.com']; // TODO: would need to add more due to security issues
+const whiteList = ['https://wildroute-api.onrender.com', 'https://wild-route.vercel.app']; // TODO: would need to add more due to security issues
 
 app.use(
   cors({
     // origin: '*',
     // origin: 'http://localhost:5173',
-    origin: (origin, callbackify) => {
-      if (typeof origin === 'string' && whiteList.indexOf(origin) !== -1) {
-        callbackify(null, true);
+    origin: (origin, callback) => {
+      if (whiteList.indexOf(origin!) !== -1 || !origin) {
+        callback(null, true);
       } else {
-        callbackify(new Error('Not allowed by CORS'));
+        callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
