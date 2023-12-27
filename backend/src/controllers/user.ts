@@ -52,12 +52,7 @@ export const loginUser: RequestHandler = async (req, res, next) => {
   const { salt, hash, ...userTosend } = user._doc; // ._doc contain user data
   // send refreshToken as cookie
   // the option secure: true, can be set when in production, as  the cookie will only be sent over secure (HTTPS) connections.
-  res.cookie('jwt', refreshToken, {
-    httpOnly: false,
-    sameSite: 'none',
-    secure: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'lax', secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
   res.status(200).json({ accessToken, user: userTosend });
 };
 
@@ -74,7 +69,7 @@ export const logoutUser: RequestHandler<unknown, unknown, logoutBody, unknown> =
   // 0: successfully delete the refreshToken in dbs
   if (result === 0) {
     // clear cookie
-    res.clearCookie('jwt', { httpOnly: false, sameSite: 'none', secure: true });
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'lax', secure: true });
     res.status(200).json({ message: 'Successfully logout' });
   } else {
     throw new AppError(<string>result, 500);
@@ -115,8 +110,8 @@ export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = 
 
   // update the existing cookie
   res.cookie('jwt', newRefreshToken, {
-    httpOnly: false,
-    sameSite: 'none',
+    httpOnly: true,
+    sameSite: 'lax',
     secure: true,
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
