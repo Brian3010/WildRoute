@@ -37,14 +37,14 @@ app.use((0, cookie_parser_1.default)());
 app.use((0, express_mongo_sanitize_1.default)({
     replaceWith: '_',
 }));
-const whiteList = ['https://wild-route.vercel.app', 'https://wildroute-api.onrender.com'];
+const whiteList = ['https://wildroute-api.onrender.com', 'https://wild-route.vercel.app'];
 app.use((0, cors_1.default)({
-    origin: (origin, callbackify) => {
-        if (typeof origin === 'string' && whiteList.indexOf(origin) !== -1) {
-            callbackify(null, true);
+    origin: (origin, callback) => {
+        if (whiteList.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
         }
         else {
-            callbackify(new Error('Not allowed by CORS'));
+            callback(new Error('Not allowed by CORS'));
         }
     },
     credentials: true,
