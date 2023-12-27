@@ -11,6 +11,7 @@ import LeaveReview from './LeaveReview';
 // import MapDisplay from './MapDisplay';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import { Link } from 'react-router-dom';
 import SingleMarkerMap from '../../components/SingleMarkerMap';
 interface ActyDetailDisplayProps {
   actyData: TActyDetail;
@@ -68,7 +69,9 @@ export default function ActyDetailDisplay(props: ActyDetailDisplayProps) {
             href="/activities"
             className="back-to-list-btn"
           >
-            Back to the list
+            <Link to="/activities" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Back to the list
+            </Link>
           </Button>
         </Box>
       </Grid>
