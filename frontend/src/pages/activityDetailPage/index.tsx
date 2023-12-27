@@ -3,7 +3,7 @@ import { Box, Button, CircularProgress, Container } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import '../../assets/ActivityDetailPage.css';
 import getActyById, { TActyDetail } from '../../services/getActyById';
 import ActyDetailDisplay from './ActyDetailDisplay';
@@ -61,14 +61,10 @@ function Activity() {
       <>
         <Container maxWidth="lg" sx={{ marginTop: 4 }}>
           <Box sx={{ display: { sm: 'inline-block', md: 'none' }, marginBottom: '15px' }}>
-            <Button
-              disableRipple
-              size="small"
-              startIcon={<ArrowBackIcon />}
-              href="/activities"
-              className="back-to-list-btn"
-            >
-              Back to the list
+            <Button disableRipple size="small" startIcon={<ArrowBackIcon />} className="back-to-list-btn">
+              <Link to="/activities" style={{ textDecoration: 'none', color: 'inherit' }}>
+                Back to the list
+              </Link>
             </Button>
           </Box>
           <ActyDetailDisplay actyData={actyDetail} onRatingChanged={onRatingChanged} />
