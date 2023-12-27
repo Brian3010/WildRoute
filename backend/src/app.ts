@@ -66,7 +66,7 @@ app.use(
       if (typeof origin === 'string' && whiteList.indexOf(origin) !== -1) {
         callbackify(null, true);
       } else {
-        callbackify(new Error());
+        callbackify(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
