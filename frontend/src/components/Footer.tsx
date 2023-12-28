@@ -62,7 +62,7 @@ function Footer() {
           </Box>
         </Box>
         <Typography textAlign="center" alignSelf="flex-end" variant="overline">
-          &copy; 2023 Brian Nguyen. All rights reserved.
+          &copy; 2024 Brian Nguyen. All rights reserved.
         </Typography>
       </Box>
     </Box>
