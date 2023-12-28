@@ -62,13 +62,7 @@ export default function ActyDetailDisplay(props: ActyDetailDisplayProps) {
         {/* <MapDisplay /> */}
         <SingleMarkerMap geometry={actyDetail.geometry} />
         <Box sx={{ display: { xs: 'none', sm: 'none', md: 'inline-block' }, marginTop: '15px' }}>
-          <Button
-            disableRipple
-            size="small"
-            startIcon={<ArrowBackIcon />}
-            href="/activities"
-            className="back-to-list-btn"
-          >
+          <Button disableRipple size="small" startIcon={<ArrowBackIcon />} className="back-to-list-btn">
             <Link to="/activities" style={{ textDecoration: 'none', color: 'inherit' }}>
               Back to the list
             </Link>
