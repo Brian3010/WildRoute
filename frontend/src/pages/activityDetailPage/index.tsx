@@ -27,7 +27,7 @@ function Activity() {
         const actyDetail = await getActyById(id);
         // actyDetail && setActyDetail(actyDetail);
 
-        if (actyDetail || isRatingChanged) {
+        if (actyDetail) {
           setActyDetail(actyDetail);
         }
       } catch (error) {
@@ -43,14 +43,10 @@ function Activity() {
       }
     })();
 
-    return function () {
-      setIsRatingChanged(false);
-    };
+
   }, [id, isRatingChanged, showBoundary]);
 
-  const onRatingChanged = (isRatingChanded: boolean) => {
-    setIsRatingChanged(isRatingChanded);
-  };
+
 
   if (isLoading) {
     return <CircularProgress className="loader" color="inherit" />;
@@ -67,7 +63,7 @@ function Activity() {
               </Link>
             </Button>
           </Box>
-          <ActyDetailDisplay actyData={actyDetail} onRatingChanged={onRatingChanged} />
+          <ActyDetailDisplay actyData={actyDetail}/>
         </Container>
       </>
     );
