@@ -14,7 +14,6 @@ function Activity() {
   // console.log('Activity ID: ', id);
 
   const [actyDetail, setActyDetail] = useState<TActyDetail | undefined>(undefined);
-  const [isRatingChanged, setIsRatingChanged] = useState<boolean>(false);
   const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
@@ -42,11 +41,7 @@ function Activity() {
         setIsloading(false);
       }
     })();
-
-
-  }, [id, isRatingChanged, showBoundary]);
-
-
+  }, [id, showBoundary]);
 
   if (isLoading) {
     return <CircularProgress className="loader" color="inherit" />;
@@ -63,7 +58,7 @@ function Activity() {
               </Link>
             </Button>
           </Box>
-          <ActyDetailDisplay actyData={actyDetail}/>
+          <ActyDetailDisplay actyData={actyDetail} />
         </Container>
       </>
     );

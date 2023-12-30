@@ -1,9 +1,10 @@
 import { Box, Button, Rating, TextareaAutosize } from '@mui/material';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ReturnCreatedReview from '../../@types/ReturnCreatedReview';
 import '../../assets/LeaveReview.css';
+import Loading from '../../components/Loading';
 import { IAuthContext } from '../../context/AuthProvider';
 import useAuth from '../../hooks/useAuth';
 import useAxiosInterceptor from '../../hooks/useAxiosInterceptor';
@@ -42,6 +43,7 @@ const LeaveReview = ({ onReviewAdded }: LeaveReviewProps) => {
   const axiosInterceptor = useAxiosInterceptor();
   const { setFlashMessage } = useFlashMessage();
   const isError = useRef<boolean>();
+  const [isLoading, setIsloading] = useState(false);
 
   const submit: SubmitHandler<IReviewData> = async data => {
     // set flash message if not authenticated
@@ -61,6 +63,7 @@ const LeaveReview = ({ onReviewAdded }: LeaveReviewProps) => {
     console.log(data);
 
     try {
+      setIsloading(true);
       const res = await axiosInterceptor.post<ReturnCreatedReview>(`/activities/${id}/review`, {
         review: {
           body: data.textBody,
@@ -71,6 +74,7 @@ const LeaveReview = ({ onReviewAdded }: LeaveReviewProps) => {
       if (res === undefined) throw new Error('Response Undefined');
       // console.log('res.data: ', res.data);
       onReviewAdded(res.data.reviewCreated);
+      setIsloading(false);
     } catch (error) {
       console.error(error);
       // handle refreshToken expired and Unauthorized
@@ -94,9 +98,15 @@ const LeaveReview = ({ onReviewAdded }: LeaveReviewProps) => {
       </Box>
 
       <TextareaAutosize minRows={5} minLength={5} maxLength={50} className="text-area" {...register('textBody')} />
-      <Button type="submit" variant="contained" disabled={(isError.current = watch('rating') === 0)}>
-        Submit
-      </Button>
+      {isLoading ? (
+        <div>
+          <Loading styles={{ size: 30, color: 'inherit' }} />
+        </div>
+      ) : (
+        <Button type="submit" variant="contained" disabled={(isError.current = watch('rating') === 0)}>
+          Submit
+        </Button>
+      )}
     </form>
   );
 };
