@@ -27,32 +27,30 @@ export default function ActyReviews({ reviews, onReviewDeleted }: ActyReviewProp
   const firstReviewIndex = lastReviewIndex - reviewPerPage;
   const currentReviews = reviewList.slice(firstReviewIndex, lastReviewIndex);
 
-  // useEffect(() => {
-  //   const deleteReview = async (actyId: string, reviewId: string, accessToken: string) => {
-  //     const res = await axiosInterceptor.delete(`/activities/${actyId}/review/${reviewId}`, {
-  //       headers: { Authorization: `bearer ${accessToken}` },
-  //     });
-
-  //     return res;
-  //   };
-
-  // },[]
   const handleRemoveClick = async (
+    event: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>,
     reviewId: string,
     reviewOwnerId: string,
     deletedReview: TActyDetail['reviews'][number]
   ) => {
-    console.log('handleRemoveClick clicked');
+    console.log('handleRemoveClick clicked', event.currentTarget.id === reviewId);
+
     if (reviewOwnerId !== auth.user._id) return; // not review onwer
     const loginUser = auth.user._id;
     console.log({ actyId, reviewId, reviewOwnerId, loginUser, deletedReview });
 
+    //* place the removing function here to show instantly delete the review
+    //* following deleting pattern from Facebook
+    onReviewDeleted(deletedReview);
     try {
+      // if (event.currentTarget.id === reviewId && !isLoading) setIsloading(true);
+      // console.log({ isSameReviews: event.currentTarget.id === reviewId });
+
+      //* removing reviews happened in background here
       const res = await axiosInterceptor.delete(`/activities/${actyId}/review/${reviewId}`, {
         headers: { Authorization: `bearer ${auth.accessToken}` },
       });
       if (res === undefined) throw new Error('cannot find the review id');
-      onReviewDeleted(deletedReview);
     } catch (error) {
       console.error(error);
     }
@@ -66,26 +64,33 @@ export default function ActyReviews({ reviews, onReviewDeleted }: ActyReviewProp
             <Typography variant="subtitle1" fontWeight={600} sx={{ display: 'flex', justifyContent: 'space-between' }}>
               {r.owner.username}
 
+              {/* displayed in large screen */}
               <Chip
-                // sx={{fontSize:'0.8rem'} }
                 sx={{ display: { xs: 'none', sm: 'inherit' }, fontSize: '0.75rem' }}
                 label="Remove"
-                onClick={() => handleRemoveClick(r._id, r.owner._id, r)}
+                onClick={event => {
+                  handleRemoveClick(event, r._id, r.owner._id, r);
+                }}
                 icon={<DeleteIcon sx={{ fontSize: '1rem' }} />}
                 variant="outlined"
                 color="error"
-                disabled={r.owner._id === auth.user._id ? false : true}
+                id={r._id}
+                disabled={r.owner._id !== auth.user._id}
               />
+              {/*==========================*/}
+
+              {/* displayed in small screen */}
               <IconButton
                 aria-label="delete"
                 size="small"
                 sx={{ display: { xs: 'inherit', sm: 'none' } }}
                 color="error"
-                onClick={() => handleRemoveClick(r._id, r.owner._id, r)}
-                disabled={r.owner._id === auth.user._id ? false : true}
+                onClick={event => handleRemoveClick(event, r._id, r.owner._id, r)}
+                disabled={r.owner._id !== auth.user._id}
               >
                 <DeleteRoundedIcon sx={{ fontSize: 'inherit' }} />
               </IconButton>
+              {/*==========================*/}
             </Typography>
             <Rating sx={{ paddingTop: '8px' }} name="read-only" value={r.rating} readOnly />
             <Box sx={{ padding: '8px 0' }}>

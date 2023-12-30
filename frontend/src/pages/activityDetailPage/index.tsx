@@ -14,7 +14,6 @@ function Activity() {
   // console.log('Activity ID: ', id);
 
   const [actyDetail, setActyDetail] = useState<TActyDetail | undefined>(undefined);
-  const [isRatingChanged, setIsRatingChanged] = useState<boolean>(false);
   const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
@@ -27,7 +26,7 @@ function Activity() {
         const actyDetail = await getActyById(id);
         // actyDetail && setActyDetail(actyDetail);
 
-        if (actyDetail || isRatingChanged) {
+        if (actyDetail) {
           setActyDetail(actyDetail);
         }
       } catch (error) {
@@ -42,15 +41,7 @@ function Activity() {
         setIsloading(false);
       }
     })();
-
-    return function () {
-      setIsRatingChanged(false);
-    };
-  }, [id, isRatingChanged, showBoundary]);
-
-  const onRatingChanged = (isRatingChanded: boolean) => {
-    setIsRatingChanged(isRatingChanded);
-  };
+  }, [id, showBoundary]);
 
   if (isLoading) {
     return <CircularProgress className="loader" color="inherit" />;
@@ -67,7 +58,7 @@ function Activity() {
               </Link>
             </Button>
           </Box>
-          <ActyDetailDisplay actyData={actyDetail} onRatingChanged={onRatingChanged} />
+          <ActyDetailDisplay actyData={actyDetail} />
         </Container>
       </>
     );

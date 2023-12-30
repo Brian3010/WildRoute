@@ -2,18 +2,30 @@ import { Box, Card, CardContent, Rating, Typography } from '@mui/material';
 
 import '../../assets/ActivityInfoItem.css';
 
+import useReviewsContext from '../../hooks/useReviewsContext';
 import iconSrcs from '../../images';
 import { TActyDetail } from '../../services/getActyById';
 import DipslayTagIcons from './DisplayTagIcons';
 import DropDownMenu from './DropDownMenu';
+import ReviewTotal from './ReviewTotal';
 
 interface ActyInfoItemProps {
   actyDetail: Omit<TActyDetail, 'image' | 'reviews'>;
-  reviewTotal: number;
 }
 
-export default function ActyInfoItem({ actyDetail, reviewTotal }: ActyInfoItemProps) {
+const avgRating = (reviews: TActyDetail['reviews']) => {
+  let sum = 0;
+  for (let i = 0; i < reviews.length; i++) {
+    sum += reviews[i].rating;
+  }
+
+  return sum / reviews.length;
+};
+
+export default function ActyInfoItem({ actyDetail}: ActyInfoItemProps) {
   // console.log('ActyInfoItem rendered');
+
+  const { reviews } = useReviewsContext();
 
   // convert the tags to icons
   const convertToIcon = (tags: typeof actyDetail.tags) => {
@@ -68,10 +80,8 @@ export default function ActyInfoItem({ actyDetail, reviewTotal }: ActyInfoItemPr
           <hr className="line-break" />
 
           <Typography sx={{ display: 'flex', marginBottom: 1 }}>
-            <Rating size="small" name="read-only" value={actyDetail.rating || 0} readOnly />
-            <span style={{ fontSize: 'smaller', alignSelf: 'end', paddingLeft: 5, color: 'rgba(0, 0, 0, 0.6)' }}>
-              {reviewTotal > 1 ? `${reviewTotal} reviews` : `${reviewTotal} review`}
-            </span>
+            <Rating size="small" name="read-only" value={avgRating(reviews) || 0} readOnly />
+            <ReviewTotal numOfReviews={reviews.length} />
           </Typography>
 
           <Typography maxHeight={'500px'} variant="body2" margin="10px 0 10px 0">

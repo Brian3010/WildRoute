@@ -1,6 +1,5 @@
 require('dotenv').config();
 
-import { resolve } from 'path';
 import type { RedisClientType } from 'redis';
 import { createClient } from 'redis';
 
