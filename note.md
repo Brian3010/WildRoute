@@ -24,7 +24,6 @@ The WildRoute website will be developed using Node.js, MongoDB, Express, React, 
 14. Event Listings: Provide information about upcoming outdoor events, such as marathons, cycling races, or adventure festivals.
 15. Mobile Responsiveness: Ensure that the app is mobile-friendly and responsive for a seamless user experience on different devices.
 
-P/s: This prioritization focuses on the core functionality of your app, starting with providing detailed listings of outdoor activities and allowing user engagement through reviews and ratings. It then moves on to essential features like trail maps, activity search, and user profiles. As you progress, you can add more advanced features like photography and sharing, equipment recommendations, and weather conditions. Finally, you can incorporate features related to activity booking, trip planning, safety, community engagement, event listings, and ensuring a responsive mobile experience.
 
 ---
 
@@ -64,43 +63,3 @@ app.use(cors(
 ))
 
 ```
-
-**Use Helmet as in YelpCamp** for `cors error`?
-
-To access differnet path, we need this:
-
-```javascript
-import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/decks/:deckId",
-    element: <Deck />, // component runned based on the path 
-  },
-]);
-
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <div className="page">
-      <Header />
-      <RouterProvider router={router} />
-    </div>
-  </React.StrictMode>
-);
-
-```
-
-### 1. Activity Listings
-
-*Brief*: Provide detailed listings for various outdoor activities, including descriptions, difficulty ratings, distance, elevation, and special requirements
-
-*Ideas*:
-
-- List all activities:
-  - started data: {id, activity_name, location, desciption(fact), price, image, author}.
-  - modified ?:
