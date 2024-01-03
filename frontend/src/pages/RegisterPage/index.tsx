@@ -111,7 +111,7 @@ function RegisterPage() {
 
   return (
     <>
-      <Container maxWidth="sm"  sx={{marginTop:4}}>
+      <Container maxWidth="sm" sx={{ marginTop: 4 }}>
         <Paper elevation={1} sx={{ padding: 4 }}>
           <Box textAlign={'center'}>
             <Typography variant="h2" fontSize={'24px'} fontWeight={700} margin={'0 0 9px'}>
@@ -204,7 +204,7 @@ function RegisterPage() {
               <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }} paddingX={2}>
                 <Typography variant="h4" fontSize={'16px'}>
                   Already have one?{' '}
-                  <Link style={{ textDecoration: 'none' }} to={'../user/login'}>
+                  <Link style={{ color: 'InactiveCaptionText' }} to={'../user/login'}>
                     Sign in
                   </Link>
                   .
