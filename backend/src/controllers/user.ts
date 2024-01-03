@@ -141,7 +141,7 @@ export const verifyEmail: RequestHandler<unknown, unknown, { username: string; e
   // find user with email
   const foundUser = await User.where('username', username.toLowerCase()).where('email', email.toLowerCase());
   console.log({ foundUser });
-  if (foundUser.length <= 0) throw new AppError('the user is not exist in database', 404);
+  if (foundUser.length <= 0) throw new AppError('the user not exist in the database', 404);
 
   // get token for reseting password - prevent access the reset-password api
   const user = foundUser[0]._id;
@@ -158,17 +158,30 @@ export const verifyEmail: RequestHandler<unknown, unknown, { username: string; e
 };
 
 // reset password
-export const resetPassword: RequestHandler<unknown, unknown, { newPassword: string }, unknown> = async (req, res) => {
-  const { newPassword } = req.body;
-  const user = req.user;
+export const resetPassword: RequestHandler<
+  unknown,
+  unknown,
+  { newPassword: string; confirmPwd: string },
+  unknown
+> = async (req, res) => {
+  const { newPassword, confirmPwd } = req.body;
 
-  // const foundUser = await User.findOne({
-  //   _id: user._id,
-  // });
-  // if (!foundUser) throw new AppError('user not found', 404);
+  // missing body
+  if (!newPassword || !confirmPwd) throw new AppError('missing fields in the body', 404);
 
-  // const foundUser = await User.findByUsername(user.username, true);
-  // read this https://stackoverflow.com/questions/17828663/passport-local-mongoose-change-password
+  // not matching
+  if (newPassword !== confirmPwd) throw new AppError('passwords does not match', 400);
 
-  res.json({ newPassword, user, foundUser });
+  // find the user
+  const foundUser = await User.findOne({
+    _id: req.user._id,
+  });
+  // check user exist
+  if (!foundUser) throw new AppError('user not found', 404);
+
+  // change the password
+  await foundUser.setPassword(newPassword);
+  await foundUser.save();
+
+  res.json({ message: 'Password has been reset successfully - redirect to login' });
 };

@@ -87,7 +87,7 @@ const verifyEmail = async (req, res) => {
     const foundUser = await user_1.default.where('username', username.toLowerCase()).where('email', email.toLowerCase());
     console.log({ foundUser });
     if (foundUser.length <= 0)
-        throw new AppError_1.default('the user is not exist in database', 404);
+        throw new AppError_1.default('the user not exist in the database', 404);
     const user = foundUser[0]._id;
     const resetPasswordToken = (0, tokenHandling_1.generateResetPwdToken)(user);
     res.cookie('jwt', resetPasswordToken, {
@@ -100,9 +100,19 @@ const verifyEmail = async (req, res) => {
 };
 exports.verifyEmail = verifyEmail;
 const resetPassword = async (req, res) => {
-    const { newPassword } = req.body;
-    const user = req.user;
-    res.json({ newPassword, user, foundUser });
+    const { newPassword, confirmPwd } = req.body;
+    if (!newPassword || !confirmPwd)
+        throw new AppError_1.default('missing fields in the body', 404);
+    if (newPassword !== confirmPwd)
+        throw new AppError_1.default('passwords does not match', 400);
+    const foundUser = await user_1.default.findOne({
+        _id: req.user._id,
+    });
+    if (!foundUser)
+        throw new AppError_1.default('user not found', 404);
+    await foundUser.setPassword(newPassword);
+    await foundUser.save();
+    res.json({ message: 'Password has been reset successfully - redirect to login' });
 };
 exports.resetPassword = resetPassword;
 //# sourceMappingURL=user.js.map
