@@ -3,7 +3,9 @@ import { RequestHandler } from 'express';
 import User from '../models/user';
 import AppError from '../utils/AppError';
 import { deleteRedisToken, getRedisToken, setRedisToken } from '../utils/redis';
-import { generateAccessToken, generateRefreshToken } from '../utils/tokenHandling';
+import { generateAccessToken, generateRefreshToken, generateResetPwdToken } from '../utils/tokenHandling';
+
+import passport from 'passport';
 
 import JWT from 'jsonwebtoken';
 // export const index: RequestHandler = (req, res, next) => {
@@ -23,7 +25,10 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
 
   const { email, username, password } = req.body.user;
 
-  const user = new User({ email, username });
+  const lowerCaseEmail = email.toLowerCase();
+
+  const user = new User({ lowerCaseEmail, username });
+
   await User.register(user, password);
 
   const token = generateAccessToken<typeof user>(user);
@@ -122,4 +127,48 @@ export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = 
   });
   // res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
   res.status(200).json({ accessToken: newAccessToken });
+};
+
+// verify user email in forgot-password request for reseting password
+export const verifyEmail: RequestHandler<unknown, unknown, { username: string; email: string }, unknown> = async (
+  req,
+  res
+) => {
+  const { email, username } = req.body;
+  // console.log({ userEmail });
+  if (!email || !username) throw new AppError('email and username in the body not found', 404);
+
+  // find user with email
+  const foundUser = await User.where('username', username.toLowerCase()).where('email', email.toLowerCase());
+  console.log({ foundUser });
+  if (foundUser.length <= 0) throw new AppError('the user is not exist in database', 404);
+
+  // get token for reseting password - prevent access the reset-password api
+  const user = foundUser[0]._id;
+  const resetPasswordToken = generateResetPwdToken(user);
+
+  // set cookie as it will be used for reseting password
+  res.cookie('jwt', resetPasswordToken, {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    expires: new Date(Date.now() + 10 * 60000),
+  });
+  res.json({ message: 'found the user - redirect to reset-password page' });
+};
+
+// reset password
+export const resetPassword: RequestHandler<unknown, unknown, { newPassword: string }, unknown> = async (req, res) => {
+  const { newPassword } = req.body;
+  const user = req.user;
+
+  // const foundUser = await User.findOne({
+  //   _id: user._id,
+  // });
+  // if (!foundUser) throw new AppError('user not found', 404);
+
+  // const foundUser = await User.findByUsername(user.username, true);
+  // read this https://stackoverflow.com/questions/17828663/passport-local-mongoose-change-password
+
+  res.json({ newPassword, user, foundUser });
 };

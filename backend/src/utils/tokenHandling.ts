@@ -46,3 +46,19 @@ export const generateRefreshToken: GenerateFnType = user => {
 
   return token;
 };
+
+export const generateResetPwdToken = (userId: Types.ObjectId) => {
+  return JWT.sign(
+    // payload
+    {
+      userId,
+      // username: user.username,
+    },
+    // secret
+    process.env.JWT_ACCESS_SECRET as JWT.Secret,
+    {
+      expiresIn: process.env.JWTEXPIRE_ACCESS,
+      subject: userId && userId.toString(),
+    }
+  );
+};
