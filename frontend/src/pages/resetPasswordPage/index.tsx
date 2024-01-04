@@ -1,7 +1,11 @@
 import { Alert, Box, Button, Container, Paper, TextField, Typography } from '@mui/material';
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
+import verifyUsernameEmail from '../../services/verifyUsernameEmail';
+import NewPassword from './NewPassword';
 
 interface ResetPwdData {
   username: string;
@@ -42,11 +46,23 @@ export default function ResetPassword() {
   });
 
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
+  const [isVerified, setIsVerified] = useState<boolean>(false);
 
-  const submit: SubmitHandler<ResetPwdData> = data => {
-    //TODO: make a request to forgot-password api
-    //TODO: setErrorMsg when not verified
+  const submit: SubmitHandler<ResetPwdData> = async data => {
     console.log({ data });
+    //make a request to forgot-password api
+    try {
+      const res = await verifyUsernameEmail(data.username, data.email);
+      // redirect to reset-password page when succefful.
+
+      if (res) setIsVerified(true);
+    } catch (error) {
+      // show message when not verified
+      if (isAxiosError(error) && error.response && error.response.data.error.includes('the user not exist')) {
+        setErrorMsg('Verification failed. Please check your username and email');
+      }
+      console.error(error);
+    }
   };
 
   return (
@@ -91,12 +107,11 @@ export default function ResetPassword() {
 
             <Button
               type="submit"
-              fullWidth
               size="large"
+              fullWidth
               variant="contained"
-              sx={{ margin: '27px 0px 0px' }}
               style={{
-                fontSize: '0.9375rem',
+                margin: '27px 0px 0px',
                 fontWeight: 'bold',
                 textTransform: 'none',
                 backgroundColor: 'rgb(85, 105, 255)',
@@ -108,6 +123,13 @@ export default function ResetPassword() {
           </form>
         </Box>
       </Paper>
+      <Button disableRipple size="small" className="back-to-list-btn">
+        <Link to="../user/login" style={{ color: 'inherit' }}>
+          Go back
+        </Link>
+      </Button>
+
+      {isVerified && <NewPassword isVerified={isVerified} />}
     </Container>
   );
 }

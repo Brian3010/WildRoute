@@ -188,7 +188,7 @@ export default function LoginPage() {
             <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }}>
               <Typography variant="h4" fontSize={'16px'}>
                 Don't have an account yet?{' '}
-                <Link style={{ color: 'InactiveCaptionText' }} to="../user/register">
+                <Link style={{ color: 'rgb(85, 105, 255)' }} to="../user/register">
                   Sign up here.
                 </Link>
               </Typography>

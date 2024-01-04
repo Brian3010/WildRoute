@@ -204,7 +204,7 @@ function RegisterPage() {
               <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }} paddingX={2}>
                 <Typography variant="h4" fontSize={'16px'}>
                   Already have one?{' '}
-                  <Link style={{ color: 'InactiveCaptionText' }} to={'../user/login'}>
+                  <Link style={{ color: 'rgb(85, 105, 255)' }} to={'../user/login'}>
                     Sign in
                   </Link>
                   .
