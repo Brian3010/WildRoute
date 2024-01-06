@@ -129,7 +129,7 @@ export default function ResetPassword() {
         </Link>
       </Button>
 
-      {isVerified && <NewPassword isVerified={isVerified} />}
+      {isVerified && <NewPassword isVerified={isVerified} onCancel={setIsVerified}/>}
     </Container>
   );
 }

@@ -134,6 +134,7 @@ export const verifyEmail: RequestHandler<unknown, unknown, { username: string; e
   req,
   res
 ) => {
+  console.log('forgot-password API hit');
   const { email, username } = req.body;
   // console.log({ userEmail });
   if (!email || !username) throw new AppError('email and username in the body not found', 404);

@@ -1,43 +1,155 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+} from '@mui/material';
+import { useState } from 'react';
+import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
+import { TypeMapper } from '../../@types/TypeMapper';
 
 interface NewPasswordProps {
   isVerified: boolean;
+  onCancel: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function NewPassword({ isVerified }: NewPasswordProps) {
-  //TODO: add react hook form, and show password icon
-  //TODO: make sure the cookie is available in order to make it through the end reseting passsword route
-  //TODO: Cancel button close the diablog
+
+interface NewPasswordInputs {
+  newPassword: string;
+  confirmPwd: string;
+}
+
+type FieldsOpts = TypeMapper<NewPasswordInputs, RegisterOptions>;
+
+const newPwdOpts: FieldsOpts = {
+  newPassword: {
+    required: 'Password must not empty',
+    minLength: {
+      value: 5,
+      message: 'The password should have at minimum length of 5',
+    },
+  },
+  confirmPwd: {
+    required: 'Password must not empty',
+    minLength: {
+      value: 5,
+      message: 'The password should have at minimum length of 5',
+    },
+  },
+};
+
+export default function NewPassword({ isVerified, onCancel }: NewPasswordProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NewPasswordInputs>({ mode: 'onSubmit', defaultValues: { newPassword: '', confirmPwd: '' } });
+
+  const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const submit: SubmitHandler<NewPasswordInputs> = async data => {
+    const { newPassword, confirmPwd } = data;
+
+    if (!newPassword.includes(confirmPwd)) return setErrorMsg('Passwords are unmatched');
+
+    // console.log({cookie:});
+    console.log({ data });
+
+    //TODO: make sure the cookie is available in order to make it through the end reseting passsword route
+    //!warning: no jwt found in browser event thought the forgot-password API hit.
+  };
+
   return (
     <>
       <Dialog open={isVerified}>
-        <DialogTitle textAlign={'center'} fontWeight={'bold'}>
-          Change your password
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>Enter a new passowrd below to change your password</DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="reset-password"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="standard"
-          />
-          <TextField
-            autoFocus
-            sx={{ margin: '16px 0 8px' }}
-            id="confirm-reset-password"
-            label="Confirm password"
-            type="password"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button color="error">Cancel</Button>
-          <Button>Change password</Button>
-        </DialogActions>
+        <form action="" onSubmit={handleSubmit(submit)}>
+          <DialogTitle textAlign={'center'} fontWeight={'bold'}>
+            Change your password
+          </DialogTitle>
+          <DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
+            <DialogContentText>Enter a new passowrd below to change your password</DialogContentText>
+
+            {/* display error message */}
+            {errorMsg && (
+              <Alert severity="error" sx={{ borderRadius: '0.5rem', margin: '16px' }}>
+                {errorMsg}
+              </Alert>
+            )}
+
+            {/* new password input */}
+            <FormControl sx={{ margin: '16px 0 8px' }}>
+              <InputLabel htmlFor="newPassword" error={errors.newPassword && errors.newPassword.message ? true : false}>
+                New Password
+              </InputLabel>
+              <OutlinedInput
+                autoFocus
+                onFocus={() => setErrorMsg(undefined)}
+                error={errors.newPassword && errors.newPassword.message ? true : false}
+                id="newPassword"
+                type={showPassword ? 'text' : 'password'}
+                {...register('newPassword', newPwdOpts.newPassword)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton aria-label="toggle password visibility" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="New password"
+              />
+              {errors.newPassword && errors.newPassword.message && (
+                <FormHelperText error>{errors.newPassword.message}</FormHelperText>
+              )}
+            </FormControl>
+
+            {/* confirm password input */}
+            <FormControl sx={{ margin: '16px 0 8px' }}>
+              <InputLabel htmlFor="confirmPwd" error={errors.confirmPwd && errors.confirmPwd.message ? true : false}>
+                Confirm password
+              </InputLabel>
+              <OutlinedInput
+                autoFocus
+                onFocus={() => setErrorMsg(undefined)}
+                error={errors.confirmPwd && errors.confirmPwd.message ? true : false}
+                id="confirmPwd"
+                type={showPassword ? 'text' : 'password'}
+                {...register('confirmPwd', newPwdOpts.confirmPwd)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton aria-label="toggle password visibility" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Confirm password"
+              />
+              {errors.confirmPwd && errors.confirmPwd.message && (
+                <FormHelperText error>{errors.confirmPwd.message}</FormHelperText>
+              )}
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                onCancel(false);
+              }}
+              color="error"
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Change password</Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </>
   );
