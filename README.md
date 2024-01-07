@@ -18,11 +18,13 @@ WildRoute is an activtity discovery app where the user can create, rate, and rev
 ### Table of Contents
 
 - [Demo](#demo)
-- [Technologies Stack](#technologies-stack)
+- [Technology Stack](#technology-stack)
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Deployment](#deployment)
+- [Acknowledgments](#acknowledgments)
+- [Contact](#contact)
 
 ### Demo
 
