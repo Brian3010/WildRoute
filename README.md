@@ -30,7 +30,7 @@ WildRoute Link: <https://wild-route.vercel.app/>
 
 Live Demo: **In progress**.
 
-### Technologies Stack
+### Technology Stack
 
 - **Front-End:** [React](https://react.dev/), [React Router](https://reactrouter.com/en/main), [React Hook Form](https://www.react-hook-form.com/), [Material-UI library](https://mui.com/), and [MapBox](https://www.mapbox.com/).
 - **Back-End:** [Node.js](https://nodejs.org/en), [ExpressJS](https://expressjs.com/).
