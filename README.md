@@ -4,7 +4,7 @@
 
 ## Project Description
 
-WildRoute is an activtity discovery app where users can create, rate, and review activities. providing specific locations, which helps user to discover various adventure.
+WildRoute is an activity discovery app where users can create, rate, and review activities. providing specific locations, which helps user to discover various adventure.
 
 ### Key Features
 
