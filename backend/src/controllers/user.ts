@@ -8,6 +8,7 @@ import { generateAccessToken, generateRefreshToken, generateResetPwdToken } from
 import passport from 'passport';
 
 import JWT from 'jsonwebtoken';
+import { Types } from 'mongoose';
 // export const index: RequestHandler = (req, res, next) => {
 //   res.send('index from user');
 // };
@@ -145,8 +146,9 @@ export const verifyEmail: RequestHandler<unknown, unknown, { username: string; e
   if (foundUser.length <= 0) throw new AppError('the user not exist in the database', 404);
 
   // get token for reseting password - prevent access the reset-password api
-  const user = foundUser[0]._id;
-  const resetPasswordToken = generateResetPwdToken(user);
+  const userObj = { _id: foundUser[0]._id, username };
+
+  const resetPasswordToken = generateResetPwdToken(userObj);
 
   // set cookie as it will be used for reseting password
   res.cookie('jwt', resetPasswordToken, {
@@ -165,6 +167,17 @@ export const resetPassword: RequestHandler<
   { newPassword: string; confirmPwd: string },
   unknown
 > = async (req, res) => {
+  console.log('reset-password POST request');
+
+  const refreshToken = req.cookies.jwt || undefined;
+
+  if (!refreshToken) throw new AppError('cookie not provided', 400);
+  // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
+
+  // verify the refreshToken abd decode the token
+
+  const payload = JWT.verify(refreshToken, process.env.JWT_ACCESS_SECRET as JWT.Secret) as JWT.JwtPayload;
+
   const { newPassword, confirmPwd } = req.body;
 
   // missing body
@@ -175,7 +188,8 @@ export const resetPassword: RequestHandler<
 
   // find the user
   const foundUser = await User.findOne({
-    _id: req.user._id,
+    // _id: req.user._id,
+    _id: payload.userId, // payload will has userId in it as previously registered with userid
   });
   // check user exist
   if (!foundUser) throw new AppError('user not found', 404);

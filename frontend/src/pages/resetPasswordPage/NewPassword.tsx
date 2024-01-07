@@ -14,9 +14,13 @@ import {
   InputLabel,
   OutlinedInput,
 } from '@mui/material';
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { TypeMapper } from '../../@types/TypeMapper';
+import useFlashMessage from '../../hooks/useFlashMessage';
+import resetPassword from '../../services/resetPassword';
 
 interface NewPasswordProps {
   isVerified: boolean;
@@ -56,17 +60,30 @@ export default function NewPassword({ isVerified, onCancel }: NewPasswordProps) 
 
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const [showPassword, setShowPassword] = useState(false);
+  const { setFlashMessage } = useFlashMessage();
+  const navigate = useNavigate();
 
   const submit: SubmitHandler<NewPasswordInputs> = async data => {
     const { newPassword, confirmPwd } = data;
+    if (newPassword !== confirmPwd) return setErrorMsg('Passwords are unmatched');
 
-    if (!newPassword.includes(confirmPwd)) return setErrorMsg('Passwords are unmatched');
-
-    // console.log({cookie:});
     console.log({ data });
 
-    //TODO: make sure the cookie is available in order to make it through the end reseting passsword route
-    //!warning: no jwt found in browser event thought the forgot-password API hit.
+    // make request to change password to backend
+    try {
+      const res = await resetPassword(newPassword, confirmPwd);
+      if (res.status === 200) {
+        setFlashMessage({
+          type: 'success',
+          message: 'Password Reset Successful! You can now log in using your new password.',
+        });
+        return navigate('/activities/user/login', { state: { openFlashMsg: true } });
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        setErrorMsg('Oops! Something went wrong on our end. Please try again later.');
+      }
+    }
   };
 
   return (
@@ -93,7 +110,6 @@ export default function NewPassword({ isVerified, onCancel }: NewPasswordProps) 
               </InputLabel>
               <OutlinedInput
                 autoFocus
-                onFocus={() => setErrorMsg(undefined)}
                 error={errors.newPassword && errors.newPassword.message ? true : false}
                 id="newPassword"
                 type={showPassword ? 'text' : 'password'}
@@ -119,7 +135,6 @@ export default function NewPassword({ isVerified, onCancel }: NewPasswordProps) 
               </InputLabel>
               <OutlinedInput
                 autoFocus
-                onFocus={() => setErrorMsg(undefined)}
                 error={errors.confirmPwd && errors.confirmPwd.message ? true : false}
                 id="confirmPwd"
                 type={showPassword ? 'text' : 'password'}

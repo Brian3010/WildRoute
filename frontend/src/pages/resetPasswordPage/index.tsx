@@ -55,7 +55,10 @@ export default function ResetPassword() {
       const res = await verifyUsernameEmail(data.username, data.email);
       // redirect to reset-password page when succefful.
 
-      if (res) setIsVerified(true);
+      if (res) {
+        setIsVerified(true);
+        setErrorMsg(undefined);
+      }
     } catch (error) {
       // show message when not verified
       if (isAxiosError(error) && error.response && error.response.data.error.includes('the user not exist')) {
@@ -129,7 +132,7 @@ export default function ResetPassword() {
         </Link>
       </Button>
 
-      {isVerified && <NewPassword isVerified={isVerified} onCancel={setIsVerified}/>}
+      {isVerified && <NewPassword isVerified={isVerified} onCancel={setIsVerified} />}
     </Container>
   );
 }

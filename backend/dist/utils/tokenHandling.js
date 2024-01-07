@@ -27,12 +27,13 @@ const generateRefreshToken = user => {
     return token;
 };
 exports.generateRefreshToken = generateRefreshToken;
-const generateResetPwdToken = (userId) => {
+const generateResetPwdToken = (user) => {
     return jsonwebtoken_1.default.sign({
-        userId,
+        userId: user._id,
+        username: user.username,
     }, process.env.JWT_ACCESS_SECRET, {
         expiresIn: process.env.JWTEXPIRE_ACCESS,
-        subject: userId && userId.toString(),
+        subject: user._id && user._id.toString(),
     });
 };
 exports.generateResetPwdToken = generateResetPwdToken;

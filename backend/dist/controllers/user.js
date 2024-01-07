@@ -81,6 +81,7 @@ const refreshToken = async (req, res, next) => {
 };
 exports.refreshToken = refreshToken;
 const verifyEmail = async (req, res) => {
+    console.log('forgot-password API hit');
     const { email, username } = req.body;
     if (!email || !username)
         throw new AppError_1.default('email and username in the body not found', 404);
@@ -88,8 +89,8 @@ const verifyEmail = async (req, res) => {
     console.log({ foundUser });
     if (foundUser.length <= 0)
         throw new AppError_1.default('the user not exist in the database', 404);
-    const user = foundUser[0]._id;
-    const resetPasswordToken = (0, tokenHandling_1.generateResetPwdToken)(user);
+    const userObj = { _id: foundUser[0]._id, username };
+    const resetPasswordToken = (0, tokenHandling_1.generateResetPwdToken)(userObj);
     res.cookie('jwt', resetPasswordToken, {
         httpOnly: true,
         sameSite: 'none',
@@ -100,13 +101,18 @@ const verifyEmail = async (req, res) => {
 };
 exports.verifyEmail = verifyEmail;
 const resetPassword = async (req, res) => {
+    console.log('reset-password POST request');
+    const refreshToken = req.cookies.jwt || undefined;
+    if (!refreshToken)
+        throw new AppError_1.default('cookie not provided', 400);
+    const payload = jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_ACCESS_SECRET);
     const { newPassword, confirmPwd } = req.body;
     if (!newPassword || !confirmPwd)
         throw new AppError_1.default('missing fields in the body', 404);
     if (newPassword !== confirmPwd)
         throw new AppError_1.default('passwords does not match', 400);
     const foundUser = await user_1.default.findOne({
-        _id: req.user._id,
+        _id: payload.userId,
     });
     if (!foundUser)
         throw new AppError_1.default('user not found', 404);

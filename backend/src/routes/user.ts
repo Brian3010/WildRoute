@@ -11,12 +11,11 @@ router.route('/register').post(validateRegister, catchAsync(userController.regis
 // router.route('/login').post(authCheck, catchAsync(isTokenInBlackList), catchAsync(userController.loginUser));
 router.route('/login').post(authLoginInfo, catchAsync(userController.loginUser));
 
-//TODO: add reset password API
 // this route verify the email and redirect to reset-password api
 router.route('/forgot-password').post(catchAsync(userController.verifyEmail));
 
 // reset password - validate the token before reseting password
-router.route('/reset-password').post(isLoggedIn, catchAsync(userController.resetPassword));
+router.route('/reset-password').post(catchAsync(userController.resetPassword));
 
 router.route('/logout').get(isLoggedIn, catchAsync(userController.logoutUser));
 
