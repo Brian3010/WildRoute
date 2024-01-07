@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refreshToken = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
+exports.resetPassword = exports.verifyEmail = exports.refreshToken = exports.logoutUser = exports.loginUser = exports.registerUser = void 0;
 require('dotenv').config();
 const user_1 = __importDefault(require("../models/user"));
 const AppError_1 = __importDefault(require("../utils/AppError"));
@@ -13,7 +13,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const registerUser = async (req, res, next) => {
     console.log(`${req.originalUrl} POST method`);
     const { email, username, password } = req.body.user;
-    const user = new user_1.default({ email, username });
+    const lowerCaseEmail = email.toLowerCase();
+    const user = new user_1.default({ lowerCaseEmail, username });
     await user_1.default.register(user, password);
     const token = (0, tokenHandling_1.generateAccessToken)(user);
     const refreshToken = (0, tokenHandling_1.generateRefreshToken)(user);
@@ -29,7 +30,12 @@ const loginUser = async (req, res, next) => {
     console.log(user._id);
     await (0, redis_1.setRedisToken)(refreshToken, user._id);
     const { salt, hash, ...userTosend } = user._doc;
-    res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+    res.cookie('jwt', refreshToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
     res.status(200).json({ accessToken, user: userTosend });
 };
 exports.loginUser = loginUser;
@@ -69,9 +75,50 @@ const refreshToken = async (req, res, next) => {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     });
     res.status(200).json({ accessToken: newAccessToken });
 };
 exports.refreshToken = refreshToken;
+const verifyEmail = async (req, res) => {
+    console.log('forgot-password API hit');
+    const { email, username } = req.body;
+    if (!email || !username)
+        throw new AppError_1.default('email and username in the body not found', 404);
+    const foundUser = await user_1.default.where('username', username.toLowerCase()).where('email', email.toLowerCase());
+    console.log({ foundUser });
+    if (foundUser.length <= 0)
+        throw new AppError_1.default('the user not exist in the database', 404);
+    const userObj = { _id: foundUser[0]._id, username };
+    const resetPasswordToken = (0, tokenHandling_1.generateResetPwdToken)(userObj);
+    res.cookie('jwt', resetPasswordToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        expires: new Date(Date.now() + 10 * 60000),
+    });
+    res.json({ message: 'found the user - redirect to reset-password page' });
+};
+exports.verifyEmail = verifyEmail;
+const resetPassword = async (req, res) => {
+    console.log('reset-password POST request');
+    const refreshToken = req.cookies.jwt || undefined;
+    if (!refreshToken)
+        throw new AppError_1.default('cookie not provided', 400);
+    const payload = jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_ACCESS_SECRET);
+    const { newPassword, confirmPwd } = req.body;
+    if (!newPassword || !confirmPwd)
+        throw new AppError_1.default('missing fields in the body', 404);
+    if (newPassword !== confirmPwd)
+        throw new AppError_1.default('passwords does not match', 400);
+    const foundUser = await user_1.default.findOne({
+        _id: payload.userId,
+    });
+    if (!foundUser)
+        throw new AppError_1.default('user not found', 404);
+    await foundUser.setPassword(newPassword);
+    await foundUser.save();
+    res.json({ message: 'Password has been reset successfully - redirect to login' });
+};
+exports.resetPassword = resetPassword;
 //# sourceMappingURL=user.js.map

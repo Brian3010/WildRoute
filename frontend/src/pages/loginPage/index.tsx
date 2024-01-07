@@ -111,7 +111,7 @@ export default function LoginPage() {
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: 4 }}>
-      <Paper elevation={1} sx={{ padding: 4 }}>
+      <Paper elevation={1} sx={{ padding: 4, position: 'relative' }}>
         <Box textAlign={'center'}>
           <Typography variant="h2" fontSize={'24px'} fontWeight={700} margin={'0 0 9px'}>
             Sign in
@@ -162,14 +162,12 @@ export default function LoginPage() {
                 <FormHelperText error>{errors.password.message}</FormHelperText>
               )}
             </FormControl>
-            <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }} paddingX={2}>
-              <Typography variant="h4" fontSize={'16px'}>
-                Don't have an account yet?{' '}
-                <Link style={{ textDecoration: 'none' }} to="../user/register">
-                  Sign up here.
-                </Link>
-              </Typography>
-            </Box>
+
+            <Typography variant="subtitle2" textAlign="end">
+              <Link style={{ color: 'InactiveCaptionText' }} to="../user/forgot-password">
+                Forgot your password?
+              </Link>
+            </Typography>
 
             <Button
               type="submit"
@@ -187,6 +185,14 @@ export default function LoginPage() {
             >
               Sign in
             </Button>
+            <Box textAlign={'left'} sx={{ margin: '16px 0 8px' }}>
+              <Typography variant="h4" fontSize={'16px'}>
+                Don't have an account yet?{' '}
+                <Link style={{ color: 'rgb(85, 105, 255)' }} to="../user/register">
+                  Sign up here.
+                </Link>
+              </Typography>
+            </Box>
           </form>
         </Box>
       </Paper>

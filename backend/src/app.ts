@@ -122,6 +122,8 @@ const jwtStrategy: PassportJwt.Strategy = new PassportJwt.Strategy(jwtOpts, jwtV
 app.use(passport.initialize());
 passport.use(jwtStrategy);
 
+
+
 // *Passport configuration
 
 // app.use(passport.initialize());

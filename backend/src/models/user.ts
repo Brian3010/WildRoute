@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from 'mongoose';
+import mongoose, { InferSchemaType, PassportLocalDocument, PassportLocalModel } from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
 const { Schema } = mongoose;
 
@@ -16,6 +16,6 @@ UserSchema.plugin(passportLocalMongoose, {
 
 export type UserSchemaType = InferSchemaType<typeof UserSchema>;
 
-const User = mongoose.model<UserSchemaType>('User', UserSchema);
+const User = mongoose.model<UserSchemaType & PassportLocalDocument>('User', UserSchema);
 
 export default User;

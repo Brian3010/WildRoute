@@ -17,6 +17,7 @@ import EditActivity from './pages/editPage';
 import HomePage from './pages/homepage';
 import LoginPage from './pages/loginPage';
 import NewActivity from './pages/newPage';
+import ResetPassword from './pages/resetPasswordPage';
 
 function App() {
   const location = useLocation();
@@ -30,7 +31,7 @@ function App() {
   }
 
   return (
-    <div className="App" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh',position:'relative'}}>
+    <div className="App" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', position: 'relative' }}>
       {/* <NavBar /> */}
 
       {/* <FlashMessage /> */}
@@ -53,6 +54,7 @@ function App() {
                 />
               }
             />
+            <Route path="user/forgot-password" element={<ResetPassword />} />
             <Route element={<PersistLogin />}>
               <Route
                 path=":id"
@@ -66,9 +68,7 @@ function App() {
               />
               <Route path="user/register" element={<RegisterPage />} />
               {/* -------------- */}
-
               {/* private routes */}
-
               <Route element={<RequireAuth />}>
                 <Route path="new" element={<NewActivity />} />
                 {/* <Route path="user/logout" element={<div>logout </div>} /> */}

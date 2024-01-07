@@ -3,9 +3,12 @@ import { RequestHandler } from 'express';
 import User from '../models/user';
 import AppError from '../utils/AppError';
 import { deleteRedisToken, getRedisToken, setRedisToken } from '../utils/redis';
-import { generateAccessToken, generateRefreshToken } from '../utils/tokenHandling';
+import { generateAccessToken, generateRefreshToken, generateResetPwdToken } from '../utils/tokenHandling';
+
+import passport from 'passport';
 
 import JWT from 'jsonwebtoken';
+import { Types } from 'mongoose';
 // export const index: RequestHandler = (req, res, next) => {
 //   res.send('index from user');
 // };
@@ -23,7 +26,10 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
 
   const { email, username, password } = req.body.user;
 
-  const user = new User({ email, username });
+  const lowerCaseEmail = email.toLowerCase();
+
+  const user = new User({ lowerCaseEmail, username });
+
   await User.register(user, password);
 
   const token = generateAccessToken<typeof user>(user);
@@ -122,4 +128,75 @@ export const refreshToken: RequestHandler<unknown, unknown, unknown, unknown> = 
   });
   // res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
   res.status(200).json({ accessToken: newAccessToken });
+};
+
+// verify user email in forgot-password request for reseting password
+export const verifyEmail: RequestHandler<unknown, unknown, { username: string; email: string }, unknown> = async (
+  req,
+  res
+) => {
+  console.log('forgot-password API hit');
+  const { email, username } = req.body;
+  // console.log({ userEmail });
+  if (!email || !username) throw new AppError('email and username in the body not found', 404);
+
+  // find user with email
+  const foundUser = await User.where('username', username.toLowerCase()).where('email', email.toLowerCase());
+  console.log({ foundUser });
+  if (foundUser.length <= 0) throw new AppError('the user not exist in the database', 404);
+
+  // get token for reseting password - prevent access the reset-password api
+  const userObj = { _id: foundUser[0]._id, username };
+
+  const resetPasswordToken = generateResetPwdToken(userObj);
+
+  // set cookie as it will be used for reseting password
+  res.cookie('jwt', resetPasswordToken, {
+    httpOnly: true,
+    sameSite: 'none',
+    secure: true,
+    expires: new Date(Date.now() + 10 * 60000),
+  });
+  res.json({ message: 'found the user - redirect to reset-password page' });
+};
+
+// reset password
+export const resetPassword: RequestHandler<
+  unknown,
+  unknown,
+  { newPassword: string; confirmPwd: string },
+  unknown
+> = async (req, res) => {
+  console.log('reset-password POST request');
+
+  const refreshToken = req.cookies.jwt || undefined;
+
+  if (!refreshToken) throw new AppError('cookie not provided', 400);
+  // if (!isValidMongooseId(userId)) throw new AppError('id is not a mongoose valid id', 400);
+
+  // verify the refreshToken abd decode the token
+
+  const payload = JWT.verify(refreshToken, process.env.JWT_ACCESS_SECRET as JWT.Secret) as JWT.JwtPayload;
+
+  const { newPassword, confirmPwd } = req.body;
+
+  // missing body
+  if (!newPassword || !confirmPwd) throw new AppError('missing fields in the body', 404);
+
+  // not matching
+  if (newPassword !== confirmPwd) throw new AppError('passwords does not match', 400);
+
+  // find the user
+  const foundUser = await User.findOne({
+    // _id: req.user._id,
+    _id: payload.userId, // payload will has userId in it as previously registered with userid
+  });
+  // check user exist
+  if (!foundUser) throw new AppError('user not found', 404);
+
+  // change the password
+  await foundUser.setPassword(newPassword);
+  await foundUser.save();
+
+  res.json({ message: 'Password has been reset successfully - redirect to login' });
 };
