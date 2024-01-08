@@ -30,6 +30,10 @@ WildRoute is an activity discovery app where users can create, rate, and review 
 
 WildRoute Link: <https://wild-route.vercel.app/>
 
+- You can use the credentials bellow to sign in or create your own to explore the app:
+    - username: admin
+    - password: admin
+
 Live Demo: **In progress**.
 
 ### Technology Stack
@@ -40,7 +44,7 @@ Live Demo: **In progress**.
 - **Deployment:**
   - [Render](https://render.com/) (Backend)
   - [Vercel](https://vercel.com/) (Frontend)
-- **Others:** [TypeScript](https://www.typescriptlang.org/), [JSON Web Token (JWT)](https://jwt.io/) and [Passport](https://www.passportjs.org/) for `Authentication`, [Multer](https://www.npmjs.com/package/multer) for handling `multipart/form-data`.
+- **Others:** [TypeScript](https://www.typescriptlang.org/), [JSON Web Token (JWT)](https://jwt.io/) for managing tokens and [Passport](https://www.passportjs.org/) for `Authentication`, [Multer](https://www.npmjs.com/package/multer) for handling `multipart/form-data`.
 
 ### Features
 
