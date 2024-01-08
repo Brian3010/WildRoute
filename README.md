@@ -1,10 +1,10 @@
-# WildRoute: Discover and share outdoor adventures in Australia
+# WildRoute: Explore and share outdoor activities in Australia
 
 ![home page](./project_images/homepage.png)
 
 ## Project Description
 
-WildRoute is an activity discovery app where users can create, rate, and review activities. providing specific locations, which helps user to discover various adventure.
+WildRoute is an activity discovery app where users can create, rate, and review activities. providing specific locations, which helps users to discover various adventures.
 
 ### Key Features
 
@@ -13,7 +13,7 @@ WildRoute is an activity discovery app where users can create, rate, and review 
 - **User Accounts:** Create an account to unlock features like rating, reviewing, and managing your own activities.
 - **Rating and Reviewing:** Share your experiences and insights by providing ratings and reviews for activities.
 - **Activity Management:** Take control by creating, editing, and deleting your own activities.
-- **Location Details:** Get specific location information for each activity, ensuring you find adventures that suit your preferences.
+- **Location Details:** Get specific location information for each activity.
 
 ### Table of Contents
 
