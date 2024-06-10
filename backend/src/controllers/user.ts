@@ -28,7 +28,8 @@ export const registerUser: RequestHandler<unknown, unknown, UserBody, unknown> =
 
   const lowerCaseEmail = email.toLowerCase();
 
-  const user = new User({ lowerCaseEmail, username });
+  const user = new User({ email: lowerCaseEmail, username });
+  // console.log({ lowerCaseEmail, email, user });
 
   await User.register(user, password);
 
