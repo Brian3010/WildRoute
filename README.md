@@ -1,218 +1,200 @@
-# WildRoute: Explore and share outdoor activities in Australia
+# WildRoute 🌿
 
-![home page](./project_images/homepage.png)
+**Discover and share outdoor adventures across Australia.**
 
-## Project Description
+WildRoute is a full-stack activity discovery platform where users can explore, create, and review outdoor activities — all plotted on an interactive map with precise location details.
 
-WildRoute is an activity discovery app where users can create, rate, and review activities. providing specific locations, which helps users to discover various adventures.
+🔗 **Live Demo:** [wild-route.vercel.app](https://wild-route.vercel.app/) &nbsp;|&nbsp; **API:** [wildroute-api.onrender.com](https://wildroute-api.onrender.com)
 
-### Key Features
+> **Try it out** — sign in with `admin` / `admin` or create your own account.
 
-- **Activities Listing:** Explore a list of activities to find the perfect adventure.
-- **Search Functionality:** Search for activities by name or category for a personalized experience.
-- **User Accounts:** Create an account to unlock features like rating, reviewing, and managing your own activities.
-- **Rating and Reviewing:** Share your experiences and insights by providing ratings and reviews for activities.
-- **Activity Management:** Take control by creating, editing, and deleting your own activities.
-- **Location Details:** Get specific location information for each activity.
+---
 
-### Table of Contents
+## Screenshots
 
-- [Demo](#demo)
-- [Technology Stack](#technology-stack)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Deployment](#deployment)
-- [Acknowledgments](#acknowledgments)
-- [Contact](#contact)
+| Home | Activity List | Interactive Map |
+|------|--------------|-----------------|
+| ![Home](./project_images/homepage.png) | ![List](./project_images/activityList_page.png) | ![Map](./project_images/interactive_map.png) |
 
-### Demo
+| Activity Detail | Create Activity | Reviews |
+|----------------|-----------------|---------|
+| ![Detail](./project_images/show_activity.png) | ![New](./project_images/newActivity.png) | ![Review](./project_images/review.png) |
 
-WildRoute Link: <https://wild-route.vercel.app/>
+---
 
-- You can use the credentials bellow to sign in or create your own to explore the app:
-    - username: admin
-    - password: admin
+## Features
 
-Live Demo: **In progress**.
+- 🗺️ **Interactive Map** — All activities plotted on a live Mapbox map; updates in real-time as activities are added
+- 🔍 **Search & Filter** — Search activities by name or category
+- 📋 **Activity Listings** — Browse detailed activity cards with location, description, and images
+- ✏️ **Full CRUD** — Authenticated users can create, edit, and delete their own activities
+- ⭐ **Ratings & Reviews** — Leave feedback on any activity; only the review owner can delete it
+- 🔐 **Authentication** — JWT-based auth with Passport.js; tokens stored in Redis for stateless invalidation
+- 🔑 **Password Reset** — Self-service password reset flow
+- 🖼️ **Image Uploads** — Activity photos uploaded via Multer and stored on Cloudinary
+- 🛡️ **Input Sanitization** — Server-side Joi validation, `express-mongo-sanitize`, and `sanitize-html` protect against injection attacks
 
-### Technology Stack
+---
 
-- **Front-End:** [React](https://react.dev/), [React Router](https://reactrouter.com/en/main), [React Hook Form](https://www.react-hook-form.com/), [Material-UI library](https://mui.com/), and [MapBox](https://www.mapbox.com/).
-- **Back-End:** [Node.js](https://nodejs.org/en), [ExpressJS](https://expressjs.com/).
-- **Database:** [MongoDB](https://www.mongodb.com/), [Redis](https://redis.com/) (storing JWT), [Cloudinary](https://cloudinary.com/) (storing images).
-- **Deployment:**
-  - [Render](https://render.com/) (Backend)
-  - [Vercel](https://vercel.com/) (Frontend)
-- **Others:** [TypeScript](https://www.typescriptlang.org/), [JSON Web Token (JWT)](https://jwt.io/) for managing tokens and [Passport](https://www.passportjs.org/) for `Authentication`, [Multer](https://www.npmjs.com/package/multer) for handling `multipart/form-data`.
+## Tech Stack
 
-### Features
+### Frontend
+| Technology | Role |
+|-----------|------|
+| React 18 + TypeScript | UI framework |
+| Vite | Build tool & dev server |
+| React Router v6 | Client-side routing |
+| Material-UI (MUI) | Component library & theming |
+| Mapbox GL JS | Interactive maps |
+| React Hook Form | Performant form handling |
+| Axios | HTTP client |
 
-- **Dynamic activity listing:**
+### Backend
+| Technology | Role |
+|-----------|------|
+| Node.js + Express + TypeScript | REST API server |
+| MongoDB + Mongoose | Primary database & ODM |
+| Redis | JWT token store (stateless logout) |
+| Passport.js + JWT | Authentication strategy |
+| Multer + Cloudinary | Image upload & storage |
+| Joi | Request validation |
 
-  ![list of activities](./project_images/activityList_page.png)
+### DevOps & Tooling
+| Technology | Role |
+|-----------|------|
+| Vercel | Frontend deployment |
+| Render | Backend deployment |
+| TypeScript (full stack) | End-to-end type safety |
 
-- **Interactive map:**
+---
 
-  ![interactive map](./project_images/interactive_map.png)
+## Architecture
 
-- **Search activities by text and categories:**
+```
+┌─────────────────────┐        REST API        ┌──────────────────────────┐
+│   React SPA         │ ──────────────────────▶ │   Express + TypeScript   │
+│   (Vercel)          │ ◀────────────────────── │   (Render)               │
+└─────────────────────┘      JSON responses     └──────────┬───────────────┘
+                                                           │
+                                          ┌────────────────┼────────────────┐
+                                          ▼                ▼                ▼
+                                       MongoDB           Redis          Cloudinary
+                                    (activities,      (JWT tokens)    (user images)
+                                     users, reviews)
+```
 
-  ![search bar](./project_images/search_function.png)
+- The **frontend** is a single-page React app served via Vercel, communicating with the backend over HTTPS.
+- The **backend** exposes a RESTful API with route-level auth guards using Passport JWT middleware.
+- **Redis** is used to store and invalidate JWT tokens, enabling true stateless logout without database lookups.
+- **Cloudinary** handles image hosting, removing the need for local file storage in production.
 
-- **Show detail of an activity:**
+---
 
-  ![activity detail](./project_images/show_activity.png)**Note: Delete and Edit are not allowed if not logged in**
-
-- **Sign In**
-
-  - you can use the credentials bellow to sign in or create your own:
-    - username: admin
-    - password: admin
-
-  ![sign in](./project_images/signin.png)
-  ![register](./project_images/register.png)
-
-  - In case you forgot your password, there is `forgot your password?` here to reset your password:
-  ![forgot password](./project_images/password_reset.png)
-
-- **Once you are signed in, you can create your own activity. the activity is also updated on the map**
-  ![new activity](./project_images/newActivity.png)
-
-  ![map updated](./project_images/updatedActivity.png)
-
-- **As the owner of the activity, you have permission to edit or delete it**
-
-  ![edit or delete activity](./project_images/actvitycreated.png)
-
-- **Review on other activities**
-
-  - Only the owner of the review can delete their review
-  ![review acitivity](./project_images/review.png)
-
-**You can try out or the mentioned features at [Demo](#demo) section.**
+## Getting Started
 
 ### Prerequisites
 
-Before running Wildroute locally, ensure you have the following prerequisites installed on your machine:
-
-- **Node.js:** Make sure you have Node.js installed. You can download it from [here](https://nodejs.org/).
-
-- **MongoDB:** Install MongoDB and make sure it's running. You can download it from [here](https://www.mongodb.com/try/download/community).
-
-- **Redis:** Install and start the Redis server. You can download it from [here](https://redis.io/download).
-
-- **Git:** Install Git for version control. You can download it from [here](https://git-scm.com/).
-
-- **A Code Editor:** Choose a code editor of your choice. We recommend [Visual Studio Code](https://code.visualstudio.com/).
+- [Node.js](https://nodejs.org/) v18+
+- [MongoDB](https://www.mongodb.com/try/download/community) (local instance)
+- [Redis](https://redis.io/download) (local instance)
+- A [Mapbox](https://www.mapbox.com/) access token
+- A [Cloudinary](https://cloudinary.com/) account
 
 ### Installation
 
-Follow these steps to set up Wildroute on your local machine:
+```bash
+# 1. Clone the repository
+git clone https://github.com/Brian3010/WildRoute.git
+cd WildRoute
+```
 
-1. **Clone the Repository:**
-   - Open your terminal and run the following command:
+**Backend**
 
-     ```bash
-         git clone https://github.com/Brian3010/WildRoute.git
-     ```
+```bash
+cd backend
+npm install
 
-2. **Navigate to the Backend:**
-   - Change into the backend directory:
+# Create .env file (see Environment Variables section below)
 
-     ```bash
-     cd WildRoute/backend
-     ```
+npm run serve        # dev mode with watch
+# or
+npm run build && npm start   # production build
+```
 
-3. **Install Backend Dependencies:**
-   - Run the following command to install the backend dependencies:
+**Frontend**
 
-     ```bash
-     npm install
-     ```
+```bash
+cd frontend
+npm install
 
-4. **Build and Start Backend:**
-   - Run the following command to build the backend:
+# Create .env file (see Environment Variables section below)
 
-     ```bash
-     npm run build
-     ```
+npm run dev          # starts Vite dev server
+```
 
-   - Then, start the backend server:
+### Environment Variables
 
-     ```bash
-     npm start
-     ```
+**`backend/.env`**
+```env
+PORT=3000
+MONGO_URL=mongodb://localhost:27017/wildroute
+REDIS_URL=redis://localhost:6379
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
 
-   - Alternatively, if you want to watch for changes during development, you can use:
+**`frontend/.env`**
+```env
+VITE_API_BASE_URL=http://localhost:3000
+VITE_MAPBOX_TOKEN=your_mapbox_token
+```
 
-     ```bash
-     npm run serve
-     ```
+> Need help with environment variables? Reach out at [briannguyenwg@gmail.com](mailto:briannguyenwg@gmail.com).
 
-   - **Note:** The backend is running at [http://localhost:3000/](http://localhost:3000/). Ensure that the frontend is configured to connect to this URL when making requests.
+---
 
-5. **Navigate to the Frontend:**
-   - Change into the frontend directory:
+## Usage
 
-     ```bash
-     cd ../frontend
-     ```
+| Action | How |
+|--------|-----|
+| Browse activities | Visit the Activities page — no login required |
+| View on map | Click the Map tab to see all activities geographically |
+| Search | Use the search bar to filter by name or category |
+| Create an activity | Sign in → click "New Activity" → fill in details + upload photos |
+| Edit / Delete | Only available to the activity owner when signed in |
+| Leave a review | Sign in → navigate to any activity → submit a review |
 
-6. **Install Frontend Dependencies:**
-   - Run the following command to install the frontend dependencies:
+---
 
-     ```bash
-     npm install
-     ```
+## Why This Project Matters
 
-7. **Start Frontend:**
-   - Run the following command to start the frontend:
+Outdoor activity discovery tools are often limited to trail databases with no community layer. WildRoute combines **user-generated content** with **geospatial discovery**, letting adventurers both find and share experiences in one place.
 
-     ```bash
-     npm run dev
-     ```
+From an engineering perspective, the project demonstrates:
 
-   - This will start the frontend using Vite.
+- **Full-stack TypeScript** across a decoupled frontend/backend architecture
+- **Secure auth** using JWT + Redis (token invalidation without session storage)
+- **Production deployment** with separate hosting for frontend (Vercel) and backend (Render)
+- **Real-world integrations** with Mapbox, Cloudinary, and MongoDB Atlas
 
-   - **Note:** Ensure that your frontend `.env` file is configured to connect to the backend URL [http://localhost:3000/](http://localhost:3000/) for API requests.
+---
 
-8. **Environment Variables:**
-   - Create a `.env` file in the root of the backend folder and frontend folder respectively and add any required environment variables.
-   **Note:** If you need assistance or have any questions regarding the required environment variables, feel free to reach out! Contact me at [briannguyenwg@gmail.com](mailto:briannguyenwg@gmail.com) for any inquiries.
+## Future Improvements
 
-9. **Access the App:**
-   - Open your browser and go to the URL provided by VITE when running `npm run dev`.
+- [ ] OAuth login (Google / GitHub)
+- [ ] Activity difficulty ratings and distance/elevation metadata
+- [ ] Filter activities by map bounds (visible area search)
+- [ ] Email notifications for reviews on owned activities
+- [ ] Mobile-responsive UI improvements
 
-### Deployment
+---
 
-- The backend is deployed on [Render](https://docs.render.com/deploy-node-express-app). The APIs available at [Backend APIs](https://wildroute-api.onrender.com).
-- The frontend is deployed on [Vercel](https://vercel.com/docs/frameworks/vite).
+## Author
 
-### Acknowledgments
+**Brian Nguyen**
 
-- **[Mapbox](https://www.mapbox.com/):** Provided an outstanding mapping platform that greatly enriched the visual presentation of location-based data in WildRoute.
-
-- **[Material-UI (MUI)](https://mui.com/):** Powerful React UI framework. MUI significantly contributed to the aesthetics and user experience of WildRoute.
-
-- **[React Router](https://reactrouter.com/):** Simplified navigation and ensured smooth transitions between different views in WildRoute.
-
-- **[React Hook Form](https://react-hook-form.com/)**
-
-- **[Mongoose Docs](https://mongoosejs.com/docs/)**
-
-- **[Passport](http://www.passportjs.org/):** Passport played a vital role in handling authentication in WildRoute
-
-- **[jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken):** The `jsonwebtoken` library was instrumental in implementing secure authentication mechanisms in WildRoute.
-
-- **[multer](https://www.npmjs.com/package/multer):** Multer simplified the process of handling file uploads in WildRoute
-
-These tools and libraries have not only enhanced the functionality of WildRoute but also contributed to the overall success of the project.
-
-### Contact
-
-Feel free to reach out if you have any questions, suggestions, or just want to connect! You can contact me via:
-
-- **Email:** [briannguyenwg@gmail.com](mailto:briannguyenwg@gmail.com)
-- **LinkedIn:** [https://www.linkedin.com/in/brian-nguyen-411483196/](https://www.linkedin.com/in/brian-nguyen-411483196/)
-- **GitHub:** [https://github.com/Brian3010](https://github.com/Brian3010)
+- 📧 [briannguyenwg@gmail.com](mailto:briannguyenwg@gmail.com)
+- 💼 [LinkedIn](https://www.linkedin.com/in/brian-nguyen-411483196/)
+- 🐙 [GitHub](https://github.com/Brian3010)
